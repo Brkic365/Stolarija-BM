@@ -1,0 +1,186 @@
+.purchaseModal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 0.3125rem;
+  background: #fff;
+
+  padding: 0.5rem 1.25rem 1rem 1.25rem;
+
+  max-width: 95%;
+
+  button,
+  .emptyButton {
+    color: white;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+
+    border-radius: 0.25rem;
+    border: none;
+    background: black;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .emptyButton {
+    display: flex;
+    align-items: center;
+
+    color: black;
+
+    border: none;
+    background: transparent;
+    padding: 0;
+
+    svg {
+      margin-left: 0.5rem;
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+  }
+
+  .top {
+    width: 15rem;
+
+    display: flex;
+    align-items: center;
+    place-content: space-between;
+
+    h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.875rem;
+      opacity: 0.8;
+    }
+
+    svg {
+      width: 1.1rem;
+      height: 1.1rem;
+
+      opacity: 0.5;
+    }
+  }
+
+  form {
+    margin-top: 1rem;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.7rem 0.75rem;
+      border: 1px solid transparent;
+      outline: none;
+      border-radius: 0.3125rem;
+
+      background: #ededed;
+
+      color: black;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      resize: none;
+
+      transition: 0.25s ease-in-out;
+
+      &:focus {
+        border: 1px solid black;
+      }
+    }
+
+    .inputRow {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .error {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.3125rem;
+      border: 1px solid red;
+      opacity: 0;
+      height: 0;
+
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      background-color: #ebbcbc;
+
+      svg {
+        color: red;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+
+      p {
+        color: red;
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.2rem;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      margin-top: 1rem;
+    }
+  }
+
+  .success,
+  .fail {
+    margin-top: 2rem;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    text-align: center;
+
+    img {
+      width: 70%;
+    }
+
+    h3 {
+      margin-top: 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.875rem;
+      opacity: 0.8;
+    }
+
+    p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.4rem;
+      opacity: 0.8;
+    }
+
+    button {
+      margin-top: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      margin-top: 2rem;
+    }
+  }
+}
