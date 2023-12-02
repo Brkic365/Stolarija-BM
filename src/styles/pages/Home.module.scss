@@ -206,3 +206,72 @@
     }
   }
 }
+
+@media only screen and (min-width: 600px) {
+  .main {
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    button,
+    .emptyButton {
+      padding: 0.7rem 1.5rem;
+    }
+
+    .emptyButton {
+      gap: 0.6rem;
+    }
+
+    .hero {
+      padding: 10rem 4rem;
+
+      .cta {
+        margin-top: 3rem;
+      }
+    }
+
+    .about {
+      padding: 5rem 3rem;
+      .text {
+        position: relative;
+        h1 {
+          top: -2rem;
+          width: fit-content;
+          font-size: 20vw;
+        }
+
+        h2 {
+        }
+
+        p {
+          width: 90%;
+          margin-top: 3rem;
+        }
+      }
+
+      img {
+        width: 90%;
+      }
+    }
+
+    .services {
+      padding: 5rem 3rem;
+      .service {
+        h1 {
+        }
+      }
+    }
+  }
+}

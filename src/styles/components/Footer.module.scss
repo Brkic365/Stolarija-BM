@@ -88,3 +88,35 @@
     }
   }
 }
+
+@media only screen and (min-width: 600px) {
+  .footer {
+    .info {
+      width: 70%;
+      h2 {
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+      }
+
+      .cta {
+        button,
+        .emptyButton {
+          padding: 0.7rem 1.5rem;
+        }
+
+        .emptyButton {
+          gap: 0.5rem;
+        }
+      }
+    }
+
+    ul {
+      gap: 2.5rem;
+      .copyright {
+      }
+
+      li {
+      }
+    }
+  }
+}

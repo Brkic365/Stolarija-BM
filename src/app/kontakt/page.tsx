@@ -8,8 +8,6 @@ import {
   HiChatBubbleBottomCenter,
 } from "react-icons/hi2";
 
-import Map from "@/components/Map";
-
 function Contact() {
   return (
     <main className={styles.mainContact}>
