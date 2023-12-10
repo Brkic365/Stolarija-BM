@@ -93,6 +93,7 @@
     gap: 2rem;
 
     .productsType {
+      width: 100%;
       .top {
         position: relative;
 
@@ -159,7 +160,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         width: 100%;
       }
     }
@@ -185,6 +186,152 @@
       line-height: 1.875rem;
 
       margin-bottom: 1.5rem;
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .mainWebshop {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      line-height: 3rem;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.75rem;
+    }
+
+    button,
+    .emptyButton {
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .hero {
+      padding: 12rem 1rem;
+    }
+
+    .products {
+      padding: 5rem 3rem;
+      gap: 5rem;
+
+      .productsType {
+        .top {
+          .left {
+            h3 {
+              font-size: 1.75rem;
+              line-height: 2.5rem;
+            }
+
+            p {
+              line-height: 1.75rem;
+            }
+          }
+
+          .emptyButton {
+            top: 0.5rem;
+            font-size: 1.1rem;
+
+            svg {
+              margin-left: 0.75rem;
+              width: 1.5rem;
+              height: 1.5rem;
+            }
+          }
+        }
+
+        .productsList {
+          margin-top: 2rem;
+        }
+      }
+    }
+
+    .seeAll {
+      margin-bottom: 5rem;
+      padding: 3rem 1rem;
+
+      h3 {
+        font-size: 1.5rem;
+        line-height: 2.25rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .mainWebshop {
+    h1 {
+      font-size: 3rem;
+    }
+
+    .hero {
+      padding: 15rem 1rem;
+    }
+
+    .products {
+      padding: 5rem 4rem;
+      gap: 6rem;
+
+      .productsType {
+        .top {
+          display: flex;
+          align-items: center;
+
+          .left {
+            max-width: 50%;
+            h3 {
+              font-size: 2rem;
+              line-height: 3rem;
+            }
+
+            p {
+              margin-top: 0.5rem;
+              font-size: 1rem;
+              line-height: 2rem;
+            }
+          }
+
+          .emptyButton {
+            top: 0;
+            position: relative;
+
+            svg {
+              margin-left: 1rem;
+              width: 1.75rem;
+              height: 1.75rem;
+            }
+          }
+        }
+
+        .productsList {
+          margin-top: 3rem;
+        }
+      }
+    }
+
+    .seeAll {
+      margin-bottom: 8rem;
+
+      h3 {
+        font-size: 2rem;
+        line-height: 3.5rem;
+        margin-bottom: 3rem;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .mainWebshop {
+    .products {
+      padding: 7rem;
+      gap: 7rem;
     }
   }
 }

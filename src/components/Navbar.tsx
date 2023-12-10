@@ -71,7 +71,9 @@ function Navbar() {
         })}
       </ul>
 
-      <button className={styles.cta}>Kontaktiraj nas</button>
+      <button className={styles.cta} onClick={() => router.push("/kontakt")}>
+        Kontaktiraj nas
+      </button>
 
       <div
         className={styles.hamburger}

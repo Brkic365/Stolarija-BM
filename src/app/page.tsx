@@ -33,28 +33,32 @@ export default function Home() {
 
       {/* About section */}
       <section className={styles.about}>
-        <section className={styles.text}>
+        <section className={styles.top}>
           <h1 className={styles.bgText}>O nama</h1>
           <h2>
             Više od 30 godina kreiramo unikatni namještaj i kuhinje po mjeri.
             Otkrijte našu stolarsku baštinu, Od kuhinja do personaliziranih
             dizajna.
           </h2>
-          <p>
-            U Stolariji BM d.o.o., neprestano radimo na poboljšanju naših
-            procesa i zadovoljenju potreba naših klijenata. <br />
-            <br />
-            Posvećeni smo pružanju vrhunskih proizvoda, istovremeno nastojeći
-            zadovoljiti i najviše standarde korisničkog iskustva.
-          </p>
-          <button
-            className={styles.emptyButton}
-            onClick={() => router.push("/o-nama")}
-          >
-            Više o nama <HiArrowSmRight />
-          </button>
         </section>
-        <img src="/images/kitchens/kitchen_1.png" alt="O nama" />
+        <section className={styles.content}>
+          <section className={styles.text}>
+            <p>
+              U Stolariji BM d.o.o., neprestano radimo na poboljšanju naših
+              procesa i zadovoljenju potreba naših klijenata. <br />
+              <br />
+              Posvećeni smo pružanju vrhunskih proizvoda, istovremeno nastojeći
+              zadovoljiti i najviše standarde korisničkog iskustva.
+            </p>
+            <button
+              className={styles.emptyButton}
+              onClick={() => router.push("/o-nama")}
+            >
+              Više o nama <HiArrowSmRight />
+            </button>
+          </section>
+          <div className={styles.image} />
+        </section>
       </section>
 
       {/* Services section */}

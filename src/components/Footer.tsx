@@ -12,18 +12,27 @@ function Footer() {
   return (
     <section className={styles.footer}>
       <section className={styles.info}>
-        <h2>S nestrpljenjem očekujemo priliku za suradnju s vama!</h2>
-        <div className={styles.cta}>
-          <button onClick={() => router.push("/kontakt")}>
-            Kontaktiraj nas
-          </button>
-          <button
-            className={styles.emptyButton}
-            onClick={() => router.push("/o-nama")}
-          >
-            O nama <HiArrowSmRight />
-          </button>
-        </div>
+        <section className={styles.left}>
+          <h2>S nestrpljenjem očekujemo priliku za suradnju s vama!</h2>
+          <div className={styles.cta}>
+            <button onClick={() => router.push("/kontakt")}>
+              Kontaktiraj nas
+            </button>
+            <button
+              className={styles.emptyButton}
+              onClick={() => router.push("/web-shop")}
+            >
+              Posjeti web shop <HiArrowSmRight />
+            </button>
+          </div>
+        </section>
+
+        <ul className={styles.details}>
+          <li className={styles.title}>Stolarija BM d.o.o.</li>
+          <li>Dragutina Domjanića 37, HR-10361</li>
+          <li>Sesvetski Kraljevec</li>
+          <li>OIB: 78796206166</li>
+        </ul>
       </section>
 
       <ul>

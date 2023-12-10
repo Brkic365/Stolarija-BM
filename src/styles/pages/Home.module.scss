@@ -68,9 +68,10 @@
 
     padding: 10rem 1rem;
 
-    background-image: linear-gradient(0deg, #000 47.2%, rgba(0, 0, 0, 0) 100%),
+    background-image: linear-gradient(0deg, #000 47.2%, rgba(0, 0, 0, 0.2) 100%),
       url("/images/kitchens/dark_kitchen.png");
     background-size: cover;
+    background-position: center;
 
     .text {
       color: white;
@@ -105,11 +106,14 @@
     flex-direction: column;
 
     padding: 3rem 1.25rem;
-    .text {
+
+    .top {
       display: flex;
       align-items: center;
       flex-direction: column;
       text-align: center;
+
+      position: relative;
 
       h1 {
         width: 100%;
@@ -127,26 +131,45 @@
         font-weight: 800;
         line-height: 2.5rem;
       }
-
-      p {
-        margin-top: 2rem;
-
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5625rem;
-      }
-
-      .emptyButton {
-        margin-top: 1.5rem;
-        color: black;
-        svg {
-        }
-      }
     }
 
-    img {
-      width: 100%;
-      margin-top: 3rem;
+    .content {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .text {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+
+        p {
+          margin-top: 2rem;
+
+          font-size: 1rem;
+          font-weight: 400;
+          line-height: 1.5625rem;
+        }
+
+        .emptyButton {
+          margin-top: 1.5rem;
+          color: black;
+          svg {
+          }
+        }
+      }
+
+      .image {
+        background-image: url("/images/kitchens/kitchen_1.png");
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 20rem;
+        margin-top: 3rem;
+        border-radius: 0.3125rem;
+      }
     }
   }
 
@@ -244,25 +267,27 @@
 
     .about {
       padding: 5rem 3rem;
-      .text {
-        position: relative;
+
+      .top {
         h1 {
           top: -2rem;
           width: fit-content;
           font-size: 20vw;
         }
-
-        h2 {
-        }
-
-        p {
-          width: 90%;
-          margin-top: 3rem;
-        }
       }
+      .content {
+        .text {
+          position: relative;
 
-      img {
-        width: 90%;
+          p {
+            width: 90%;
+            margin-top: 3rem;
+          }
+        }
+
+        .image {
+          width: 90%;
+        }
       }
     }
 
@@ -272,6 +297,472 @@
         h1 {
         }
       }
+    }
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .main {
+    h1 {
+      font-size: 2.8rem;
+      line-height: 4.2rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      line-height: 3rem;
+    }
+
+    h3 {
+      font-size: 1.7rem;
+      line-height: 2.5rem;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 2.1rem;
+    }
+
+    button,
+    .emptyButton {
+      padding: 0.8rem 1.7rem;
+    }
+
+    .emptyButton {
+      gap: 0.7rem;
+    }
+
+    .hero {
+      padding: 12rem 9rem;
+
+      .cta {
+        margin-top: 3rem;
+      }
+    }
+
+    .about {
+      padding: 8rem 5rem;
+
+      .top {
+        h1 {
+          top: -0.5rem;
+        }
+
+        h2 {
+          text-align: left;
+          font-size: 1.5rem;
+          line-height: 3rem;
+        }
+      }
+      .content {
+        .text {
+          position: relative;
+
+          p {
+            width: 80%;
+            margin-top: 5rem;
+          }
+        }
+
+        .image {
+          width: 80%;
+        }
+      }
+    }
+
+    .services {
+      padding: 8rem 4rem;
+      gap: 2rem;
+      .service {
+        h1 {
+          font-size: 1.5rem;
+          bottom: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .main {
+    .services {
+      .service {
+        height: 15rem;
+        h1 {
+          font-size: 1.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .main {
+    h1 {
+      font-size: 3.75rem;
+      line-height: 5.25rem;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      line-height: 3.75rem;
+    }
+
+    h3 {
+      font-size: 2rem;
+      line-height: 3rem;
+    }
+
+    p {
+      font-size: 1.075rem;
+      line-height: 2.15rem;
+    }
+
+    button,
+    .emptyButton {
+      padding: 0.8rem 1.8rem;
+    }
+
+    .emptyButton {
+      gap: 0.8rem;
+    }
+
+    .hero {
+      padding: 14rem 12rem;
+
+      .text h1 {
+        margin-bottom: 1.5rem;
+      }
+
+      .cta {
+        margin-top: 3rem;
+      }
+    }
+
+    .about {
+      padding: 12rem 10rem;
+
+      .top {
+        h1 {
+          top: -0.5rem;
+          font-size: 17.5vw;
+        }
+
+        h2 {
+          text-align: left;
+        }
+      }
+      .content {
+        .text {
+          position: relative;
+
+          p {
+            width: 80%;
+            margin-top: 7rem;
+            margin-bottom: 1rem;
+          }
+        }
+
+        .image {
+          width: 80%;
+        }
+      }
+    }
+
+    .services {
+      padding: 8rem;
+      gap: 2rem;
+      .service {
+        h1 {
+          font-size: 1.5rem;
+          bottom: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  .main {
+    .services {
+      height: 35rem;
+      margin: 6rem 0;
+      padding: 0;
+
+      position: relative;
+
+      background-image: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.17) 0%,
+          rgba(0, 0, 0, 0.73) 100%
+        ),
+        url("/images/kitchens/kitchen_1.png");
+      background-size: cover;
+      background-position: center;
+
+      flex-direction: row;
+      gap: 0;
+
+      overflow: hidden;
+
+      .service {
+        z-index: 3;
+        height: 100%;
+        width: 100%;
+        border-radius: 0;
+        background-image: none;
+
+        h1 {
+          left: 1rem;
+          bottom: 1rem;
+        }
+
+        &:nth-child(2) {
+          background-image: none;
+          border-left: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        &:nth-child(3) {
+          background-image: none;
+          border-left: 1px solid rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .main {
+    h1 {
+      font-size: 3.75rem;
+      line-height: 5.25rem;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      line-height: 3.75rem;
+    }
+
+    h3 {
+      font-size: 2rem;
+      line-height: 3rem;
+    }
+
+    p {
+      font-size: 1.075rem;
+      line-height: 2.15rem;
+    }
+
+    button,
+    .emptyButton {
+      padding: 0.8rem 1.8rem;
+    }
+
+    .emptyButton {
+      gap: 0.8rem;
+    }
+
+    .hero {
+      padding: 10rem 10%;
+      align-items: flex-start;
+      text-align: left;
+
+      background: linear-gradient(90deg, #000 34.87%, rgba(0, 0, 0, 0) 100%),
+        url("/images/kitchens/dark_kitchen.png");
+      background-size: cover;
+
+      .text {
+        width: 70%;
+        text-align: left;
+
+        h1 {
+          text-align: left;
+        }
+
+        p {
+          width: 70%;
+          text-align: left;
+        }
+      }
+
+      .cta {
+        margin-top: 3rem;
+      }
+    }
+
+    .about {
+      padding: 12rem 10rem 6rem 10rem;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .top {
+        h1 {
+          top: 0;
+          font-size: 17.5vw;
+        }
+
+        h2 {
+          text-align: left;
+          font-size: 1.8rem;
+          line-height: 3.2rem;
+        }
+      }
+
+      .content {
+        margin-top: 4rem;
+        flex-direction: row-reverse;
+        place-content: space-between;
+        align-items: center;
+        gap: 4rem;
+
+        .text {
+          margin-top: 0;
+          width: 25rem;
+          position: relative;
+
+          align-items: flex-start;
+
+          p {
+            text-align: left;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 1rem;
+          }
+
+          .emptyButton {
+            padding: 0;
+          }
+        }
+
+        .image {
+          width: 20rem;
+          height: 30rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .main {
+    .hero {
+      padding: 13rem 10%;
+    }
+
+    .about {
+      .top {
+        h1 {
+          font-size: 19vw;
+        }
+
+        h2 {
+          font-size: 2rem;
+          line-height: 3.5rem;
+        }
+      }
+
+      .content {
+        margin-top: 5rem;
+        gap: 5rem;
+
+        .text {
+          width: 25rem;
+
+          p {
+            font-size: 1.15rem;
+            line-height: 2rem;
+          }
+        }
+
+        .image {
+          width: 22.5rem;
+          height: 30rem;
+        }
+      }
+    }
+
+    .services {
+      height: 80vh;
+    }
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .main {
+    button,
+    .emptyButton {
+      padding: 0.85rem 2.5rem;
+      font-size: 1rem;
+    }
+
+    .hero {
+      padding: 15rem 10%;
+    }
+
+    .about {
+      .top {
+        h1 {
+          font-size: 19vw;
+        }
+
+        h2 {
+          font-size: 2rem;
+          line-height: 3.5rem;
+        }
+      }
+
+      .content {
+        margin-top: 8rem;
+        gap: 5rem;
+
+        .text {
+          width: 30rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .main {
+    .hero {
+      padding: 15rem 10%;
+
+      .text {
+        width: 40vw;
+      }
+    }
+
+    .about {
+      .top {
+        h2 {
+          width: 75%;
+          margin-right: auto;
+          margin-left: 4rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1900px) {
+  .main {
+    .hero {
+      padding: 15rem 10%;
+    }
+
+    .about {
+      .top {
+        h2 {
+          width: 60%;
+          margin-left: 6rem;
+        }
+      }
+    }
+
+    .services {
+      height: 85vh;
     }
   }
 }

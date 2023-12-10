@@ -37,14 +37,14 @@ function Contact() {
           <div className={styles.infoBlock}>
             <HiPhone />
             <ul>
-              <li>Mobitel: 095 1991 128</li>
+              <li>Mobitel: 095 198 9479</li>
               <li>Fax: 01 2046 348</li>
             </ul>
           </div>
           <div className={styles.infoBlock}>
             <HiEnvelope />
             <ul>
-              <li>kontakt@stolarija-bm.hr</li>
+              <li>stolarijabm123@gmail.com</li>
             </ul>
           </div>
           <div className={styles.chatBlock}>
