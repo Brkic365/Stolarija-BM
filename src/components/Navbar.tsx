@@ -13,8 +13,11 @@ import MobileMenu from "./MobileMenu";
 
 import { useRouter } from "next/navigation";
 
+import { usePathname } from "next/navigation";
+
 function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   // State that handles opening and closing of the mobile menu
   const [openMenu, setOpenMenu] = useState(false);
@@ -63,8 +66,17 @@ function Navbar() {
       {/* Navbar links */}
       <ul className={styles.links}>
         {links.map((link) => {
+          // Check if the link is active
+          let active =
+            link.href === "/"
+              ? pathname === link.href
+              : pathname.includes(link.href);
+
           return (
-            <li key={link.href}>
+            <li
+              key={link.href}
+              className={active ? styles.active : styles.unactive}
+            >
               <a href={link.href}>{link.title}</a>
             </li>
           );

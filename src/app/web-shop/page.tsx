@@ -4,10 +4,17 @@ import React from "react";
 import styles from "@/styles/pages/Webshop.module.scss";
 import productSections from "../../../public/data/products.json";
 
+import Carousel from "@/components/Carousel";
+import { EmblaOptionsType } from "embla-carousel-react";
+
 import { HiArrowSmRight } from "react-icons/hi";
-import Product from "@/components/Product";
 
 import { useRouter } from "next/navigation";
+
+const OPTIONS: EmblaOptionsType = {
+  slidesToScroll: "auto",
+  containScroll: "trimSnaps",
+};
 
 function Webshop() {
   const router = useRouter();
@@ -37,11 +44,7 @@ function Webshop() {
                 Vidi sve <HiArrowSmRight />
               </button>
             </section>
-
-            <section className={styles.productsList}>
-              <Product product={productSection.products[0]} />
-              <Product product={productSection.products[1]} />
-            </section>
+            <Carousel products={productSection.products} options={OPTIONS} />
           </section>
         ))}
       </section>

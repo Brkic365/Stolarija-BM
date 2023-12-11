@@ -38,7 +38,11 @@ function Products() {
       <section className={styles.products}>
         {productSections.map((productSection) => {
           return productSection.products.map((product, i) => {
-            return <Product product={product} key={i} />;
+            return (
+              <div className={styles.productContainer}>
+                <Product product={product} key={i} />
+              </div>
+            );
           });
         })}
       </section>

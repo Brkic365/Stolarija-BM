@@ -6,6 +6,8 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
+import { motion } from "framer-motion";
+
 export default function Home() {
   const router = useRouter();
 
@@ -21,13 +23,21 @@ export default function Home() {
           </p>
         </section>
         <section className={styles.cta}>
-          <button onClick={() => router.push("/web-shop")}>Web shop</button>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push("/web-shop")}
+          >
+            Web shop
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={styles.emptyButton}
             onClick={() => router.push("/o-nama")}
           >
             O nama <HiArrowSmRight />
-          </button>
+          </motion.button>
         </section>
       </section>
 
@@ -50,12 +60,14 @@ export default function Home() {
               Posvećeni smo pružanju vrhunskih proizvoda, istovremeno nastojeći
               zadovoljiti i najviše standarde korisničkog iskustva.
             </p>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={styles.emptyButton}
               onClick={() => router.push("/o-nama")}
             >
               Više o nama <HiArrowSmRight />
-            </button>
+            </motion.button>
           </section>
           <div className={styles.image} />
         </section>

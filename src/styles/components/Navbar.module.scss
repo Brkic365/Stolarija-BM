@@ -83,7 +83,7 @@
       li {
         margin-right: 3.5rem;
         color: white;
-        opacity: 0.9;
+        opacity: 0.8;
         font-size: 0.9rem;
         font-weight: 600;
 
@@ -91,6 +91,11 @@
           width: 2rem;
           height: 2rem;
         }
+      }
+
+      .active {
+        opacity: 1;
+        border-bottom: 1px solid white;
       }
     }
 
@@ -105,6 +110,13 @@
       font-weight: 600;
       color: white;
       background-color: transparent;
+
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        background-color: white;
+        color: black;
+      }
     }
 
     .hamburger {

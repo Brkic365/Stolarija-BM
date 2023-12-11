@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.19",
+    "embla-carousel-react": "^8.0.0-rc15",
     "framer-motion": "^10.16.5",
     "next": "14.0.3",
     "react": "^18",
@@ -19,7 +20,9 @@
     "react-dom": "^18",
     "react-icons": "^4.12.0",
     "request": "^2.88.2",
-    "sass": "^1.69.5"
+    "sass": "^1.69.5",
+    "swiper": "^11.0.5",
+    "swiper-react": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",

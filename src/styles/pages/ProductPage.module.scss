@@ -20,11 +20,13 @@
         rgba(0, 0, 0, 0.9) 47.2%,
         rgba(0, 0, 0, 0.5) 100%
       ),
-      url("/images/kitchens/kitchen_2.png");
+      url("/images/covers/navbar.jpg");
     background-size: cover;
+    background-position: center;
   }
 
   .product {
+    max-width: 90rem;
     padding: 5rem 1.25rem 8rem 1.25rem;
     img {
       width: 100%;
@@ -86,6 +88,104 @@
             width: 1.5rem;
             height: 1.5rem;
           }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 550px) {
+  .mainProduct {
+    .product {
+      padding: 5rem 3rem 8rem 3rem;
+    }
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .mainProduct {
+    .product {
+      padding: 5rem 7rem 8rem 7rem;
+
+      .productInfo {
+        gap: 0;
+
+        h2 {
+          margin-bottom: 0.75rem;
+        }
+
+        p {
+          margin-bottom: 1.25rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .mainProduct {
+    .product {
+      padding: 5rem 2rem 8rem 2rem;
+      display: flex;
+      align-items: flex-start;
+      place-content: space-between;
+
+      img {
+        width: 48%;
+      }
+
+      .productInfo {
+        width: 48%;
+        margin-top: 0;
+
+        h2 {
+          margin-bottom: 0.75rem;
+        }
+
+        p {
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1250px) {
+  .mainProduct {
+    .product {
+      padding: 5rem 5rem 8rem 5rem;
+
+      img {
+        width: 45%;
+      }
+
+      .productInfo {
+        width: 45%;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .mainProduct {
+    .product {
+      padding: 5rem 7rem 8rem 7rem;
+
+      img {
+        width: 43.5%;
+      }
+
+      .productInfo {
+        width: 43.5%;
+
+        h2 {
+          font-size: 2rem;
+          line-height: 2.5rem;
+        }
+
+        p {
+          margin-bottom: 1.75rem;
+          line-height: 2.25rem;
         }
       }
     }
