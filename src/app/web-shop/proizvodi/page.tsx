@@ -39,8 +39,8 @@ function Products() {
         {productSections.map((productSection) => {
           return productSection.products.map((product, i) => {
             return (
-              <div className={styles.productContainer}>
-                <Product product={product} key={i} />
+              <div className={styles.productContainer} key={i}>
+                <Product product={product} />
               </div>
             );
           });
