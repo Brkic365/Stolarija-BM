@@ -33,121 +33,157 @@
 
     background-image: linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.9) 47.2%,
-        rgba(0, 0, 0, 0.5) 100%
+        rgba(0, 0, 0, 1) 47.2%,
+        rgba(0, 0, 0, 0.9) 100%
       ),
       url("/images/covers/navbar.jpg");
     background-size: cover;
     background-position: center;
   }
 
-  .top {
-    padding: 3rem 1.5rem 1rem 1.5rem;
+  .content {
     width: 100%;
-    max-width: 98rem;
+    min-height: 75rem;
 
     display: flex;
     align-items: flex-start;
-    flex-direction: column;
-    .text {
-      text-align: left;
-      h2 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        line-height: 2.1875rem;
-      }
+    place-content: space-between;
 
-      p {
-        font-size: 0.75rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1.25rem;
-
-        a {
-          text-decoration-line: underline;
-        }
-      }
+    .filtersContainer {
+      display: none;
     }
 
-    .buttons {
-      margin-top: 2rem;
+    .mainContent {
       width: 100%;
-
       display: flex;
       align-items: center;
-      place-content: space-between;
-
-      button {
-        color: #000;
-        font-size: 0.95rem;
-        font-weight: 500;
-        line-height: 1.25rem;
-
-        border-radius: 0.25rem;
-        border: 1px solid black;
-        background: transparent;
-        padding: 0.4rem 1.1rem;
+      flex-direction: column;
+      .top {
+        padding: 3rem 1.5rem 1rem 1.5rem;
+        width: 100%;
+        max-width: 98rem;
 
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        align-items: flex-start;
+        flex-direction: column;
+        .text {
+          text-align: left;
+          h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 2.1875rem;
+          }
+
+          p {
+            font-size: 0.75rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.25rem;
+
+            a {
+              text-decoration-line: underline;
+            }
+          }
+        }
+
+        .buttons {
+          margin-top: 2rem;
+          width: 100%;
+
+          display: flex;
+          align-items: center;
+          place-content: space-between;
+
+          button {
+            color: #000;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.25rem;
+
+            border-radius: 0.25rem;
+            border: 1px solid black;
+            background: transparent;
+            padding: 0.4rem 1.1rem;
+
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .results {
+            display: none;
+          }
+
+          .sort {
+            display: none;
+          }
+
+          .filter {
+            margin-left: auto;
+            outline: none;
+          }
+        }
       }
-    }
-  }
 
-  .products {
-    padding: 1rem 1.5rem 3rem 1.5rem;
-    width: 100%;
-    max-width: 100rem;
+      .products {
+        padding: 1rem 1.5rem 3rem 1.5rem;
+        width: 100%;
+        max-width: 100rem;
 
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 0.75rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0.75rem;
 
-    flex-wrap: wrap;
+        flex-wrap: wrap;
 
-    .productContainer {
-      width: 100%;
-      max-width: 18rem;
+        .productContainer {
+          width: 100%;
+          max-width: 18rem;
+        }
+      }
     }
   }
 }
 
 @media only screen and (min-width: 500px) {
   .mainProducts {
-    .top {
-      padding: 3.5rem 2rem 1rem 2rem;
+    .content {
+      .mainContent {
+        .top {
+          padding: 3.5rem 2rem 1rem 2rem;
 
-      .text {
-        h2 {
-          font-size: 2rem;
-          line-height: 3.5rem;
+          .text {
+            h2 {
+              font-size: 2rem;
+              line-height: 3.5rem;
+            }
+
+            p {
+              font-size: 0.9rem;
+              line-height: 1.5rem;
+            }
+          }
+
+          .buttons {
+            margin-top: 2.5rem;
+
+            button {
+              font-size: 1rem;
+              line-height: 1.5rem;
+              padding: 0.5rem 1.2rem;
+            }
+          }
         }
 
-        p {
-          font-size: 0.9rem;
-          line-height: 1.5rem;
+        .products {
+          padding: 1rem 2rem 3.5rem 2rem;
+          gap: 1rem;
+
+          .productContainer {
+            width: 48%;
+          }
         }
-      }
-
-      .buttons {
-        margin-top: 2.5rem;
-
-        button {
-          font-size: 1rem;
-          line-height: 1.5rem;
-          padding: 0.5rem 1.2rem;
-        }
-      }
-    }
-
-    .products {
-      padding: 1rem 2rem 3.5rem 2rem;
-      gap: 1rem;
-
-      .productContainer {
-        width: 48%;
       }
     }
   }
@@ -155,28 +191,80 @@
 
 @media only screen and (min-width: 900px) {
   .mainProducts {
-    .products {
-      padding: 2rem 2rem 4rem 2rem;
-      gap: 1.5rem;
+    .content {
+      .mainContent {
+        .products {
+          padding: 2rem 2rem 4rem 2rem;
+          gap: 1.5rem;
 
-      .productContainer {
-        width: 30%;
+          .productContainer {
+            width: 30%;
+          }
+        }
       }
     }
   }
 }
 
+@media only screen and (min-width: 1050px) {
+  .mainProducts .content .mainContent .products {
+    width: 65rem;
+  }
+}
+
 @media only screen and (min-width: 1400px) {
   .mainProducts {
-    .top {
-      padding: 4rem 0 1rem 0;
-    }
-    .products {
-      padding: 4rem 0;
-      gap: 2rem;
+    .content {
+      .filtersContainer {
+        display: flex;
+        width: 20%;
+      }
 
-      .productContainer {
-        width: 18%;
+      .mainContent {
+        width: 80%;
+        .top {
+          padding: 4rem 2rem 1rem 2rem;
+
+          .buttons {
+            .filter {
+              display: none;
+            }
+
+            .results {
+              display: block;
+              opacity: 0.5;
+              font-weight: 500;
+            }
+
+            .sort {
+              margin-left: auto;
+              display: flex;
+            }
+          }
+        }
+        .products {
+          width: 100%;
+          padding: 2rem 2rem 4rem 2rem;
+          gap: 2rem;
+
+          .productContainer {
+            width: 18%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .mainProducts {
+    .content {
+      .filtersContainer {
+        width: 20%;
+      }
+
+      .mainContent {
+        width: 85%;
       }
     }
   }

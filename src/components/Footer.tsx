@@ -6,6 +6,8 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
+import { motion } from "framer-motion";
+
 function Footer() {
   const router = useRouter();
 
@@ -15,15 +17,21 @@ function Footer() {
         <section className={styles.left}>
           <h2>S nestrpljenjem očekujemo priliku za suradnju s vama!</h2>
           <div className={styles.cta}>
-            <button onClick={() => router.push("/kontakt")}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => router.push("/kontakt")}
+            >
               Kontaktiraj nas
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={styles.emptyButton}
               onClick={() => router.push("/web-shop")}
             >
               Posjeti web shop <HiArrowSmRight />
-            </button>
+            </motion.button>
           </div>
         </section>
 

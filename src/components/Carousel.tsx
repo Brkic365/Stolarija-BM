@@ -77,14 +77,20 @@ const Carousel = (props: PropType) => {
         </div>
       </div>
 
-      <div className={styles.buttons}>
-        <button onClick={scrollPrev} disabled={prevBtnDisabled}>
-          <HiArrowNarrowLeft />
-        </button>
-        <button onClick={scrollNext} disabled={nextBtnDisabled}>
-          <HiArrowNarrowRight />
-        </button>
-      </div>
+      <button
+        onClick={scrollPrev}
+        disabled={prevBtnDisabled}
+        className={styles.prev}
+      >
+        <HiArrowNarrowLeft />
+      </button>
+      <button
+        onClick={scrollNext}
+        disabled={nextBtnDisabled}
+        className={styles.next}
+      >
+        <HiArrowNarrowRight />
+      </button>
     </div>
   );
 };

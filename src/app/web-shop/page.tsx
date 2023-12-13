@@ -11,6 +11,8 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
+import { motion } from "framer-motion";
+
 const OPTIONS: EmblaOptionsType = {
   slidesToScroll: "auto",
   containScroll: "trimSnaps",
@@ -35,14 +37,16 @@ function Webshop() {
                 <h3>{productSection.name}</h3>
                 <p>{productSection.description}</p>
               </div>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className={styles.emptyButton}
                 onClick={() =>
                   router.push(`/web-shop/proizvodi?filter=${i + 1}`)
                 }
               >
                 Vidi sve <HiArrowSmRight />
-              </button>
+              </motion.button>
             </section>
             <Carousel products={productSection.products} options={OPTIONS} />
           </section>
@@ -52,12 +56,14 @@ function Webshop() {
       {/* See all section */}
       <section className={styles.seeAll}>
         <h3>Pregledaj cijelu ponudu!</h3>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           className={styles.button}
           onClick={() => router.push(`/web-shop/proizvodi`)}
         >
           Pregledaj sve
-        </button>
+        </motion.button>
       </section>
     </main>
   );

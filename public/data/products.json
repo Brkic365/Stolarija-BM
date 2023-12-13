@@ -1,11 +1,12 @@
 [
   {
+    "id": "kitchens",
     "name": "Kuhinje",
     "description": "Kreirajte Kulinarski Raj: Prilagođene Kuhinje Po Vašoj Mjeri, Spojevi Estetike i Funkcionalnosti.",
     "products": [
       {
         "name": "Imperial Kuhinja",
-        "price": 499999,
+        "price": 4999,
         "image": "/images/kitchens/imperial.png"
       },
       {
@@ -20,74 +21,76 @@
       },
       {
         "name": "Tunechi Kuhinja",
-        "price": 26499,
+        "price": 2599,
         "image": "/images/kitchens/tunechi.png"
       },
       {
         "name": "Huncho Kuhinja",
-        "price": 1499999,
+        "price": 3500,
         "image": "/images/kitchens/huncho.png"
       }
     ]
   },
   {
+    "id": "rooms",
     "name": "Dječje Sobe",
     "description": "Dječje Carstvo Snova: Namještaj Za Male Avanturiste, Unikatno Prilagođen Za Sretno Odrastanje.",
     "products": [
       {
         "name": "Fairyland Dječja Soba",
-        "price": 499999,
+        "price": 4967,
         "image": "/images/rooms/fairyland.png"
       },
       {
         "name": "Dječja Soba Explorer's Haven",
-        "price": 3499,
+        "price": 4067,
         "image": "/images/rooms/explorers_haven.png"
       },
       {
         "name": "Dreamland Dječja Soba",
-        "price": 1999,
+        "price": 4068,
         "image": "/images/rooms/dreamland.png"
       },
       {
         "name": "Dječja Soba Evolution",
-        "price": 26499,
+        "price": 1205,
         "image": "/images/rooms/evolution.png"
       },
       {
         "name": "Dječja Soba Happy Haven",
-        "price": 1499999,
+        "price": 2340,
         "image": "/images/rooms/happy_haven.png"
       }
     ]
   },
   {
+    "id": "furniture",
     "name": "Namještaj",
     "description": "Vaša Oaza Stila: Personalizirani Namještaj, Izrađen s Pažnjom i Stručnošću, Oblikovan Za Vaš Prostor.",
     "products": [
       {
         "name": "Krevet i Ormar Serije Royal Elegance",
-        "price": 499999,
+        "price": 100,
         "image": "/images/furniture/royal_elegance.png"
       },
       {
         "name": "Stolić Za Kavu i Polica Serije Urban Luxe",
-        "price": 3499,
+        "price": 506,
         "image": "/images/furniture/urban_luxe.png"
       },
       {
         "name": "Drveni Stol i Stolice Serije Nature's Embrace",
-        "price": 1999,
+        "price": 501,
         "image": "/images/furniture/natures_embrace.png"
       },
       {
         "name": "Sjedeća Garnitura Velvet Dreams",
-        "price": 26499,
+        "price": 798,
         "image": "/images/furniture/velvet_dreams.png"
       },
       {
         "name": "Radni Stol i Biblioteka Serije Timeless Charm",
-        "price": 1499999,
+        "price": 1901,
         "image": "/images/furniture/timeless_charm.png"
       }
     ]

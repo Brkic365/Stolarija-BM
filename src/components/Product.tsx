@@ -15,7 +15,9 @@ function Product({ product }: { product: productType }) {
       className={styles.product}
       onClick={() => router.push("/proizvod?id=1")}
     >
-      <img src={product.image} alt={product.name} />
+      <div className={styles.image}>
+        <img src={product.image} alt={product.name} />
+      </div>
       <h4>{product.name}</h4>
       <p>Od €{product.price.toLocaleString("en-US")}</p>
     </section>

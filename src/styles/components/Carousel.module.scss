@@ -22,51 +22,51 @@
     position: relative;
   }
 
-  .buttons {
-    width: 105%;
-    display: flex;
-    align-items: center;
-    place-content: space-between;
+  .prev,
+  .next {
+    cursor: pointer;
 
     position: absolute;
+    left: -2%;
     top: 40%;
     transform: translateY(-50%);
-    left: -2.5%;
 
-    button {
-      -webkit-appearance: none;
-      background-color: transparent;
-      touch-action: manipulation;
-      display: inline-flex;
-      text-decoration: none;
-      cursor: pointer;
-      border: 0;
-      padding: 0;
-      margin: 0;
+    -webkit-appearance: none;
+    background-color: transparent;
+    touch-action: manipulation;
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    margin: 0;
 
-      z-index: 1;
-      background-color: white;
-      border-radius: 50%;
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    z-index: 1;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-      color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      width: 3rem;
-      height: 3rem;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 3rem;
+    height: 3rem;
 
-      svg {
-        width: 1.25rem;
-        height: 1.25rem;
-      }
-
-      &:disabled {
-        opacity: 0.3;
-        cursor: default;
-      }
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
     }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  }
+
+  .next {
+    left: 98%;
   }
 }
 
@@ -82,15 +82,14 @@
     --slide-spacing: 2rem;
     --slide-size: 25%;
 
-    .buttons {
-      button {
-        width: 4rem;
-        height: 4rem;
+    .prev,
+    .next {
+      width: 4rem;
+      height: 4rem;
 
-        svg {
-          width: 1.5rem;
-          height: 1.5rem;
-        }
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
   }

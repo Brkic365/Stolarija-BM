@@ -3,11 +3,17 @@
 import React, { useState } from "react";
 import styles from "@/styles/pages/ProductPage.module.scss";
 
+import { useRouter } from "next/navigation";
+
 import { HiArrowSmRight } from "react-icons/hi";
 
 import PurchaseModal from "@/components/Modals/PurchaseModal";
 
+import { motion } from "framer-motion";
+
 function ProductPage() {
+  const router = useRouter();
+
   const [purchaseModalOpen, setPurchaseModalOpen] = useState<boolean>(false);
 
   return (
@@ -40,10 +46,21 @@ function ProductPage() {
             odražava vrhunsku izradu i posvećenost detaljima.
           </p>
           <div className={styles.buttons}>
-            <button onClick={() => setPurchaseModalOpen(true)}>Naruči</button>
-            <button className={styles.emptyButton}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setPurchaseModalOpen(true)}
+            >
+              Naruči
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={styles.emptyButton}
+              onClick={() => router.push("/kontakt")}
+            >
               Kontaktiraj nas <HiArrowSmRight />
-            </button>
+            </motion.button>
           </div>
         </section>
       </section>
