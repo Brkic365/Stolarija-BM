@@ -88,7 +88,7 @@ function Navbar() {
       </button>
 
       <div
-        className={styles.hamburger}
+        className={openMenu ? styles.closeHamburger : styles.hamburger}
         onClick={() => setOpenMenu(!openMenu)}
         id="hamburger"
       >

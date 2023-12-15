@@ -80,6 +80,10 @@
             font-weight: 400;
             line-height: 1.25rem;
 
+            span {
+              margin: 0 0.5rem;
+            }
+
             a {
               text-decoration-line: underline;
             }
@@ -93,6 +97,7 @@
           display: flex;
           align-items: center;
           place-content: space-between;
+          gap: 1rem;
 
           button {
             color: #000;
@@ -111,9 +116,11 @@
           }
 
           .results {
-            display: none;
+            display: block;
+            opacity: 0.5;
+            font-weight: 500;
+            text-align: left;
           }
-
           .sort {
             display: none;
           }
@@ -136,6 +143,7 @@
         gap: 0.75rem;
 
         flex-wrap: wrap;
+        justify-content: center;
 
         .productContainer {
           width: 100%;
@@ -149,7 +157,12 @@
 @media only screen and (min-width: 500px) {
   .mainProducts {
     .content {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
       .mainContent {
+        justify-content: center;
+        max-width: 41rem;
         .top {
           padding: 3.5rem 2rem 1rem 2rem;
 
@@ -179,6 +192,7 @@
         .products {
           padding: 1rem 2rem 3.5rem 2rem;
           gap: 1rem;
+          justify-content: flex-start;
 
           .productContainer {
             width: 48%;
@@ -193,6 +207,8 @@
   .mainProducts {
     .content {
       .mainContent {
+        max-width: 55rem;
+
         .products {
           padding: 2rem 2rem 4rem 2rem;
           gap: 1.5rem;
@@ -207,20 +223,25 @@
 }
 
 @media only screen and (min-width: 1050px) {
-  .mainProducts .content .mainContent .products {
-    width: 65rem;
+  .mainProducts .content .mainContent {
+    max-width: 65rem;
   }
 }
 
 @media only screen and (min-width: 1400px) {
   .mainProducts {
     .content {
+      flex-direction: row;
+      align-items: flex-start;
+      place-content: space-evenly;
       .filtersContainer {
         display: flex;
+        max-width: 20rem;
         width: 20%;
       }
 
       .mainContent {
+        max-width: 55rem;
         width: 80%;
         .top {
           padding: 4rem 2rem 1rem 2rem;
@@ -228,12 +249,6 @@
           .buttons {
             .filter {
               display: none;
-            }
-
-            .results {
-              display: block;
-              opacity: 0.5;
-              font-weight: 500;
             }
 
             .sort {
@@ -246,10 +261,6 @@
           width: 100%;
           padding: 2rem 2rem 4rem 2rem;
           gap: 2rem;
-
-          .productContainer {
-            width: 18%;
-          }
         }
       }
     }
@@ -264,7 +275,18 @@
       }
 
       .mainContent {
+        max-width: 90rem;
         width: 85%;
+
+        .products {
+          width: 100%;
+          padding: 2rem 2rem 4rem 2rem;
+          gap: 2rem;
+
+          .productContainer {
+            width: 18%;
+          }
+        }
       }
     }
   }

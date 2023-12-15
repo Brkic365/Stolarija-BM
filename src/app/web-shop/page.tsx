@@ -25,7 +25,18 @@ function Webshop() {
     <main className={styles.mainWebshop}>
       {/* Hero section */}
       <section className={styles.hero}>
-        <h1>Web shop</h1>
+        <motion.h1
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0.85 },
+          }}
+        >
+          Web shop
+        </motion.h1>
       </section>
 
       {/* Products section */}
@@ -42,7 +53,9 @@ function Webshop() {
                 whileTap={{ scale: 0.95 }}
                 className={styles.emptyButton}
                 onClick={() =>
-                  router.push(`/web-shop/proizvodi?filter=${i + 1}`)
+                  router.push(
+                    `/web-shop/proizvodi?category=${productSection.id}`
+                  )
                 }
               >
                 Vidi sve <HiArrowSmRight />
@@ -55,12 +68,29 @@ function Webshop() {
 
       {/* See all section */}
       <section className={styles.seeAll}>
-        <h3>Pregledaj cijelu ponudu!</h3>
+        <motion.h3
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0.85 },
+          }}
+        >
+          Pregledaj cijelu ponudu!
+        </motion.h3>
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
           className={styles.button}
           onClick={() => router.push(`/web-shop/proizvodi`)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          variants={{
+            visible: { opacity: 1 },
+            hidden: { opacity: 0 },
+          }}
         >
           Pregledaj sve
         </motion.button>

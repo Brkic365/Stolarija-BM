@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import styles from "@/styles/pages/Products.module.scss";
 import rawProductSections from "../../../../public/data/products.json";
 
+import { useSearchParams } from "next/navigation";
+
 import Product from "@/components/Product";
 import Link from "next/link";
 
@@ -14,6 +16,14 @@ import { Select, SelectItem } from "@nextui-org/react";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Filters from "@/components/Filters";
+
+type ProductType = {
+  category: string;
+  name: string;
+  price: number;
+  image: string;
+  uploadDate: string;
+};
 
 type SortItemType = {
   label: string;
@@ -30,19 +40,23 @@ const sortItems: Array<SortItemType> = [
     label: "Najnovije",
   },
   {
-    value: "priceAsc",
+    value: "priceDesc",
     label: "Cijena viša",
   },
   {
-    value: "priceDesc",
+    value: "priceAsc",
     label: "Cijena niža",
   },
 ];
 
 function Products() {
+  const searchParams = useSearchParams();
+
+  const categoryQuery = searchParams.get("category");
+
   const [openFiltersDrawer, setOpenFiltersDrawer] = useState(false);
 
-  const [productSections, setProductSections] = useState(rawProductSections);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [categories, setCategories] = useState<Array<string>>([]);
   const [sortType, setSortType] = useState("popular");
@@ -52,6 +66,9 @@ function Products() {
 
   const [length, setLength] = useState(0);
 
+  const [categoryCounts, setCategoryCounts] = useState<number[]>([0, 0, 0]);
+
+  // Toggle filters drawer
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -74,10 +91,13 @@ function Products() {
     setPriceRange(value);
   };
 
-  const updateSortType = () => {};
+  const updateSortType = (e: any) => {
+    setSortType(e.target.value);
+  };
 
   // Filter by category and price
   useEffect(() => {
+    // Filter by price
     let filteredPrice = rawProductSections.map((productSection) => {
       return {
         ...productSection,
@@ -89,8 +109,18 @@ function Products() {
       };
     });
 
+    // Create a copy of filteredPrice to store the amount of categories available for current price filter
     let filteredCategories = filteredPrice;
 
+    // Get amount of categories available for current price filter
+    filteredCategories.forEach((productSection, i) => {
+      setCategoryCounts((prev) => {
+        prev[i] = productSection.products.length;
+        return prev;
+      });
+    });
+
+    // Filter by category if there are any selected
     if (categories.length > 0) {
       filteredCategories = filteredPrice.filter((productSection) => {
         return categories.includes(productSection.id);
@@ -99,13 +129,43 @@ function Products() {
 
     let lengthTemp = 0;
 
+    // Get length of products
     filteredCategories.forEach((productSection) => {
       lengthTemp += productSection.products.length;
     });
 
     setLength(lengthTemp);
 
-    setProductSections(filteredCategories);
+    // Flat the products into one array
+    const flatProductsArray = filteredCategories.flatMap((val) =>
+      val.products.map((product) => ({
+        ...product,
+        category: val.id,
+      }))
+    );
+
+    // Sort products
+    if (sortType === "popular") {
+      flatProductsArray.sort((a, b) => {
+        return b.price - a.price;
+      });
+    } else if (sortType === "newest") {
+      flatProductsArray.sort((a, b) => {
+        return (
+          new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()
+        );
+      });
+    } else if (sortType === "priceAsc") {
+      flatProductsArray.sort((a, b) => {
+        return a.price - b.price;
+      });
+    } else if (sortType === "priceDesc") {
+      flatProductsArray.sort((a, b) => {
+        return b.price - a.price;
+      });
+    }
+
+    setProducts(flatProductsArray);
   }, [categories, priceRange, sortType]);
 
   // Get min and max price
@@ -129,6 +189,11 @@ function Products() {
     setMaxPrice(max);
     setPriceRange([min, max]);
   }, [rawProductSections]);
+
+  // Set categories if there is a category query
+  useEffect(() => {
+    setCategories(categoryQuery ? [categoryQuery] : []);
+  }, [categoryQuery]);
 
   return (
     <main className={styles.mainProducts}>
@@ -155,6 +220,7 @@ function Products() {
             updateSortType={updateSortType}
             minPrice={minPrice}
             maxPrice={maxPrice}
+            categoryCounts={categoryCounts}
           />
         </Box>
       </SwipeableDrawer>
@@ -175,6 +241,7 @@ function Products() {
             updateSortType={updateSortType}
             minPrice={minPrice}
             maxPrice={maxPrice}
+            categoryCounts={categoryCounts}
           />
         </section>
         <section className={styles.mainContent}>
@@ -182,13 +249,16 @@ function Products() {
             <div className={styles.text}>
               <h2>Proizvodi</h2>
               <p>
-                <Link href="/web-shop">Web shop</Link> / Proizvodi
+                <Link href="/web-shop">Web shop</Link>
+                <span>/</span>Proizvodi
               </p>
             </div>
 
             <div className={styles.buttons}>
               <p className={styles.results}>
-                Prikazano 1-{length} od {length} rezultata
+                {length > 0
+                  ? `Prikazano 1-${length} od ${length} rezultata`
+                  : "Nema rezultata"}
               </p>
               <button className={styles.filter} onClick={toggleDrawer(true)}>
                 <HiAdjustmentsHorizontal />
@@ -197,6 +267,7 @@ function Products() {
               <div className={styles.sort}>
                 <Select
                   items={sortItems}
+                  onChange={updateSortType}
                   defaultSelectedKeys={["popular"]}
                   disallowEmptySelection
                   style={{
@@ -221,14 +292,12 @@ function Products() {
 
           {/* Products section */}
           <section className={styles.products}>
-            {productSections.map((productSection) => {
-              return productSection.products.map((product, i) => {
-                return (
-                  <div className={styles.productContainer} key={i}>
-                    <Product product={product} />
-                  </div>
-                );
-              });
+            {products.map((product: ProductType, i: number) => {
+              return (
+                <div className={styles.productContainer} key={i}>
+                  <Product product={product} />
+                </div>
+              );
             })}
           </section>
         </section>

@@ -44,7 +44,7 @@ function Footer() {
       </section>
 
       <ul>
-        <li className={styles.copyright}>© Stolarija BM d.o.o. 2023</li>
+        <li className={styles.copyright}>© 2023 Stolarija BM d.o.o.</li>
         <li>
           <a href="/">Početna</a>
         </li>

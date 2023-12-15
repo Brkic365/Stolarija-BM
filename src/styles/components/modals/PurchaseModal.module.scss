@@ -4,12 +4,13 @@
   top: 50%;
   transform: translate(-50%, -50%);
 
-  border-radius: 0.3125rem;
   background: #fff;
 
   padding: 0.5rem 1.25rem 1rem 1.25rem;
 
-  max-width: 95%;
+  width: 30rem;
+  height: 100%;
+  max-width: 100%;
 
   button,
   .emptyButton {
@@ -57,6 +58,8 @@
     }
 
     svg {
+      cursor: pointer;
+
       width: 1.1rem;
       height: 1.1rem;
 
@@ -65,7 +68,7 @@
   }
 
   form {
-    margin-top: 1rem;
+    margin-top: 3rem;
     width: 100%;
 
     display: flex;
@@ -188,6 +191,14 @@
   }
 }
 
+@media only screen and (min-width: 450px) {
+  .purchaseModal {
+    border-radius: 0.3125rem;
+    max-width: 95%;
+    height: fit-content;
+  }
+}
+
 @media only screen and (min-width: 500px) {
   .purchaseModal {
     max-width: 43rem;
@@ -220,7 +231,6 @@
 
       input,
       textarea {
-        width: 20rem;
         padding: 0.75rem 1rem;
       }
 
@@ -237,16 +247,18 @@
 
 @media only screen and (min-width: 900px) {
   .purchaseModal {
+    width: 35rem;
     form {
+      justify-content: center;
       input,
       textarea {
-        width: 31rem;
+        width: 100%;
       }
 
       .inputRow {
         flex-direction: row;
         input {
-          width: 15rem;
+          width: 100%;
         }
       }
     }

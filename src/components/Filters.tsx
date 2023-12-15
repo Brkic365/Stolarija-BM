@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/styles/components/Filters.module.scss";
 
 import {
@@ -16,14 +16,15 @@ type SortItemType = {
 
 type PropType = {
   includeSort: boolean;
-  categories: Array<string>;
+  categories: string[];
   updateCategories: (value: any) => void;
-  priceRange: Array<number>;
+  priceRange: number[];
   updatePriceRange: (value: any) => void;
   sortType: string;
   updateSortType: (value: any) => void;
   minPrice: number;
   maxPrice: number;
+  categoryCounts: number[];
 };
 
 const sortItems: Array<SortItemType> = [
@@ -55,6 +56,7 @@ function Filters({
   updateSortType,
   minPrice,
   maxPrice,
+  categoryCounts,
 }: PropType) {
   if (maxPrice === 0) return null;
 
@@ -66,6 +68,7 @@ function Filters({
           <Select
             items={sortItems}
             defaultSelectedKeys={["popular"]}
+            onChange={updateSortType}
             disallowEmptySelection
             style={{
               width: "12rem",
@@ -87,18 +90,18 @@ function Filters({
       <CheckboxGroup onChange={updateCategories} value={categories}>
         <Checkbox value="kitchens" style={{ marginBottom: "0.5rem" }}>
           <div className={styles.checkbox}>
-            Kuhinje <div className={styles.amount}>10</div>
+            Kuhinje <div className={styles.amount}>{categoryCounts[0]}</div>
           </div>
         </Checkbox>
         <Checkbox value="rooms" style={{ marginBottom: "0.5rem" }}>
           <div className={styles.checkbox}>
-            Dječje Sobe <div className={styles.amount}>12</div>
+            Dječje Sobe <div className={styles.amount}>{categoryCounts[1]}</div>
           </div>
         </Checkbox>
         <Checkbox value="furniture">
           {" "}
           <div className={styles.checkbox}>
-            Namještaj <div className={styles.amount}>5</div>
+            Namještaj <div className={styles.amount}>{categoryCounts[2]}</div>
           </div>
         </Checkbox>
       </CheckboxGroup>
@@ -109,11 +112,10 @@ function Filters({
         minValue={minPrice}
         maxValue={maxPrice}
         defaultValue={[minPrice, maxPrice]}
-        value={priceRange}
         label=" "
         formatOptions={{ style: "currency", currency: "EUR" }}
         className="max-w-md"
-        onChange={updatePriceRange}
+        onChangeEnd={updatePriceRange}
       />
     </section>
   );

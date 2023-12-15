@@ -11,6 +11,12 @@ import PurchaseModal from "@/components/Modals/PurchaseModal";
 
 import { motion } from "framer-motion";
 
+import ProductImagesCarousel from "@/components/ProductImagesCarousel";
+
+import { EmblaOptionsType } from "embla-carousel-react";
+
+const OPTIONS: EmblaOptionsType = {};
+
 function ProductPage() {
   const router = useRouter();
 
@@ -28,11 +34,64 @@ function ProductPage() {
 
       {/* Product section */}
       <section className={styles.product}>
-        <img src="/images/kitchens/essence.png" alt="Product" />
+        <motion.div
+          className={styles.carouselHolder}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          variants={{
+            visible: { opacity: 1, scale: 1 },
+            hidden: { opacity: 0, scale: 0.85 },
+          }}
+        >
+          <ProductImagesCarousel
+            images={[
+              "/images/kitchens/essence.png",
+              "/images/kitchens/boutique.png",
+              "/images/kitchens/huncho.png",
+              "/images/kitchens/imperial.png",
+              "/images/kitchens/tunechi.png",
+            ]}
+            options={OPTIONS}
+          />
+        </motion.div>
         <section className={styles.productInfo}>
-          <h2>Essence Kuhinja</h2>
-          <p className={styles.price}>Od €{(149999).toLocaleString("en-US")}</p>
-          <p>
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            variants={{
+              visible: { opacity: 1, scale: 1 },
+              hidden: { opacity: 0, scale: 0.85 },
+            }}
+          >
+            Essence Kuhinja
+          </motion.h2>
+          <motion.p
+            className={styles.price}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            variants={{
+              visible: { opacity: 1 },
+              hidden: { opacity: 0 },
+            }}
+          >
+            Od €{(149999).toLocaleString("en-US")}
+          </motion.p>
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            variants={{
+              visible: { opacity: 1 },
+              hidden: { opacity: 0 },
+            }}
+          >
             Kuhinja Imperial predstavlja vrhunski spoj elegancije i
             funkcionalnosti. Sa sofisticiranim dizajnom i pažljivim detaljima,
             ova kuhinja oduševljava svojom luksuznom pojavom. Visokokvalitetni
@@ -44,20 +103,32 @@ function ProductPage() {
             pažljivo integrirano kako bi se stvorila ugodna atmosfera, čineći
             svaku kulinarsku avanturu posebnom. Svaki element ove kuhinje
             odražava vrhunsku izradu i posvećenost detaljima.
-          </p>
+          </motion.p>
           <div className={styles.buttons}>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => setPurchaseModalOpen(true)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              variants={{
+                visible: { opacity: 1 },
+                hidden: { opacity: 0 },
+              }}
             >
               Naruči
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               className={styles.emptyButton}
               onClick={() => router.push("/kontakt")}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 1 }}
+              variants={{
+                visible: { opacity: 1 },
+                hidden: { opacity: 0 },
+              }}
             >
               Kontaktiraj nas <HiArrowSmRight />
             </motion.button>

@@ -1,0 +1,104 @@
+.carousel {
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+  --slide-height: 30rem;
+  position: relative;
+  margin-bottom: 3rem;
+
+  .viewport {
+    overflow: hidden;
+  }
+
+  .container {
+    backface-visibility: hidden;
+    display: flex;
+    touch-action: pan-y;
+    margin-left: calc(var(--slide-spacing) * -1);
+
+    .slide {
+      z-index: 1;
+      flex: 0 0 var(--slide-size);
+      min-width: 0;
+      padding-left: var(--slide-spacing);
+      position: relative;
+
+      .parallax {
+        border-radius: 0.3125rem;
+        height: 100%;
+        overflow: hidden;
+
+        .slideImg {
+          border-radius: 0.3125rem;
+          display: block;
+          height: var(--slide-height);
+          width: 100%;
+          object-fit: cover;
+        }
+
+        .parallaxLayer {
+          border-radius: 0.3125rem;
+          position: relative;
+          height: 100%;
+          width: 100%;
+
+          .parallaxImg {
+            border-radius: 0.3125rem;
+            max-width: none;
+            width: calc(100% + (var(--slide-spacing) * 2));
+            margin-left: calc(var(--slide-spacing) * -1);
+          }
+        }
+      }
+    }
+  }
+  .dots {
+    position: relative;
+    z-index: 2;
+    bottom: -2rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .dot {
+      -webkit-appearance: none;
+      background-color: transparent;
+      touch-action: manipulation;
+      display: inline-flex;
+      text-decoration: none;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+      margin: 0;
+
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      margin-right: 0.75rem;
+      margin-left: 0.75rem;
+
+      &:after {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        width: 100%;
+        height: 0.3rem;
+        content: "";
+      }
+    }
+
+    .dotSelected {
+      &:after {
+        background: black;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 700px) {
+  .carousel {
+    --slide-height: 40rem;
+  }
+}

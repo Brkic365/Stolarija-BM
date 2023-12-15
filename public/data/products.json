@@ -7,27 +7,32 @@
       {
         "name": "Imperial Kuhinja",
         "price": 4999,
-        "image": "/images/kitchens/imperial.png"
+        "image": "/images/kitchens/imperial.png",
+        "uploadDate": "2023-05-20"
       },
       {
         "name": "Essence Kuhinja",
         "price": 3499,
-        "image": "/images/kitchens/essence.png"
+        "image": "/images/kitchens/essence.png",
+        "uploadDate": "2022-12-10"
       },
       {
         "name": "Boutique Kuhinja",
         "price": 1999,
-        "image": "/images/kitchens/boutique.png"
+        "image": "/images/kitchens/boutique.png",
+        "uploadDate": "2023-09-15"
       },
       {
         "name": "Tunechi Kuhinja",
         "price": 2599,
-        "image": "/images/kitchens/tunechi.png"
+        "image": "/images/kitchens/tunechi.png",
+        "uploadDate": "2023-02-28"
       },
       {
         "name": "Huncho Kuhinja",
         "price": 3500,
-        "image": "/images/kitchens/huncho.png"
+        "image": "/images/kitchens/huncho.png",
+        "uploadDate": "2023-11-05"
       }
     ]
   },
@@ -39,27 +44,32 @@
       {
         "name": "Fairyland Dječja Soba",
         "price": 4967,
-        "image": "/images/rooms/fairyland.png"
+        "image": "/images/rooms/fairyland.png",
+        "uploadDate": "2023-06-12"
       },
       {
         "name": "Dječja Soba Explorer's Haven",
         "price": 4067,
-        "image": "/images/rooms/explorers_haven.png"
+        "image": "/images/rooms/explorers_haven.png",
+        "uploadDate": "2022-11-23"
       },
       {
         "name": "Dreamland Dječja Soba",
         "price": 4068,
-        "image": "/images/rooms/dreamland.png"
+        "image": "/images/rooms/dreamland.png",
+        "uploadDate": "2011-08-18"
       },
       {
         "name": "Dječja Soba Evolution",
         "price": 1205,
-        "image": "/images/rooms/evolution.png"
+        "image": "/images/rooms/evolution.png",
+        "uploadDate": "2022-10-05"
       },
       {
         "name": "Dječja Soba Happy Haven",
         "price": 2340,
-        "image": "/images/rooms/happy_haven.png"
+        "image": "/images/rooms/happy_haven.png",
+        "uploadDate": "2023-03-30"
       }
     ]
   },
@@ -71,27 +81,32 @@
       {
         "name": "Krevet i Ormar Serije Royal Elegance",
         "price": 100,
-        "image": "/images/furniture/royal_elegance.png"
+        "image": "/images/furniture/royal_elegance.png",
+        "uploadDate": "2023-07-25"
       },
       {
         "name": "Stolić Za Kavu i Polica Serije Urban Luxe",
         "price": 506,
-        "image": "/images/furniture/urban_luxe.png"
+        "image": "/images/furniture/urban_luxe.png",
+        "uploadDate": "2023-01-15"
       },
       {
         "name": "Drveni Stol i Stolice Serije Nature's Embrace",
         "price": 501,
-        "image": "/images/furniture/natures_embrace.png"
+        "image": "/images/furniture/natures_embrace.png",
+        "uploadDate": "2023-04-02"
       },
       {
         "name": "Sjedeća Garnitura Velvet Dreams",
         "price": 798,
-        "image": "/images/furniture/velvet_dreams.png"
+        "image": "/images/furniture/velvet_dreams.png",
+        "uploadDate": "2023-10-20"
       },
       {
         "name": "Radni Stol i Biblioteka Serije Timeless Charm",
         "price": 1901,
-        "image": "/images/furniture/timeless_charm.png"
+        "image": "/images/furniture/timeless_charm.png",
+        "uploadDate": "2023-09-05"
       }
     ]
   }

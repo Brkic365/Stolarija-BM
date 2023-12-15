@@ -99,31 +99,170 @@ function PurchaseModal({
 
         {orderSuccess === true && (
           <section className={styles.success}>
-            <img src="/images/icons/success.png" alt="Success icon" />
-            <h3>Narudžba uspješno poslana!</h3>
-            <p>
+            <motion.img
+              src="/images/icons/success.png"
+              alt="Success icon"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={{
+                visible: {
+                  transform: "scale(1)",
+                  filter: "blur(0px)",
+                  opacity: 1,
+                },
+                hidden: {
+                  transform: "scale(1.5)",
+                  filter: "blur(4px)",
+                  opacity: 0,
+                },
+              }}
+            />
+            <motion.h3
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                },
+                hidden: {
+                  opacity: 0,
+                },
+              }}
+            >
+              Narudžba uspješno poslana!
+            </motion.h3>
+            <motion.p
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                },
+                hidden: {
+                  opacity: 0,
+                },
+              }}
+            >
               Hvala Vam na povjerenju. Javit ćemo Vam se u najkraćem mogućem
               roku.
-            </p>
-            <button onClick={close}>Zatvori</button>
+            </motion.p>
+            <motion.button
+              onClick={close}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 1 }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                },
+                hidden: {
+                  opacity: 0,
+                },
+              }}
+            >
+              Zatvori
+            </motion.button>
           </section>
         )}
 
         {orderSuccess === false && (
           <section className={styles.fail}>
-            <img src="/images/icons/fail.png" alt="Fail icon" />
-            <h3>Greška prilikom narudžbe!</h3>
-            <p>
+            <motion.img
+              src="/images/icons/fail.png"
+              alt="Fail icon"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={{
+                visible: {
+                  transform: "scale(1)",
+                  filter: "blur(0px)",
+                  opacity: 1,
+                },
+                hidden: {
+                  transform: "scale(1.5)",
+                  filter: "blur(4px)",
+                  opacity: 0,
+                },
+              }}
+            />
+            <motion.h3
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                },
+                hidden: {
+                  opacity: 0,
+                },
+              }}
+            >
+              Greška prilikom narudžbe!
+            </motion.h3>
+            <motion.p
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                },
+                hidden: {
+                  opacity: 0,
+                },
+              }}
+            >
               Molimo Vas pokušajte ponovno ili nas kontaktirajte{" "}
               <Link href="/kontakt">ovdje</Link>.
-            </p>
+            </motion.p>
             <section className={styles.buttons}>
-              <button onClick={() => setOrderSuccess(null)}>
+              <motion.button
+                onClick={() => setOrderSuccess(null)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 1 }}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                  },
+                  hidden: {
+                    opacity: 0,
+                  },
+                }}
+              >
                 Pokušaj ponovno
-              </button>
-              <button className={styles.emptyButton} onClick={close}>
+              </motion.button>
+              <motion.button
+                className={styles.emptyButton}
+                onClick={close}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 1.2 }}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                  },
+                  hidden: {
+                    opacity: 0,
+                  },
+                }}
+              >
                 Odustani <HiArrowSmRight />
-              </button>
+              </motion.button>
             </section>
           </section>
         )}

@@ -28,7 +28,7 @@
   .product {
     max-width: 90rem;
     padding: 5rem 1.25rem 8rem 1.25rem;
-    img {
+    .carouselHolder {
       width: 100%;
     }
 
@@ -71,6 +71,16 @@
           border: none;
           background: black;
           padding: 0.6rem 2rem;
+
+          transition: all 0.2s ease-in-out;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
         }
 
         .emptyButton {
@@ -130,7 +140,7 @@
       align-items: flex-start;
       place-content: space-between;
 
-      img {
+      .carouselHolder {
         width: 48%;
       }
 
@@ -155,7 +165,7 @@
     .product {
       padding: 5rem 5rem 8rem 5rem;
 
-      img {
+      .carouselHolder {
         width: 45%;
       }
 
@@ -171,7 +181,7 @@
     .product {
       padding: 5rem 7rem 8rem 7rem;
 
-      img {
+      .carouselHolder {
         width: 43.5%;
       }
 
