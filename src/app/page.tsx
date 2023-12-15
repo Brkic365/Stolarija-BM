@@ -24,7 +24,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -240,7 +240,16 @@ export default function Home() {
             setFurnitureActive(false);
           }}
         >
-          <h1>Kuhinje</h1>
+          <div className={styles.text}>
+            <h1>Kuhinje</h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={styles.emptyButton}
+            >
+              Vidi sve <HiArrowSmRight />
+            </motion.button>
+          </div>
         </section>
         <section
           className={styles.serviceRooms}
@@ -251,7 +260,16 @@ export default function Home() {
             setFurnitureActive(false);
           }}
         >
-          <h1>Dječje Sobe</h1>
+          <div className={styles.text}>
+            <h1>Dječje Sobe</h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={styles.emptyButton}
+            >
+              Vidi sve <HiArrowSmRight />
+            </motion.button>
+          </div>
         </section>
         <section
           className={styles.serviceFurniture}
@@ -262,7 +280,16 @@ export default function Home() {
             setFurnitureActive(true);
           }}
         >
-          <h1>Namještaj</h1>
+          <div className={styles.text}>
+            <h1>Namještaj</h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={styles.emptyButton}
+            >
+              Vidi sve <HiArrowSmRight />
+            </motion.button>
+          </div>
         </section>
       </section>
     </main>

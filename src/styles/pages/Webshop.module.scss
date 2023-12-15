@@ -77,8 +77,9 @@
         rgba(0, 0, 0, 0.9) 47.2%,
         rgba(0, 0, 0, 0.5) 100%
       ),
-      url("/images/covers/webshop.jpg");
+      url("/images/covers/webshop.webp");
     background-size: cover;
+    background-position: 50% 20%;
 
     h1 {
       color: white;

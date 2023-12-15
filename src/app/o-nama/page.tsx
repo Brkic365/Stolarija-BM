@@ -65,7 +65,7 @@ function About() {
         </section>
         <section className={styles.bottom}>
           <motion.img
-            src="/images/kitchens/kitchen_2.png"
+            src="/images/covers/furniture.webp"
             alt="O nama"
             initial="hidden"
             whileInView="visible"
@@ -88,7 +88,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.6 }}
+            transition={{ duration: 1, delay: 0.4 }}
             variants={{
               visible: { opacity: 1 },
               hidden: { opacity: 0 },
@@ -216,7 +216,7 @@ function About() {
                 opacity: 0,
               },
             }}
-            src={`/images/logos/${logo}.png`}
+            src={`/images/logos/${logo}.webp`}
             alt={logo}
             key={logo}
           />

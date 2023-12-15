@@ -21,13 +21,13 @@ function Tool({ tool }: { tool: ToolType }) {
   const rotateX = useTransform(
     mouseYSpring,
     [-0.5, 0.5],
-    ["17.5deg", "-17.5deg"]
+    ["13.5deg", "-13.5deg"]
   );
 
   const rotateY = useTransform(
     mouseXSpring,
     [-0.5, 0.5],
-    ["-17.5deg", "17.5deg"]
+    ["-13.5deg", "13.5deg"]
   );
 
   const handleMouseMove = (e: any) => {
@@ -58,7 +58,7 @@ function Tool({ tool }: { tool: ToolType }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <img src={`/images/tools/${tool.id}.png`} alt={tool.name} />
+      <img src={`/images/tools/${tool.id}.webp`} alt={tool.name} />
       <div className={styles.text}>
         <h3>{tool.name}</h3>
         <p>{tool.description}</p>

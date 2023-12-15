@@ -47,11 +47,11 @@ function ProductPage() {
         >
           <ProductImagesCarousel
             images={[
-              "/images/kitchens/essence.png",
-              "/images/kitchens/boutique.png",
-              "/images/kitchens/huncho.png",
-              "/images/kitchens/imperial.png",
-              "/images/kitchens/tunechi.png",
+              "/images/kitchens/essence.webp",
+              "/images/kitchens/boutique.webp",
+              "/images/kitchens/huncho.webp",
+              "/images/kitchens/imperial.webp",
+              "/images/kitchens/tunechi.webp",
             ]}
             options={OPTIONS}
           />

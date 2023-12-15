@@ -1,6 +1,6 @@
 .carousel {
   --slide-spacing: 1rem;
-  --slide-size: 50%;
+  --slide-size: 100%;
   margin-top: 2rem;
   position: relative;
 
@@ -67,6 +67,12 @@
 
   .next {
     left: calc(100% - 1.5rem);
+  }
+}
+
+@media only screen and (min-width: 420px) {
+  .carousel {
+    --slide-size: 50%;
   }
 }
 

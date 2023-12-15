@@ -19,11 +19,12 @@
 
     background-image: linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.9) 47.2%,
-        rgba(0, 0, 0, 0.5) 100%
+        rgba(0, 0, 0, 1) 47.2%,
+        rgba(0, 0, 0, 0.9) 100%
       ),
-      url("/images/kitchens/kitchen_2.png");
+      url("/images/covers/navbar.webp");
     background-size: cover;
+    background-position: center;
   }
 
   .content {
@@ -88,6 +89,74 @@
         border: none;
         background: black;
         padding: 0.6rem 2rem;
+
+        transition: all 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .notFound {
+    .content {
+      margin-top: 6rem;
+      padding: 5rem 1.25rem 8rem 1.25rem;
+
+      .text {
+        margin-top: 5rem;
+        width: 60%;
+
+        h2 {
+          font-size: 2rem;
+          line-height: 3rem;
+        }
+
+        p {
+          font-size: 1rem;
+          line-height: 1.75rem;
+        }
+
+        button {
+          margin-top: 0.6rem;
+          font-size: 1rem;
+          padding: 0.75rem 2.25rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .notFound {
+    .content {
+      .text {
+        margin-top: 10rem;
+        width: 60%;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .notFound {
+    .content {
+      margin-top: 5rem;
+      padding: 3rem 2rem 8rem 2rem;
+
+      .bigText {
+        font-size: 35rem;
+      }
+
+      .text {
+        margin-top: 12rem;
+        width: 30rem;
       }
     }
   }

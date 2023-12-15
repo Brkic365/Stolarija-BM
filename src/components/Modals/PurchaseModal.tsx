@@ -100,7 +100,7 @@ function PurchaseModal({
         {orderSuccess === true && (
           <section className={styles.success}>
             <motion.img
-              src="/images/icons/success.png"
+              src="/images/icons/success.webp"
               alt="Success icon"
               initial="hidden"
               whileInView="visible"
@@ -175,7 +175,7 @@ function PurchaseModal({
         {orderSuccess === false && (
           <section className={styles.fail}>
             <motion.img
-              src="/images/icons/fail.png"
+              src="/images/icons/fail.webp"
               alt="Fail icon"
               initial="hidden"
               whileInView="visible"
