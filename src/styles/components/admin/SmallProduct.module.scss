@@ -1,0 +1,55 @@
+.product {
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  text-align: left;
+
+  .image {
+    width: 100%;
+    height: 10rem;
+    border-radius: 0.3125rem;
+    object-fit: cover;
+
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 10rem;
+      border-radius: 0.3125rem;
+      object-fit: cover;
+
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
+  h4 {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5625rem;
+  }
+
+  &:hover {
+    .image img {
+      transform: scale(110%);
+    }
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .product {
+    .image {
+      height: 12rem;
+
+      img {
+        height: 12rem;
+      }
+    }
+  }
+}

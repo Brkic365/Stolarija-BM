@@ -4,9 +4,6 @@ import "./globals.css";
 
 import { Providers } from "./providers";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-
 const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,11 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <Providers>
-          <Navbar />
-          {children}
-          <Footer />
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

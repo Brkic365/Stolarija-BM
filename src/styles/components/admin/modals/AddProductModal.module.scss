@@ -1,0 +1,243 @@
+.addProductModal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  background: #fff;
+
+  padding: 0.5rem 1.25rem 1rem 1.25rem;
+
+  width: 30rem;
+  height: 100%;
+  max-width: 100%;
+
+  outline: none;
+
+  button {
+    color: white;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+
+    border-radius: 0.25rem;
+    border: none;
+    background: black;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .top {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    place-content: space-between;
+
+    h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.875rem;
+      opacity: 0.8;
+    }
+
+    svg {
+      cursor: pointer;
+
+      width: 1.1rem;
+      height: 1.1rem;
+
+      opacity: 0.5;
+    }
+  }
+
+  .content {
+    padding: 2rem 0;
+
+    .image {
+      width: 100%;
+      height: 15rem;
+      border-radius: 0.3125rem;
+      object-fit: cover;
+
+      overflow: hidden;
+      position: relative;
+
+      cursor: pointer;
+
+      div {
+        z-index: 2;
+        background: rgba(0, 0, 0);
+      }
+
+      img {
+        z-index: 1;
+      }
+
+      .thumbnail {
+        width: 100%;
+        height: 15rem;
+        border-radius: 0.3125rem;
+        object-fit: cover;
+
+        transition: all 0.3s ease-in-out;
+      }
+
+      svg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        width: 4rem;
+        height: 4rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover {
+        img {
+          transform: scale(110%);
+        }
+
+        svg {
+          width: 4.5rem;
+          height: 4.5rem;
+        }
+      }
+
+      &:active {
+        img {
+          transform: scale(95%);
+        }
+
+        svg {
+          width: 3.75rem;
+          height: 3.75rem;
+        }
+      }
+    }
+
+    .info {
+      margin-top: 1.5rem;
+      section {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        label {
+          width: 30%;
+          color: #000;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.875rem;
+        }
+
+        input,
+        textarea {
+          width: 70%;
+          padding: 0.5rem 0.75rem;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+          color: black;
+          font-size: 0.9rem;
+          resize: none;
+          outline: none;
+          transition: all 0.2s ease-in-out;
+
+          &:focus {
+            border-bottom: 1px solid black;
+          }
+        }
+
+        .select {
+          display: flex;
+          align-items: center;
+
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          div {
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            color: black;
+            border: 1px solid black;
+            border-radius: 0.3125rem;
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+              background-color: black;
+              color: white;
+            }
+          }
+
+          .selected {
+            background-color: black;
+            color: white;
+          }
+        }
+      }
+
+      .description,
+      .category {
+        align-items: flex-start;
+      }
+    }
+  }
+
+  .buttons {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .add,
+    .disabled {
+      background: #22b20a;
+    }
+
+    .disabled {
+      cursor: not-allowed;
+      opacity: 0.3;
+    }
+  }
+}
+
+@media only screen and (min-width: 450px) {
+  .addProductModal {
+    border-radius: 0.3125rem;
+    max-width: 95%;
+    height: 90vh;
+  }
+}
+
+@media only screen and (min-width: 500px) {
+  .addProductModal {
+    max-width: 43rem;
+
+    button {
+      font-size: 0.9rem;
+      padding: 0.7rem 1.75rem;
+    }
+
+    .top {
+      h3 {
+        font-size: 1rem;
+        line-height: 2rem;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .addProductModal {
+    max-width: 45rem;
+    width: 45rem;
+    height: 50rem;
+    .content {
+    }
+  }
+}

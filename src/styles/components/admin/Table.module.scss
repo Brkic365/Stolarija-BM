@@ -1,0 +1,109 @@
+.empty {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+}
+
+.table {
+  width: 100%;
+
+  tr {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem 1rem;
+
+    cursor: pointer;
+
+    td,
+    th {
+      width: 10rem;
+      text-align: left;
+    }
+  }
+
+  thead {
+    display: flex;
+    align-items: center;
+
+    tr {
+      th {
+        width: 10rem;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 0.875rem;
+        font-weight: 400;
+      }
+    }
+  }
+
+  tbody {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    tr {
+      background-color: white;
+      border-radius: 0.3125rem;
+
+      td {
+        color: #000;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 700px) {
+  .empty {
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .table {
+    tr {
+      td,
+      th {
+        width: 25%;
+        max-width: 25%;
+        min-width: 25%;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .table {
+    max-width: 100%;
+    tr {
+      .status {
+        width: 15%;
+        min-width: 15%;
+        max-width: 15%;
+      }
+    }
+  }
+}

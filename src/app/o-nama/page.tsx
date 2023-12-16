@@ -36,7 +36,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             variants={{
               visible: { opacity: 1, scale: 1 },
               hidden: { opacity: 0, scale: 0.5 },
@@ -49,7 +49,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 1, delay: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
             variants={{
               visible: { opacity: 1 },
               hidden: { opacity: 0 },
@@ -70,7 +70,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -113,7 +113,7 @@ function About() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
           variants={{
             visible: { opacity: 1, scale: 1 },
             hidden: { opacity: 0, scale: 0.5 },
@@ -127,7 +127,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.7 }}
+            transition={{ duration: 0.3, delay: 0.7 }}
             variants={{
               visible: { transform: "translateX(0)", opacity: 1 },
               hidden: { transform: "translateX(-100%)", opacity: 0 },
@@ -139,7 +139,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.9 }}
+            transition={{ duration: 0.3, delay: 0.9 }}
             variants={{
               visible: { transform: "translateX(0)", opacity: 1 },
               hidden: { transform: "translateX(-100%)", opacity: 0 },
@@ -151,7 +151,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1.1 }}
+            transition={{ duration: 0.3, delay: 1.1 }}
             variants={{
               visible: { transform: "translateX(0)", opacity: 1 },
               hidden: { transform: "translateX(-100%)", opacity: 0 },
@@ -163,7 +163,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1.3 }}
+            transition={{ duration: 0.3, delay: 1.3 }}
             variants={{
               visible: { transform: "translateX(0)", opacity: 1 },
               hidden: { transform: "translateX(-100%)", opacity: 0 },
@@ -175,7 +175,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1.5 }}
+            transition={{ duration: 0.3, delay: 1.5 }}
             variants={{
               visible: { transform: "translateX(0)", opacity: 1 },
               hidden: { transform: "translateX(-100%)", opacity: 0 },
@@ -203,7 +203,7 @@ function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 + i * 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3 + i * 0.2 }}
             variants={{
               visible: {
                 transform:

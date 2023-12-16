@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { HiArrowSmRight } from "react-icons/hi";
 
-import PurchaseModal from "@/components/Modals/PurchaseModal";
+import PurchaseModal from "@/components/modals/PurchaseModal";
 
 import { motion } from "framer-motion";
 

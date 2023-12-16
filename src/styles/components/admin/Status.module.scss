@@ -1,0 +1,32 @@
+.green,
+.blue,
+.red {
+  border-radius: 0.3125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+.green {
+  background: rgba(147, 209, 131, 0.3);
+  color: #5dad49;
+}
+
+.blue {
+  background: rgba(131, 176, 209, 0.3);
+  color: #83b0d1;
+}
+
+.red {
+  background: rgba(232, 19, 19, 0.3);
+  color: #e81313;
+}
