@@ -101,7 +101,7 @@ function AddProductModal({
                 type="number"
                 id="price"
                 placeholder="Cijena u eurima"
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(parseInt(e.target.value))}
               />
             </section>
 

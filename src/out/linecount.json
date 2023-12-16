@@ -1,0 +1,416 @@
+{
+    "extension": "linecount",
+    "version": "0.1.7",
+    "workspace": "f:\\Antonio\\Code\\WebDev\\stolarija-bm\\src",
+    "linecount": [
+        {
+            "version": "0.1.7",
+            "counttime": "2023-12-17 00:54:32",
+            "filesum": 66,
+            "codesum": 7726,
+            "commentsum": 40,
+            "blanksum": 1256,
+            "filelist": [
+                {
+                    "blank": 20,
+                    "code": 72,
+                    "comment": 1,
+                    "filename": "app\\admin\\login\\page.tsx"
+                },
+                {
+                    "blank": 13,
+                    "code": 108,
+                    "comment": 2,
+                    "filename": "app\\admin\\page.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 45,
+                    "comment": 9,
+                    "filename": "app\\api\\auth\\[...nextauth]\\route.ts"
+                },
+                {
+                    "blank": 7,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "app\\api\\login\\route.ts"
+                },
+                {
+                    "filename": "app\\favicon.ico",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 4,
+                    "code": 22,
+                    "comment": 0,
+                    "filename": "app\\globals.css"
+                },
+                {
+                    "blank": 6,
+                    "code": 242,
+                    "comment": 0,
+                    "filename": "app\\kontakt\\page.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "app\\layout.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 101,
+                    "comment": 0,
+                    "filename": "app\\not-found.tsx"
+                },
+                {
+                    "blank": 12,
+                    "code": 217,
+                    "comment": 0,
+                    "filename": "app\\o-nama\\page.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "app\\opengraph-image.alt.txt"
+                },
+                {
+                    "filename": "app\\opengraph-image.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 9,
+                    "code": 288,
+                    "comment": 0,
+                    "filename": "app\\page.tsx"
+                },
+                {
+                    "blank": 14,
+                    "code": 128,
+                    "comment": 0,
+                    "filename": "app\\proizvod\\page.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "app\\providers.tsx"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "app\\twitter-image.alt.txt"
+                },
+                {
+                    "filename": "app\\twitter-image.png.png",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 11,
+                    "code": 91,
+                    "comment": 0,
+                    "filename": "app\\web-shop\\page.tsx"
+                },
+                {
+                    "blank": 42,
+                    "code": 256,
+                    "comment": 11,
+                    "filename": "app\\web-shop\\proizvodi\\page.tsx"
+                },
+                {
+                    "blank": 2,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "components\\admin\\Messages.tsx"
+                },
+                {
+                    "blank": 9,
+                    "code": 138,
+                    "comment": 0,
+                    "filename": "components\\admin\\MessagesTable.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 141,
+                    "comment": 1,
+                    "filename": "components\\admin\\modals\\AddProductModal.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 87,
+                    "comment": 0,
+                    "filename": "components\\admin\\modals\\MessageModal.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 147,
+                    "comment": 0,
+                    "filename": "components\\admin\\modals\\OrderModal.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 35,
+                    "comment": 0,
+                    "filename": "components\\admin\\Orders.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 117,
+                    "comment": 0,
+                    "filename": "components\\admin\\OrderTable.tsx"
+                },
+                {
+                    "blank": 11,
+                    "code": 57,
+                    "comment": 2,
+                    "filename": "components\\admin\\Products.tsx"
+                },
+                {
+                    "blank": 4,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "components\\admin\\SmallProduct.tsx"
+                },
+                {
+                    "blank": 3,
+                    "code": 42,
+                    "comment": 0,
+                    "filename": "components\\admin\\Status.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 82,
+                    "comment": 0,
+                    "filename": "components\\Carousel.tsx"
+                },
+                {
+                    "blank": 7,
+                    "code": 117,
+                    "comment": 0,
+                    "filename": "components\\Filters.tsx"
+                },
+                {
+                    "blank": 8,
+                    "code": 57,
+                    "comment": 0,
+                    "filename": "components\\Footer.tsx"
+                },
+                {
+                    "blank": 16,
+                    "code": 92,
+                    "comment": 9,
+                    "filename": "components\\MobileMenu.tsx"
+                },
+                {
+                    "blank": 22,
+                    "code": 296,
+                    "comment": 0,
+                    "filename": "components\\modals\\PurchaseModal.tsx"
+                },
+                {
+                    "blank": 18,
+                    "code": 97,
+                    "comment": 4,
+                    "filename": "components\\Navbar.tsx"
+                },
+                {
+                    "blank": 6,
+                    "code": 21,
+                    "comment": 0,
+                    "filename": "components\\Product.tsx"
+                },
+                {
+                    "blank": 17,
+                    "code": 115,
+                    "comment": 0,
+                    "filename": "components\\ProductImagesCarousel.tsx"
+                },
+                {
+                    "blank": 15,
+                    "code": 55,
+                    "comment": 0,
+                    "filename": "components\\Tool.tsx"
+                },
+                {
+                    "blank": 5,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "lib\\jwt.ts"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "middleware.ts"
+                },
+                {
+                    "blank": 37,
+                    "code": 194,
+                    "comment": 1,
+                    "filename": "styles\\components\\admin\\MainComponents.module.scss"
+                },
+                {
+                    "blank": 43,
+                    "code": 200,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\modals\\AddProductModal.module.scss"
+                },
+                {
+                    "blank": 31,
+                    "code": 153,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\modals\\MessageModal.module.scss"
+                },
+                {
+                    "blank": 59,
+                    "code": 269,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\modals\\OrderModal.module.scss"
+                },
+                {
+                    "blank": 9,
+                    "code": 46,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\SmallProduct.module.scss"
+                },
+                {
+                    "blank": 5,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\Status.module.scss"
+                },
+                {
+                    "blank": 14,
+                    "code": 95,
+                    "comment": 0,
+                    "filename": "styles\\components\\admin\\Table.module.scss"
+                },
+                {
+                    "blank": 18,
+                    "code": 95,
+                    "comment": 0,
+                    "filename": "styles\\components\\Carousel.module.scss"
+                },
+                {
+                    "blank": 7,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": "styles\\components\\Filters.module.scss"
+                },
+                {
+                    "blank": 35,
+                    "code": 180,
+                    "comment": 0,
+                    "filename": "styles\\components\\Footer.module.scss"
+                },
+                {
+                    "blank": 7,
+                    "code": 58,
+                    "comment": 0,
+                    "filename": "styles\\components\\MobileMenu.module.scss"
+                },
+                {
+                    "blank": 55,
+                    "code": 231,
+                    "comment": 0,
+                    "filename": "styles\\components\\modals\\PurchaseModal.module.scss"
+                },
+                {
+                    "blank": 21,
+                    "code": 114,
+                    "comment": 0,
+                    "filename": "styles\\components\\Navbar.module.scss"
+                },
+                {
+                    "blank": 13,
+                    "code": 63,
+                    "comment": 0,
+                    "filename": "styles\\components\\Product.module.scss"
+                },
+                {
+                    "blank": 12,
+                    "code": 92,
+                    "comment": 0,
+                    "filename": "styles\\components\\ProductImagesCarousel.module.scss"
+                },
+                {
+                    "blank": 9,
+                    "code": 58,
+                    "comment": 0,
+                    "filename": "styles\\components\\Tool.module.scss"
+                },
+                {
+                    "blank": 84,
+                    "code": 370,
+                    "comment": 0,
+                    "filename": "styles\\pages\\About.module.scss"
+                },
+                {
+                    "blank": 17,
+                    "code": 84,
+                    "comment": 0,
+                    "filename": "styles\\pages\\admin\\Login.module.scss"
+                },
+                {
+                    "blank": 37,
+                    "code": 172,
+                    "comment": 0,
+                    "filename": "styles\\pages\\admin\\Mainpage.module.scss"
+                },
+                {
+                    "blank": 41,
+                    "code": 234,
+                    "comment": 0,
+                    "filename": "styles\\pages\\Contact.module.scss"
+                },
+                {
+                    "blank": 151,
+                    "code": 713,
+                    "comment": 0,
+                    "filename": "styles\\pages\\Home.module.scss"
+                },
+                {
+                    "blank": 29,
+                    "code": 134,
+                    "comment": 0,
+                    "filename": "styles\\pages\\NotFound.module.scss"
+                },
+                {
+                    "blank": 38,
+                    "code": 169,
+                    "comment": 0,
+                    "filename": "styles\\pages\\ProductPage.module.scss"
+                },
+                {
+                    "blank": 44,
+                    "code": 249,
+                    "comment": 0,
+                    "filename": "styles\\pages\\Products.module.scss"
+                },
+                {
+                    "blank": 64,
+                    "code": 293,
+                    "comment": 0,
+                    "filename": "styles\\pages\\Webshop.module.scss"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "types\\product.tsx"
+                }
+            ]
+        }
+    ]
+}

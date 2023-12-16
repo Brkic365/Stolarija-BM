@@ -1,0 +1,78 @@
+===============================================================================
+EXTENSION NAME : linecount
+EXTENSION VERSION : 0.1.7
+-------------------------------------------------------------------------------
+count time : 2023-12-17 00:54:32
+count workspace : f:\Antonio\Code\WebDev\stolarija-bm\src
+total files : 66
+total code lines : 7726
+total comment lines : 40
+total blank lines : 1256
+
+app\admin\login\page.tsx, code is 72, comment is 1, blank is 20.
+app\admin\page.tsx, code is 108, comment is 2, blank is 13.
+app\api\auth\[...nextauth]\route.ts, code is 45, comment is 9, blank is 6.
+app\api\login\route.ts, code is 24, comment is 0, blank is 7.
+app\favicon.ico, it is a binary file.
+app\globals.css, code is 22, comment is 0, blank is 4.
+app\kontakt\page.tsx, code is 242, comment is 0, blank is 6.
+app\layout.tsx, code is 23, comment is 0, blank is 4.
+app\not-found.tsx, code is 101, comment is 0, blank is 7.
+app\o-nama\page.tsx, code is 217, comment is 0, blank is 12.
+app\opengraph-image.alt.txt, code is 1, comment is 0, blank is 0.
+app\opengraph-image.png, it is a binary file.
+app\page.tsx, code is 288, comment is 0, blank is 9.
+app\proizvod\page.tsx, code is 128, comment is 0, blank is 14.
+app\providers.tsx, code is 18, comment is 0, blank is 5.
+app\twitter-image.alt.txt, code is 1, comment is 0, blank is 0.
+app\twitter-image.png.png, it is a binary file.
+app\web-shop\page.tsx, code is 91, comment is 0, blank is 11.
+app\web-shop\proizvodi\page.tsx, code is 256, comment is 11, blank is 42.
+components\admin\Messages.tsx, code is 25, comment is 0, blank is 2.
+components\admin\MessagesTable.tsx, code is 138, comment is 0, blank is 9.
+components\admin\modals\AddProductModal.tsx, code is 141, comment is 1, blank is 18.
+components\admin\modals\MessageModal.tsx, code is 87, comment is 0, blank is 11.
+components\admin\modals\OrderModal.tsx, code is 147, comment is 0, blank is 16.
+components\admin\Orders.tsx, code is 35, comment is 0, blank is 3.
+components\admin\OrderTable.tsx, code is 117, comment is 0, blank is 8.
+components\admin\Products.tsx, code is 57, comment is 2, blank is 11.
+components\admin\SmallProduct.tsx, code is 15, comment is 0, blank is 4.
+components\admin\Status.tsx, code is 42, comment is 0, blank is 3.
+components\Carousel.tsx, code is 82, comment is 0, blank is 16.
+components\Filters.tsx, code is 117, comment is 0, blank is 7.
+components\Footer.tsx, code is 57, comment is 0, blank is 8.
+components\MobileMenu.tsx, code is 92, comment is 9, blank is 16.
+components\modals\PurchaseModal.tsx, code is 296, comment is 0, blank is 22.
+components\Navbar.tsx, code is 97, comment is 4, blank is 18.
+components\Product.tsx, code is 21, comment is 0, blank is 6.
+components\ProductImagesCarousel.tsx, code is 115, comment is 0, blank is 17.
+components\Tool.tsx, code is 55, comment is 0, blank is 15.
+lib\jwt.ts, code is 24, comment is 0, blank is 5.
+middleware.ts, code is 4, comment is 0, blank is 1.
+styles\components\admin\MainComponents.module.scss, code is 194, comment is 1, blank is 37.
+styles\components\admin\modals\AddProductModal.module.scss, code is 200, comment is 0, blank is 43.
+styles\components\admin\modals\MessageModal.module.scss, code is 153, comment is 0, blank is 31.
+styles\components\admin\modals\OrderModal.module.scss, code is 269, comment is 0, blank is 59.
+styles\components\admin\SmallProduct.module.scss, code is 46, comment is 0, blank is 9.
+styles\components\admin\Status.module.scss, code is 27, comment is 0, blank is 5.
+styles\components\admin\Table.module.scss, code is 95, comment is 0, blank is 14.
+styles\components\Carousel.module.scss, code is 95, comment is 0, blank is 18.
+styles\components\Filters.module.scss, code is 27, comment is 0, blank is 7.
+styles\components\Footer.module.scss, code is 180, comment is 0, blank is 35.
+styles\components\MobileMenu.module.scss, code is 58, comment is 0, blank is 7.
+styles\components\modals\PurchaseModal.module.scss, code is 231, comment is 0, blank is 55.
+styles\components\Navbar.module.scss, code is 114, comment is 0, blank is 21.
+styles\components\Product.module.scss, code is 63, comment is 0, blank is 13.
+styles\components\ProductImagesCarousel.module.scss, code is 92, comment is 0, blank is 12.
+styles\components\Tool.module.scss, code is 58, comment is 0, blank is 9.
+styles\pages\About.module.scss, code is 370, comment is 0, blank is 84.
+styles\pages\admin\Login.module.scss, code is 84, comment is 0, blank is 17.
+styles\pages\admin\Mainpage.module.scss, code is 172, comment is 0, blank is 37.
+styles\pages\Contact.module.scss, code is 234, comment is 0, blank is 41.
+styles\pages\Home.module.scss, code is 713, comment is 0, blank is 151.
+styles\pages\NotFound.module.scss, code is 134, comment is 0, blank is 29.
+styles\pages\ProductPage.module.scss, code is 169, comment is 0, blank is 38.
+styles\pages\Products.module.scss, code is 249, comment is 0, blank is 44.
+styles\pages\Webshop.module.scss, code is 293, comment is 0, blank is 64.
+types\product.tsx, code is 5, comment is 0, blank is 0.
+===============================================================================
