@@ -39,6 +39,7 @@ function AdminLogin() {
     if (res?.ok) {
       router.push("/admin");
     } else {
+      console.log(res);
       setError("Pogrešno korisničko ime ili zaporka.");
     }
   };
@@ -75,6 +76,7 @@ function AdminLogin() {
         <input
           placeholder="Zaporka"
           onChange={(e) => setPassword(e.target.value)}
+          type="password"
         />
         <motion.div
           className={styles.error}
