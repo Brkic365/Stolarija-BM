@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/MainComponents.module.scss";
-import rawProductSections from "../../../public/data/products.json";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+import { ProductType } from "@/types/product";
 
 import AddProductModal from "./modals/AddProductModal";
 
@@ -10,29 +13,24 @@ import SmallProduct from "./SmallProduct";
 
 import { HiPlus } from "react-icons/hi";
 
-type ProductType = {
-  category: string;
-  name: string;
-  price: number;
-  image: string;
-  uploadDate: string;
-};
-
 function Products() {
-  const [products, setProducts] = useState<ProductType[]>([]);
+  const supabase = createClientComponentClient();
 
+  const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [addingProduct, setAddingProduct] = useState(false);
 
-  // Filter by category and price
+  const getProducts = async () => {
+    const { data, error } = await supabase.from("Product").select("*");
+
+    if (data) {
+      setOriginalProducts(data);
+      setProducts(data);
+    }
+  };
+
   useEffect(() => {
-    // Flat the products into one array
-    const flatProductsArray = rawProductSections.flatMap((val) =>
-      val.products.map((product) => ({
-        ...product,
-        category: val.id,
-      }))
-    );
-    setProducts(flatProductsArray);
+    getProducts();
   }, []);
 
   return (

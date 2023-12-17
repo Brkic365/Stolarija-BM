@@ -6,17 +6,13 @@ import useEmblaCarousel, {
   EmblaOptionsType,
 } from "embla-carousel-react";
 
+import { ProductType } from "@/types/product";
+
 import styles from "@/styles/components/Carousel.module.scss";
 
 import { HiArrowNarrowRight, HiArrowNarrowLeft } from "react-icons/hi";
 
 import Product from "@/components/Product";
-
-type ProductType = {
-  name: string;
-  price: number;
-  image: string;
-};
 
 type PropType = {
   products: ProductType[];

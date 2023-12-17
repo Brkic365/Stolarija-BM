@@ -1,5 +1,9 @@
-export type productType = {
+export type ProductType = {
+  id: number;
   name: string;
+  description: string;
   price: number;
-  image: string;
+  image_url: string;
+  category: string;
+  created_at: Date;
 };

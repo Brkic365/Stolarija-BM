@@ -1,26 +1,62 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/styles/pages/ProductPage.module.scss";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { HiArrowSmRight } from "react-icons/hi";
 
 import PurchaseModal from "@/components/modals/PurchaseModal";
+import ProductImagesCarousel from "@/components/ProductImagesCarousel";
 
 import { motion } from "framer-motion";
 
-import ProductImagesCarousel from "@/components/ProductImagesCarousel";
-
 import { EmblaOptionsType } from "embla-carousel-react";
 
+import { CircularProgress } from "@nextui-org/react";
 const OPTIONS: EmblaOptionsType = {};
+
+function ProductPageLoading() {
+  return (
+    <main className={styles.mainProductLoading}>
+      {/* Hero section */}
+      <section className={styles.hero} />
+
+      <div className={styles.loading}>
+        <CircularProgress aria-label="Loading..." size="lg" color="default" />
+      </div>
+    </main>
+  );
+}
 
 function ProductPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const supabase = createClientComponentClient();
+
+  const idQuery = searchParams.get("id");
 
   const [purchaseModalOpen, setPurchaseModalOpen] = useState<boolean>(false);
+  const [product, setProduct] = useState<any | null>(null);
+
+  const getProduct = async () => {
+    const { data, error } = await supabase
+      .from("Product")
+      .select()
+      .eq("id", idQuery);
+
+    if (data && data.length > 0) setProduct(data[0]);
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, [idQuery]);
+
+  console.log(product);
+
+  if (!product) return <ProductPageLoading />;
 
   return (
     <main className={styles.mainProduct}>
@@ -67,7 +103,7 @@ function ProductPage() {
               hidden: { opacity: 0, scale: 0.85 },
             }}
           >
-            Essence Kuhinja
+            {product.name}
           </motion.h2>
           <motion.p
             className={styles.price}
@@ -80,7 +116,7 @@ function ProductPage() {
               hidden: { opacity: 0 },
             }}
           >
-            Od €{(149999).toLocaleString("en-US")}
+            Od €{product.price.toLocaleString("en-US")}
           </motion.p>
           <motion.p
             initial="hidden"
@@ -92,17 +128,7 @@ function ProductPage() {
               hidden: { opacity: 0 },
             }}
           >
-            Kuhinja Imperial predstavlja vrhunski spoj elegancije i
-            funkcionalnosti. Sa sofisticiranim dizajnom i pažljivim detaljima,
-            ova kuhinja oduševljava svojom luksuznom pojavom. Visokokvalitetni
-            materijali kombiniraju se s inovativnim rješenjima kako bi stvorili
-            prostor gdje se estetika susreće s praktičnošću.
-            <br />
-            <br /> Imperial kuhinja pruža obilje prostora za organizaciju, s
-            pametno osmišljenim elementima za skladištenje. Osvjetljenje je
-            pažljivo integrirano kako bi se stvorila ugodna atmosfera, čineći
-            svaku kulinarsku avanturu posebnom. Svaki element ove kuhinje
-            odražava vrhunsku izradu i posvećenost detaljima.
+            {product.description}
           </motion.p>
           <div className={styles.buttons}>
             <motion.button

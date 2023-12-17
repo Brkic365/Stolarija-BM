@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/pages/Products.module.scss";
-import rawProductSections from "../../../../public/data/products.json";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { useSearchParams } from "next/navigation";
 
 import Product from "@/components/Product";
 import Link from "next/link";
+
+import { ProductType } from "@/types/product";
 
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
@@ -16,14 +19,6 @@ import { Select, SelectItem } from "@nextui-org/react";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Filters from "@/components/Filters";
-
-type ProductType = {
-  category: string;
-  name: string;
-  price: number;
-  image: string;
-  uploadDate: string;
-};
 
 type SortItemType = {
   label: string;
@@ -52,11 +47,46 @@ const sortItems: Array<SortItemType> = [
 function Products() {
   const searchParams = useSearchParams();
 
+  const supabase = createClientComponentClient();
+
+  const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
+  const [products, setProducts] = useState<ProductType[]>([]);
+
+  const getProducts = async () => {
+    const { data, error } = await supabase.from("Product").select("*");
+
+    if (data) {
+      // Get min and max price
+      let min = data[0].price;
+      let max = min;
+
+      data.forEach((product) => {
+        if (product.price < min) {
+          min = product.price;
+        }
+
+        if (product.price > max) {
+          max = product.price;
+        }
+      });
+
+      setMinPrice(min);
+      setMaxPrice(max);
+      setPriceRange([min, max]);
+
+      setOriginalProducts(data);
+      setProducts(data);
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
   const categoryQuery = searchParams.get("category");
 
   const [openFiltersDrawer, setOpenFiltersDrawer] = useState(false);
 
-  const [products, setProducts] = useState<ProductType[]>([]);
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [categories, setCategories] = useState<Array<string>>([]);
   const [sortType, setSortType] = useState("popular");
@@ -97,98 +127,60 @@ function Products() {
 
   // Filter by category and price
   useEffect(() => {
-    // Filter by price
-    let filteredPrice = rawProductSections.map((productSection) => {
-      return {
-        ...productSection,
-        products: productSection.products.filter((product) => {
-          return (
-            product.price >= priceRange[0] && product.price <= priceRange[1]
-          );
-        }),
-      };
+    // Filter based on price and category
+
+    let kitchens = 0,
+      rooms = 0,
+      furniture = 0;
+
+    let filteredProducts = originalProducts.filter((product) => {
+      let priceInRange =
+        product.price >= priceRange[0] && product.price <= priceRange[1];
+
+      // Update category counts before filtering categories
+      if (priceInRange) {
+        if (product.category === "kitchens") {
+          kitchens++;
+        } else if (product.category === "rooms") {
+          rooms++;
+        } else if (product.category === "furniture") {
+          furniture++;
+        }
+      }
+
+      return (
+        priceInRange &&
+        (categories.length === 0 || categories.includes(product.category))
+      );
     });
 
-    // Create a copy of filteredPrice to store the amount of categories available for current price filter
-    let filteredCategories = filteredPrice;
+    setCategoryCounts([kitchens, rooms, furniture]);
 
-    // Get amount of categories available for current price filter
-    filteredCategories.forEach((productSection, i) => {
-      setCategoryCounts((prev) => {
-        prev[i] = productSection.products.length;
-        return prev;
-      });
-    });
-
-    // Filter by category if there are any selected
-    if (categories.length > 0) {
-      filteredCategories = filteredPrice.filter((productSection) => {
-        return categories.includes(productSection.id);
-      });
-    }
-
-    let lengthTemp = 0;
-
-    // Get length of products
-    filteredCategories.forEach((productSection) => {
-      lengthTemp += productSection.products.length;
-    });
-
-    setLength(lengthTemp);
-
-    // Flat the products into one array
-    const flatProductsArray = filteredCategories.flatMap((val) =>
-      val.products.map((product) => ({
-        ...product,
-        category: val.id,
-      }))
-    );
+    setLength(filteredProducts.length);
 
     // Sort products
     if (sortType === "popular") {
-      flatProductsArray.sort((a, b) => {
+      filteredProducts.sort((a, b) => {
         return b.price - a.price;
       });
     } else if (sortType === "newest") {
-      flatProductsArray.sort((a, b) => {
+      filteredProducts.sort((a, b) => {
         return (
-          new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       });
     } else if (sortType === "priceAsc") {
-      flatProductsArray.sort((a, b) => {
+      filteredProducts.sort((a, b) => {
         return a.price - b.price;
       });
     } else if (sortType === "priceDesc") {
-      flatProductsArray.sort((a, b) => {
+      filteredProducts.sort((a, b) => {
         return b.price - a.price;
       });
     }
 
-    setProducts(flatProductsArray);
+    setProducts(filteredProducts);
   }, [categories, priceRange, sortType]);
-
-  // Get min and max price
-  useEffect(() => {
-    let min = rawProductSections[0].products[0].price;
-    let max = min;
-
-    rawProductSections.forEach((productSection) => {
-      productSection.products.forEach((product) => {
-        if (product.price < min) {
-          min = product.price;
-        }
-
-        if (product.price > max) {
-          max = product.price;
-        }
-      });
-    });
-
-    setMinPrice(min);
-    setMaxPrice(max);
-    setPriceRange([min, max]);
-  }, [rawProductSections]);
 
   // Set categories if there is a category query
   useEffect(() => {
