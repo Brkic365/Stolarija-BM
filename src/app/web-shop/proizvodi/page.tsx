@@ -53,7 +53,7 @@ function Products() {
   const [products, setProducts] = useState<ProductType[]>([]);
 
   const getProducts = async () => {
-    const { data, error } = await supabase.from("Product").select("*");
+    const { data, error } = await supabase.from("products").select("*");
 
     if (data) {
       // Get min and max price

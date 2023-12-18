@@ -19,13 +19,15 @@ export async function POST(request: Request) {
       username: body.username,
     };
 
+    /*
     const accessToken = signJwtAccessToken(userWithoutPass);
 
     const result = {
       ...userWithoutPass,
       accessToken,
     };
+    */
 
-    return new Response(JSON.stringify(result));
+    return new Response(JSON.stringify(userWithoutPass));
   } else return new Response(JSON.stringify(null));
 }

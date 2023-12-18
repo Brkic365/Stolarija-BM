@@ -1,87 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/Table.module.scss";
+
+import { OrderType } from "@/types/order";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import Status from "./Status";
 import OrderModal from "./modals/OrderModal";
 
-type OrdersType = {
-  id: number;
-  name: string;
-  price: number;
-  date: Date;
-  status: string;
-}[];
-
-const orders: OrdersType = [
-  {
-    id: 1,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "done",
-  },
-  {
-    id: 2,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "working",
-  },
-  {
-    id: 3,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "waiting",
-  },
-  {
-    id: 4,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "done",
-  },
-  {
-    id: 5,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "working",
-  },
-  {
-    id: 6,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "waiting",
-  },
-  {
-    id: 7,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "done",
-  },
-  {
-    id: 8,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "working",
-  },
-  {
-    id: 9,
-    name: "Imperial Kuhinja",
-    price: 21999,
-    date: new Date(2023, 11, 24),
-    status: "waiting",
-  },
-];
-
 function OrderTable() {
-  const [openedOrder, setOpenedOrder] = useState<number | null>(null);
+  const supabase = createClientComponentClient();
+
+  const [openedOrder, setOpenedOrder] = useState<OrderType | null>(null);
+  const [orders, setOrders] = useState<OrderType[]>([]);
+
+  const getOrders = async () => {
+    const { data, error } = await supabase.from("orders").select("*");
+
+    if (data) {
+      setOrders(data);
+    }
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, [openedOrder]);
 
   if (orders.length === 0) {
     return (
@@ -95,7 +40,7 @@ function OrderTable() {
   return (
     <table className={styles.table}>
       <OrderModal
-        open={openedOrder !== null}
+        order={openedOrder}
         handleClose={() => setOpenedOrder(null)}
       />
       <thead>
@@ -108,10 +53,10 @@ function OrderTable() {
       </thead>
       <tbody>
         {orders.map((order) => (
-          <tr key={order.id} onClick={() => setOpenedOrder(order.id)}>
-            <td>{order.name}</td>
+          <tr key={order.id} onClick={() => setOpenedOrder(order)}>
+            <td>{order.product}</td>
             <td>{order.price.toLocaleString("en-US")} €</td>
-            <td>{order.date.toLocaleDateString("en-GB")}</td>
+            <td>{new Date(order.created_at).toLocaleDateString("en-GB")}</td>
             <td className={styles.status}>
               <Status status={order.status} />
             </td>

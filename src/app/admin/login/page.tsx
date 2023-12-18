@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 import { useRouter } from "next/navigation";
 
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -18,8 +18,6 @@ function AdminLogin() {
   const [password, setPassword] = useState<string>("");
 
   const router = useRouter();
-
-  const { data: session } = useSession();
 
   const login = async (e: any) => {
     e.preventDefault();

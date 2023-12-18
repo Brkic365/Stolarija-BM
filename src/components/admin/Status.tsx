@@ -32,7 +32,7 @@ function Status({ status }: { status: string }) {
         <p>Pročitano</p>
       </div>
     );
-  } else if (status === "unread") {
+  } else if (status === "notRead") {
     return (
       <div className={styles.red}>
         <HiOutlineClock />

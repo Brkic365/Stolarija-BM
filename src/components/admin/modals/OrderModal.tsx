@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/modals/OrderModal.module.scss";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+import { OrderType } from "@/types/order";
 
 import Modal from "@mui/material/Modal";
 
@@ -36,13 +40,15 @@ function DeleteOrder({ close }: { close: () => void }) {
 }
 
 function OrderModal({
-  open,
+  order,
   handleClose,
 }: {
-  open: boolean;
+  order: OrderType | null;
   handleClose: () => void;
 }) {
-  const [statusOption, setStatusOption] = useState(0);
+  const supabase = createClientComponentClient();
+
+  const [statusOption, setStatusOption] = useState<string | null>(null);
 
   const [deleting, setDeleting] = useState(false);
 
@@ -51,9 +57,28 @@ function OrderModal({
     handleClose();
   };
 
+  const changeStatus = async (newStatus: string) => {
+    setStatusOption(newStatus);
+
+    if (order) {
+      const updateRes = await supabase
+        .from("orders")
+        .update({ status: newStatus })
+        .eq("id", order.id);
+
+      console.log(updateRes);
+    }
+  };
+
+  useEffect(() => {
+    if (order) setStatusOption(order.status);
+  }, [order]);
+
+  if (!order) return null;
+
   return (
     <Modal
-      open={open}
+      open={order !== null}
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -77,9 +102,9 @@ function OrderModal({
                     <li>Prezime:</li>
                   </ul>
                   <ul className={styles.values}>
-                    <li>Imperial Kuhinja</li>
-                    <li>Ivan</li>
-                    <li>Horvat</li>
+                    <li>{order.product}</li>
+                    <li>{order.first_name}</li>
+                    <li>{order.last_name}</li>
                   </ul>
                 </div>
                 <div className={styles.infoBlock}>
@@ -89,25 +114,16 @@ function OrderModal({
                     <li>Adresa:</li>
                   </ul>
                   <ul className={styles.values}>
-                    <li>ivanhorvat@gmail.com</li>
-                    <li>095 444 5555</li>
-                    <li>Ulica kralja Držislava 5, Vrbik, Zagreb, 10 000</li>
+                    <li>{order.email}</li>
+                    <li>{order.telephone}</li>
+                    <li>{order.address}</li>
                   </ul>
                 </div>
               </div>
 
               <div className={styles.message}>
                 <p className={styles.label}>Poruka:</p>
-                <p className={styles.value}>
-                  Radujem se suradnji s vama na stvaranju moje idealne kuhinje!
-                  Želio bih naglasiti nekoliko detalja kako biste mogli bolje
-                  razumjeti moje potrebe. Preferiram moderni minimalizam s
-                  naglaskom na funkcionalnosti. Boje koje volim su neutralne
-                  nijanse poput bijele, sive i drvenih tonova. Također, važno mi
-                  je da kuhinja ima dovoljno prostora za pohranu, te bih cijenio
-                  inovativna rješenja poput izvučnih polica i organizatora
-                  ladica.
-                </p>
+                <p className={styles.value}>{order.message || "Nema poruke"}</p>
               </div>
 
               <div className={styles.status}>
@@ -115,27 +131,27 @@ function OrderModal({
                 <div className={styles.statusOptions}>
                   <div
                     className={`${styles.green} ${
-                      statusOption === 0 ? styles.selected : undefined
+                      statusOption === "done" ? styles.selected : undefined
                     }`}
-                    onClick={() => setStatusOption(0)}
+                    onClick={() => changeStatus("done")}
                   >
                     <HiOutlineCheckCircle />
                     <p>Gotovo</p>
                   </div>
                   <div
                     className={`${styles.blue} ${
-                      statusOption === 1 ? styles.selected : undefined
+                      statusOption === "working" ? styles.selected : undefined
                     }`}
-                    onClick={() => setStatusOption(1)}
+                    onClick={() => changeStatus("working")}
                   >
                     <HiOutlineClock />
                     <p>U izradi</p>
                   </div>
                   <div
                     className={`${styles.red} ${
-                      statusOption === 2 ? styles.selected : undefined
+                      statusOption === "waiting" ? styles.selected : undefined
                     }`}
-                    onClick={() => setStatusOption(2)}
+                    onClick={() => changeStatus("waiting")}
                   >
                     <HiOutlineClock />
                     <p>Čeka</p>

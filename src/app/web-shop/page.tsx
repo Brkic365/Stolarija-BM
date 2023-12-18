@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/pages/Webshop.module.scss";
-import productSections from "../../../public/data/products.json";
+import productSections from "../../../public/data/productSections.json";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
@@ -28,7 +28,7 @@ function Webshop() {
   const [products, setProducts] = useState<any[] | null>([]);
 
   const getProducts = async () => {
-    const { data, error } = await supabase.from("Product").select("*");
+    const { data, error } = await supabase.from("products").select("*");
 
     setProducts(data);
   };

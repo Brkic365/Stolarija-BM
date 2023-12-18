@@ -117,6 +117,38 @@
       }
     }
 
+    .uploadedImages {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 1rem;
+
+      .uploadedImage {
+        width: 4rem;
+        height: 4rem;
+        background-size: cover;
+        background-position: center;
+        border-radius: 0.3125rem;
+
+        position: relative;
+
+        .delete {
+          cursor: pointer;
+          position: absolute;
+          right: 0.25rem;
+          top: 0.25rem;
+          background-color: rgb(223, 43, 43);
+          color: white;
+          border-radius: 50%;
+          padding: 0.2rem;
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+      }
+    }
+
     .info {
       margin-top: 1.5rem;
       section {

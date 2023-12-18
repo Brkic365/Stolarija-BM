@@ -1,9 +1,14 @@
+type ImageType = {
+  url: string;
+  pathname: string;
+};
+
 export type ProductType = {
   id: number;
   name: string;
   description: string;
   price: number;
-  image_url: string;
+  images: ImageType[];
   category: string;
   created_at: Date;
 };

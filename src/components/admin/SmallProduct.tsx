@@ -9,7 +9,7 @@ function Product({ product }: { product: ProductType }) {
   return (
     <section className={styles.product}>
       <div className={styles.image}>
-        <img src={product.image_url} alt={product.name} />
+        <img src={product.images[0].url} alt={product.name} />
       </div>
       <h4>{product.name}</h4>
     </section>

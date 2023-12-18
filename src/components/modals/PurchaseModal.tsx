@@ -3,6 +3,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "@/styles/components/modals/PurchaseModal.module.scss";
 
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 import Link from "next/link";
 
 import { HiArrowSmRight, HiOutlineExclamationCircle } from "react-icons/hi";
@@ -11,14 +13,19 @@ import { HiXMark } from "react-icons/hi2";
 import Modal from "@mui/material/Modal";
 
 import { motion } from "framer-motion";
+import { ProductType } from "@/types/product";
 
 function PurchaseModal({
   open,
   handleClose,
+  product,
 }: {
   open: boolean;
   handleClose: () => void;
+  product: ProductType;
 }) {
+  const supabase = createClientComponentClient();
+
   const [orderSuccess, setOrderSuccess] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,7 +41,7 @@ function PurchaseModal({
     handleClose();
   };
 
-  const order = (e: any) => {
+  const order = async (e: any) => {
     e.preventDefault();
 
     const name = nameRef.current!.value;
@@ -55,16 +62,23 @@ function PurchaseModal({
       return;
     }
 
-    const data = {
-      name,
-      surname,
+    const insertRes = await supabase.from("orders").insert({
+      product: product.name,
+      price: product.price,
+      first_name: name,
+      last_name: surname,
       email,
-      number,
+      telephone: number,
       address,
       message,
-    };
+    });
 
-    setOrderSuccess(true);
+    if (insertRes.error) {
+      console.log(insertRes.error);
+      setError("Greška prilikom narudžbe.");
+    } else {
+      setOrderSuccess(true);
+    }
   };
 
   useEffect(() => {
@@ -93,7 +107,7 @@ function PurchaseModal({
     >
       <section className={styles.purchaseModal}>
         <section className={styles.top}>
-          <h3>Potvrda narudÅ¾be</h3>
+          <h3>Potvrda narudžbe</h3>
           <HiXMark onClick={close} />
         </section>
 
@@ -133,7 +147,7 @@ function PurchaseModal({
                 },
               }}
             >
-              NarudÅ¾ba uspjeÅ¡no poslana!
+              Narudžba uspješno poslana!
             </motion.h3>
             <motion.p
               initial="hidden"
@@ -149,7 +163,7 @@ function PurchaseModal({
                 },
               }}
             >
-              Hvala Vam na povjerenju. Javit Äemo Vam se u najkraÄem moguÄem
+              Hvala Vam na povjerenju. Javit ćemo Vam se u najkraćem mogućem
               roku.
             </motion.p>
             <motion.button
@@ -208,7 +222,7 @@ function PurchaseModal({
                 },
               }}
             >
-              GreÅ¡ka prilikom narudÅ¾be!
+              Greška prilikom narudžbe!
             </motion.h3>
             <motion.p
               initial="hidden"
@@ -224,7 +238,7 @@ function PurchaseModal({
                 },
               }}
             >
-              Molimo Vas pokuÅ¡ajte ponovno ili nas kontaktirajte{" "}
+              Molimo Vas pokušajte ponovno ili nas kontaktirajte{" "}
               <Link href="/kontakt">ovdje</Link>.
             </motion.p>
             <section className={styles.buttons}>
@@ -243,7 +257,7 @@ function PurchaseModal({
                   },
                 }}
               >
-                PokuÅ¡aj ponovno
+                Pokušaj ponovno
               </motion.button>
               <motion.button
                 className={styles.emptyButton}
@@ -303,7 +317,7 @@ function PurchaseModal({
             </motion.div>
 
             <section className={styles.buttons}>
-              <button type="submit">NaruÄi</button>
+              <button type="submit">Naruči</button>
               <button className={styles.emptyButton} onClick={close}>
                 Odustani <HiArrowSmRight />
               </button>

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/modals/MessageModal.module.scss";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import Modal from "@mui/material/Modal";
 
 import { HiXMark } from "react-icons/hi2";
+import { MessageType } from "@/types/message";
 
 function DeleteMessage({ close }: { close: () => void }) {
   return (
@@ -31,12 +34,14 @@ function DeleteMessage({ close }: { close: () => void }) {
 }
 
 function MessageModal({
-  open,
+  message,
   handleClose,
 }: {
-  open: boolean;
+  message: MessageType | null;
   handleClose: () => void;
 }) {
+  const supabase = createClientComponentClient();
+
   const [deleting, setDeleting] = useState(false);
 
   const close = () => {
@@ -44,9 +49,24 @@ function MessageModal({
     handleClose();
   };
 
+  const changeStatus = async () => {
+    if (message && !message.read) {
+      await supabase
+        .from("messages")
+        .update({ read: true })
+        .eq("id", message.id);
+    }
+  };
+
+  useEffect(() => {
+    changeStatus();
+  }, [message]);
+
+  if (!message) return null;
+
   return (
     <Modal
-      open={open}
+      open={message !== null}
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -68,18 +88,10 @@ function MessageModal({
               <li>Poruka:</li>
             </ul>
             <ul className={styles.values}>
-              <li>Ivan</li>
-              <li>ivanhorvat@gmail.com</li>
-              <li>095 444 5555</li>
-              <li>
-                Radujem se suradnji s vama na stvaranju moje idealne kuhinje!
-                Želio bih naglasiti nekoliko detalja kako biste mogli bolje
-                razumjeti moje potrebe. Preferiram moderni minimalizam s
-                naglaskom na funkcionalnosti. Boje koje volim su neutralne
-                nijanse poput bijele, sive i drvenih tonova. Također, važno mi
-                je da kuhinja ima dovoljno prostora za pohranu, te bih cijenio
-                inovativna rješenja poput izvučnih polica i organizatora ladica.
-              </li>
+              <li>{message.name}</li>
+              <li>{message.email}</li>
+              <li>{message.telephone}</li>
+              <li>{message.message}</li>
             </ul>
           </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "@/styles/pages/Contact.module.scss";
 import {
   HiMapPin,
@@ -10,11 +10,169 @@ import {
   HiChatBubbleBottomCenter,
 } from "react-icons/hi2";
 
+import Modal from "@mui/material/Modal";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 import { motion } from "framer-motion";
 
+export function MessageSuccessMessage({
+  open,
+  handleClose,
+}: {
+  open: boolean;
+  handleClose: () => void;
+}) {
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <section className={styles.sentMessageModal}>
+        <section className={styles.success}>
+          <motion.img
+            src="/images/icons/success.webp"
+            alt="Success icon"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            variants={{
+              visible: {
+                transform: "scale(1)",
+                filter: "blur(0px)",
+                opacity: 1,
+              },
+              hidden: {
+                transform: "scale(1.5)",
+                filter: "blur(4px)",
+                opacity: 0,
+              },
+            }}
+          />
+          <motion.h3
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            variants={{
+              visible: {
+                opacity: 1,
+              },
+              hidden: {
+                opacity: 0,
+              },
+            }}
+          >
+            Narudžba uspješno poslana!
+          </motion.h3>
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            variants={{
+              visible: {
+                opacity: 1,
+              },
+              hidden: {
+                opacity: 0,
+              },
+            }}
+          >
+            Hvala Vam na povjerenju. Javit ćemo Vam se u najkraćem mogućem roku.
+          </motion.p>
+          <motion.button
+            onClick={handleClose}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 1 }}
+            variants={{
+              visible: {
+                opacity: 1,
+              },
+              hidden: {
+                opacity: 0,
+              },
+            }}
+          >
+            Zatvori
+          </motion.button>
+        </section>
+      </section>
+    </Modal>
+  );
+}
+
 function Contact() {
+  const supabase = createClientComponentClient();
+
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [number, setNumber] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+
+  const [messageSuccess, setMessageSuccess] = useState<boolean>(false);
+  const [canSend, setCanSend] = useState<boolean>(false);
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const numberRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  const reset = () => {
+    setName("");
+    setEmail("");
+    setNumber("");
+    setMessage("");
+
+    nameRef.current!.value = "";
+    emailRef.current!.value = "";
+    numberRef.current!.value = "";
+    messageRef.current!.value = "";
+  };
+
+  const sendMessage = async (e: any) => {
+    e.preventDefault();
+
+    if (name === "" || email === "" || number === "" || message === "") {
+      return;
+    }
+
+    const insertRes = await supabase.from("messages").insert({
+      name,
+      email,
+      telephone: number,
+      message,
+    });
+
+    if (insertRes.error) {
+      console.log(insertRes.error);
+    } else {
+      setMessageSuccess(true);
+      reset();
+    }
+  };
+
+  // Update so user can send once all values of the form are filled
+  useEffect(() => {
+    if (name !== "" && email !== "" && number !== "" && message !== "") {
+      setCanSend(true);
+    } else {
+      setCanSend(false);
+    }
+  }, [name, email, number, message]);
+
   return (
     <main className={styles.mainContact}>
+      <MessageSuccessMessage
+        open={messageSuccess}
+        handleClose={() => setMessageSuccess(false)}
+      />
+
       {/* Hero section */}
       <section className={styles.hero}>
         <motion.h1
@@ -157,6 +315,7 @@ function Contact() {
               <form>
                 <motion.input
                   placeholder="Ime"
+                  id="name"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -165,9 +324,13 @@ function Contact() {
                     visible: { transform: "translateX(0)", opacity: 1 },
                     hidden: { transform: "translateX(100%)", opacity: 0 },
                   }}
+                  ref={nameRef}
+                  onChange={(e) => setName(e.target.value)}
                 />
                 <motion.input
                   placeholder="Broj telefona"
+                  type="telephone"
+                  id="telephone"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -176,9 +339,12 @@ function Contact() {
                     visible: { transform: "translateX(0)", opacity: 1 },
                     hidden: { transform: "translateX(100%)", opacity: 0 },
                   }}
+                  ref={numberRef}
+                  onChange={(e) => setNumber(e.target.value)}
                 />
                 <motion.input
                   placeholder="E-mail adresa"
+                  type="email"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -187,6 +353,8 @@ function Contact() {
                     visible: { transform: "translateX(0)", opacity: 1 },
                     hidden: { transform: "translateX(100%)", opacity: 0 },
                   }}
+                  ref={emailRef}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <motion.textarea
                   placeholder="Poruka"
@@ -199,6 +367,8 @@ function Contact() {
                     visible: { transform: "translateX(0)", opacity: 1 },
                     hidden: { transform: "translateX(100%)", opacity: 0 },
                   }}
+                  ref={messageRef}
+                  onChange={(e) => setMessage(e.target.value)}
                 />
                 <motion.button
                   initial="hidden"
@@ -209,6 +379,9 @@ function Contact() {
                     visible: { transform: "translateX(0)", opacity: 1 },
                     hidden: { transform: "translateX(100%)", opacity: 0 },
                   }}
+                  onClick={sendMessage}
+                  disabled={!canSend}
+                  className={canSend ? styles.canSend : styles.disabled}
                 >
                   Pošalji
                 </motion.button>

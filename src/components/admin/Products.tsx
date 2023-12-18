@@ -16,16 +16,17 @@ import { HiPlus } from "react-icons/hi";
 function Products() {
   const supabase = createClientComponentClient();
 
-  const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
+  const [total, setTotal] = useState<number>(0);
+
   const [products, setProducts] = useState<ProductType[]>([]);
   const [addingProduct, setAddingProduct] = useState(false);
 
   const getProducts = async () => {
-    const { data, error } = await supabase.from("Product").select("*");
+    const { data, error } = await supabase.from("products").select("*");
 
     if (data) {
-      setOriginalProducts(data);
       setProducts(data);
+      setTotal(data.length);
     }
   };
 
@@ -42,7 +43,7 @@ function Products() {
       <section className={styles.top}>
         <section className={styles.left}>
           <h3>Proizvodi</h3>
-          <p>21 Ukupno</p>
+          <p>{total} Ukupno</p>
         </section>
         <section className={styles.right}>
           <button onClick={() => setAddingProduct(true)}>

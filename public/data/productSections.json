@@ -1,0 +1,17 @@
+[
+  {
+    "id": "kitchens",
+    "name": "Kuhinje",
+    "description": "Kreirajte Kulinarski Raj: Prilagođene Kuhinje Po Vašoj Mjeri, Spojevi Estetike i Funkcionalnosti."
+  },
+  {
+    "id": "rooms",
+    "name": "Dječje Sobe",
+    "description": "Dječje Carstvo Snova: Namještaj Za Male Avanturiste, Unikatno Prilagođen Za Sretno Odrastanje."
+  },
+  {
+    "id": "furniture",
+    "name": "Namještaj",
+    "description": "Vaša Oaza Stila: Personalizirani Namještaj, Izrađen s Pažnjom i Stručnošću, Oblikovan Za Vaš Prostor."
+  }
+]

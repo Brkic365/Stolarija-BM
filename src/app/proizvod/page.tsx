@@ -40,14 +40,25 @@ function ProductPage() {
 
   const [purchaseModalOpen, setPurchaseModalOpen] = useState<boolean>(false);
   const [product, setProduct] = useState<any | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const getProduct = async () => {
     const { data, error } = await supabase
-      .from("Product")
+      .from("products")
       .select()
       .eq("id", idQuery);
 
-    if (data && data.length > 0) setProduct(data[0]);
+    if (data && data.length > 0) {
+      setProduct(data[0]);
+
+      let tempUrls = [];
+
+      for await (let image of data[0].images) {
+        tempUrls.push(image.url);
+      }
+
+      setImageUrls(tempUrls);
+    }
   };
 
   useEffect(() => {
@@ -63,6 +74,7 @@ function ProductPage() {
       <PurchaseModal
         open={purchaseModalOpen}
         handleClose={() => setPurchaseModalOpen(false)}
+        product={product}
       />
 
       {/* Hero section */}
@@ -81,16 +93,7 @@ function ProductPage() {
             hidden: { opacity: 0, scale: 0.85 },
           }}
         >
-          <ProductImagesCarousel
-            images={[
-              "/images/kitchens/essence.webp",
-              "/images/kitchens/boutique.webp",
-              "/images/kitchens/huncho.webp",
-              "/images/kitchens/imperial.webp",
-              "/images/kitchens/tunechi.webp",
-            ]}
-            options={OPTIONS}
-          />
+          <ProductImagesCarousel images={imageUrls} options={OPTIONS} />
         </motion.div>
         <section className={styles.productInfo}>
           <motion.h2
