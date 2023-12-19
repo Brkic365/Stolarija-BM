@@ -27,8 +27,6 @@ function UpdateProductModal({
   handleClose: () => void;
   updateData: () => void;
 }) {
-  if (!product) return null;
-
   const supabase = createClientComponentClient();
 
   const [images, setImages] = useState<ImageType[]>([]);
@@ -152,6 +150,8 @@ function UpdateProductModal({
       setImages(product.images);
     }
   }, [product]);
+
+  if (!product) return null;
 
   return (
     <Modal
