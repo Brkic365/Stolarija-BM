@@ -5,6 +5,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { OrderType } from "@/types/order";
 
+import { Scrollbars } from "react-custom-scrollbars";
+
 import Modal from "@mui/material/Modal";
 
 import { HiOutlineCheckCircle, HiOutlineClock } from "react-icons/hi2";
@@ -13,7 +15,21 @@ import { motion } from "framer-motion";
 
 import { HiXMark } from "react-icons/hi2";
 
-function DeleteOrder({ close }: { close: () => void }) {
+function DeleteOrder({
+  close,
+  orderId,
+}: {
+  close: () => void;
+  orderId: number;
+}) {
+  const supabase = createClientComponentClient();
+
+  const deleteOrder = async () => {
+    await supabase.from("orders").delete().eq("id", orderId);
+
+    close();
+  };
+
   return (
     <section className={styles.deleteModal}>
       <section className={styles.top}>
@@ -30,7 +46,7 @@ function DeleteOrder({ close }: { close: () => void }) {
       </section>
 
       <section className={styles.buttons}>
-        <button className={styles.delete} onClick={close}>
+        <button className={styles.delete} onClick={deleteOrder}>
           Obriši
         </button>
         <button onClick={close}>Odustani</button>
@@ -84,7 +100,7 @@ function OrderModal({
       aria-describedby="modal-modal-description"
     >
       {deleting ? (
-        <DeleteOrder close={close} />
+        <DeleteOrder close={close} orderId={order.id} />
       ) : (
         <section className={styles.orderModal}>
           <section className={styles.top}>
@@ -123,7 +139,11 @@ function OrderModal({
 
               <div className={styles.message}>
                 <p className={styles.label}>Poruka:</p>
-                <p className={styles.value}>{order.message || "Nema poruke"}</p>
+                <Scrollbars style={{ height: 250 }}>
+                  <p className={styles.value}>
+                    {order.message || "Nema poruke"}
+                  </p>
+                </Scrollbars>
               </div>
 
               <div className={styles.status}>

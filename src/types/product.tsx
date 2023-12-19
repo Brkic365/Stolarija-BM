@@ -11,4 +11,5 @@ export type ProductType = {
   images: ImageType[];
   category: string;
   created_at: Date;
+  orders: number;
 };

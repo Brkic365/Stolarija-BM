@@ -39,6 +39,7 @@ function Products() {
       <AddProductModal
         open={addingProduct}
         handleClose={() => setAddingProduct(false)}
+        updateData={getProducts}
       />
       <section className={styles.top}>
         <section className={styles.left}>
@@ -57,7 +58,7 @@ function Products() {
         {products.map((product: ProductType, i: number) => {
           return (
             <div className={styles.productContainer} key={i}>
-              <SmallProduct product={product} />
+              <SmallProduct product={product} updateData={getProducts} />
             </div>
           );
         })}

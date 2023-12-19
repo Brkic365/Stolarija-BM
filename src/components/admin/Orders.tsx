@@ -16,7 +16,10 @@ function Orders() {
   const [waiting, setWaiting] = useState<number>(0);
 
   const getOrders = async () => {
-    const { data, error } = await supabase.from("orders").select("*");
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (data) {
       setTotal(data.length);
@@ -61,7 +64,7 @@ function Orders() {
         </section>
       </section>
       <section className={styles.tableContainer}>
-        <OrderTable />
+        <OrderTable updateData={getOrders} />
       </section>
     </section>
   );

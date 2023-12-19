@@ -108,6 +108,7 @@
         font-size: 1rem;
         font-weight: 400;
         line-height: 1.5625rem;
+        margin-right: 2rem;
       }
     }
   }
@@ -122,7 +123,7 @@
     gap: 1rem;
 
     .delete {
-      background: #B90606;
+      background: #b90606;
     }
   }
 }
@@ -172,12 +173,19 @@
       .labels,
       .values {
         gap: 1.5rem;
-        width: fit-content;
 
         li {
           width: fit-content;
           margin-right: 1rem;
         }
+      }
+
+      .labels {
+        width: fit-content;
+      }
+
+      .values {
+        margin-left: 2rem;
       }
     }
   }

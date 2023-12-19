@@ -73,8 +73,13 @@ function PurchaseModal({
       message,
     });
 
-    if (insertRes.error) {
-      console.log(insertRes.error);
+    const updateProductRes = await supabase.rpc("increment", {
+      x: 1,
+      row_id: product.id,
+    });
+
+    if (insertRes.error || updateProductRes.error) {
+      console.log(insertRes.error, updateProductRes.error);
       setError("Greška prilikom narudžbe.");
     } else {
       setOrderSuccess(true);

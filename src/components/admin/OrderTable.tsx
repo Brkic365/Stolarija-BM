@@ -10,14 +10,17 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Status from "./Status";
 import OrderModal from "./modals/OrderModal";
 
-function OrderTable() {
+function OrderTable({ updateData }: { updateData: () => void }) {
   const supabase = createClientComponentClient();
 
   const [openedOrder, setOpenedOrder] = useState<OrderType | null>(null);
   const [orders, setOrders] = useState<OrderType[]>([]);
 
   const getOrders = async () => {
-    const { data, error } = await supabase.from("orders").select("*");
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (data) {
       setOrders(data);
@@ -27,6 +30,10 @@ function OrderTable() {
   useEffect(() => {
     getOrders();
   }, [openedOrder]);
+
+  useEffect(() => {
+    updateData();
+  }, [orders]);
 
   if (orders.length === 0) {
     return (

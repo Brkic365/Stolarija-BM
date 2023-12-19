@@ -66,7 +66,7 @@ export function MessageSuccessMessage({
               },
             }}
           >
-            Narudžba uspješno poslana!
+            Poruka uspješno poslana!
           </motion.h3>
           <motion.p
             initial="hidden"
@@ -82,7 +82,7 @@ export function MessageSuccessMessage({
               },
             }}
           >
-            Hvala Vam na povjerenju. Javit ćemo Vam se u najkraćem mogućem roku.
+            Hvala Vam na poruci. Javit ćemo Vam se u najkraćem mogućem roku.
           </motion.p>
           <motion.button
             onClick={handleClose}

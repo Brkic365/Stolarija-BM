@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/modals/MessageModal.module.scss";
 
+import { Scrollbars } from "react-custom-scrollbars";
+
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import Modal from "@mui/material/Modal";
@@ -8,7 +10,21 @@ import Modal from "@mui/material/Modal";
 import { HiXMark } from "react-icons/hi2";
 import { MessageType } from "@/types/message";
 
-function DeleteMessage({ close }: { close: () => void }) {
+function DeleteMessage({
+  close,
+  messageId,
+}: {
+  close: () => void;
+  messageId: number;
+}) {
+  const supabase = createClientComponentClient();
+
+  const deleteMessage = async () => {
+    await supabase.from("messages").delete().eq("id", messageId);
+
+    close();
+  };
+
   return (
     <section className={styles.deleteModal}>
       <section className={styles.top}>
@@ -24,7 +40,7 @@ function DeleteMessage({ close }: { close: () => void }) {
       </section>
 
       <section className={styles.buttons}>
-        <button className={styles.delete} onClick={close}>
+        <button className={styles.delete} onClick={deleteMessage}>
           Obriši
         </button>
         <button onClick={close}>Odustani</button>
@@ -72,7 +88,7 @@ function MessageModal({
       aria-describedby="modal-modal-description"
     >
       {deleting ? (
-        <DeleteMessage close={close} />
+        <DeleteMessage close={close} messageId={message.id} />
       ) : (
         <section className={styles.messageModal}>
           <section className={styles.top}>
@@ -91,7 +107,9 @@ function MessageModal({
               <li>{message.name}</li>
               <li>{message.email}</li>
               <li>{message.telephone}</li>
-              <li>{message.message}</li>
+              <Scrollbars style={{ height: 300 }}>
+                <li>{message.message}</li>
+              </Scrollbars>
             </ul>
           </div>
 

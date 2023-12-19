@@ -11,14 +11,17 @@ import Status from "./Status";
 
 import MessageModal from "./modals/MessageModal";
 
-function MessageTable() {
+function MessageTable({ updateData }: { updateData: () => void }) {
   const supabase = createClientComponentClient();
 
   const [openedMessage, setOpenedMessage] = useState<MessageType | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
-    const { data, error } = await supabase.from("messages").select("*");
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (data) {
       setMessages(data);
@@ -28,6 +31,10 @@ function MessageTable() {
   useEffect(() => {
     getMessages();
   }, [openedMessage]);
+
+  useEffect(() => {
+    updateData();
+  }, [messages]);
 
   if (messages.length === 0) {
     return (

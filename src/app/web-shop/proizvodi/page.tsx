@@ -161,7 +161,7 @@ function Products() {
     // Sort products
     if (sortType === "popular") {
       filteredProducts.sort((a, b) => {
-        return b.price - a.price;
+        return b.orders - a.orders;
       });
     } else if (sortType === "newest") {
       filteredProducts.sort((a, b) => {

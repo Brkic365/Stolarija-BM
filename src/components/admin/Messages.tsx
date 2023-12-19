@@ -14,7 +14,10 @@ function Messages() {
   const [notRead, setNotRead] = useState<number>(0);
 
   const getMessages = async () => {
-    const { data, error } = await supabase.from("messages").select("*");
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (data) {
       setTotal(data.length);
@@ -43,7 +46,7 @@ function Messages() {
         </section>
       </section>
       <section className={styles.tableContainer}>
-        <MessageTable />
+        <MessageTable updateData={getMessages} />
       </section>
     </section>
   );

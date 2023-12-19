@@ -11,20 +11,24 @@ import { motion } from "framer-motion";
 
 import { HiXMark } from "react-icons/hi2";
 
+import { ProductType } from "@/types/product";
+
 type ImageType = {
   url: string;
   pathname: string;
 };
 
-function AddProductModal({
-  open,
+function UpdateProductModal({
+  product,
   handleClose,
   updateData,
 }: {
-  open: boolean;
+  product: ProductType | null;
   handleClose: () => void;
   updateData: () => void;
 }) {
+  if (!product) return null;
+
   const supabase = createClientComponentClient();
 
   const [images, setImages] = useState<ImageType[]>([]);
@@ -33,7 +37,7 @@ function AddProductModal({
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string | null>(null);
 
-  const [canAdd, setCanAdd] = useState<boolean>(false);
+  const [canUpdate, setCanUpdate] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,18 +55,21 @@ function AddProductModal({
     handleClose();
   };
 
-  const addProduct = async (e: any) => {
+  const updateProduct = async (e: any) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.from("products").insert([
-      {
-        name: name,
-        price: price,
-        description: description,
-        category: category,
-        images: images,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("products")
+      .update([
+        {
+          name: name,
+          price: price,
+          description: description,
+          category: category,
+          images: images,
+        },
+      ])
+      .match({ id: product!.id });
 
     console.log(data, error);
 
@@ -130,22 +137,32 @@ function AddProductModal({
       category !== null &&
       images.length > 0
     ) {
-      setCanAdd(true);
+      setCanUpdate(true);
     } else {
-      setCanAdd(false);
+      setCanUpdate(false);
     }
   }, [name, price, description, category, images]);
 
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setPrice(product.price);
+      setDescription(product.description);
+      setCategory(product.category);
+      setImages(product.images);
+    }
+  }, [product]);
+
   return (
     <Modal
-      open={open}
+      open={product !== null}
       onClose={close}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <section className={styles.addProductModal}>
         <section className={styles.top}>
-          <h3>Dodaj Proizvod</h3>
+          <h3>Ažuriraj Proizvod</h3>
           <HiXMark onClick={close} />
         </section>
 
@@ -201,6 +218,7 @@ function AddProductModal({
                 id="name"
                 placeholder="Naziv proizvoda"
                 onChange={(e) => setName(e.target.value)}
+                value={name}
               />
             </section>
 
@@ -211,6 +229,7 @@ function AddProductModal({
                 id="price"
                 placeholder="Cijena u eurima"
                 onChange={(e) => setPrice(parseInt(e.target.value))}
+                value={price}
               />
             </section>
 
@@ -222,6 +241,7 @@ function AddProductModal({
                 placeholder="Kratki opis proizvoda"
                 rows={6}
                 onChange={(e) => setDescription(e.target.value)}
+                value={description}
               />
             </section>
 
@@ -257,11 +277,11 @@ function AddProductModal({
 
         <section className={styles.buttons}>
           <button
-            className={`${canAdd ? styles.add : styles.disabled}`}
-            onClick={addProduct}
-            disabled={!canAdd}
+            className={`${canUpdate ? styles.add : styles.disabled}`}
+            onClick={updateProduct}
+            disabled={!canUpdate}
           >
-            Dodaj
+            Ažuriraj
           </button>
           <button onClick={close}>Odustani</button>
         </section>
@@ -270,4 +290,4 @@ function AddProductModal({
   );
 }
 
-export default AddProductModal;
+export default UpdateProductModal;
