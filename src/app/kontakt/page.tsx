@@ -16,7 +16,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { motion } from "framer-motion";
 
-export function MessageSuccessMessage({
+function MessageSuccessMessage({
   open,
   handleClose,
 }: {
