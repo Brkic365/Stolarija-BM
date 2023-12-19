@@ -21,7 +21,7 @@
     "next": "14.0.3",
     "next-auth": "^4.24.5",
     "react": "^18",
-    "react-custom-scrollbars": "^4.2.1",
+    "react-custom-scrollbars-2": "^4.5.0",
     "react-detect-click-outside": "^1.1.7",
     "react-dom": "^18",
     "react-icons": "^4.12.0",

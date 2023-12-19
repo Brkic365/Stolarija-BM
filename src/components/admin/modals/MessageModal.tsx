@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/modals/MessageModal.module.scss";
 
-import { Scrollbars } from "react-custom-scrollbars";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
