@@ -17,13 +17,13 @@ function Product({
   const [openProduct, setOpenProduct] = useState<ProductType | null>(null);
 
   return (
-    <section className={styles.product} onClick={() => setOpenProduct(product)}>
+    <section className={styles.product}>
       <UpdateProductModal
         product={openProduct}
         handleClose={() => setOpenProduct(null)}
         updateData={updateData}
       />
-      <div className={styles.image}>
+      <div className={styles.image} onClick={() => setOpenProduct(product)}>
         <img src={product.images[0].url} alt={product.name} />
       </div>
       <h4>{product.name}</h4>

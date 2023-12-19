@@ -239,7 +239,7 @@ function UpdateProductModal({
                 name="description"
                 id="description"
                 placeholder="Kratki opis proizvoda"
-                rows={6}
+                rows={4}
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
               />
