@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+
 import { Providers } from "./providers";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
@@ -20,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );
