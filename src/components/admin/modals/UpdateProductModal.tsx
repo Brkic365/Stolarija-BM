@@ -18,6 +18,46 @@ type ImageType = {
   pathname: string;
 };
 
+function DeleteProduct({
+  close,
+  productId,
+}: {
+  close: () => void;
+  productId: number;
+}) {
+  const supabase = createClientComponentClient();
+
+  const deleteMessage = async () => {
+    await supabase.from("products").delete().eq("id", productId);
+
+    close();
+  };
+
+  return (
+    <section className={styles.deleteModal}>
+      <section className={styles.top}>
+        <h3>Brisanje Proizvoda</h3>
+        <HiXMark onClick={close} />
+      </section>
+
+      <section className={styles.deleteContent}>
+        <h1>Jeste li sigurni da želite obrisati proizvod?</h1>
+        <p>
+          Nakon brisanja, ovaj proizvod se ne može vratiti te je zauvijek
+          obrisan.
+        </p>
+      </section>
+
+      <section className={styles.buttons}>
+        <button className={styles.delete} onClick={deleteMessage}>
+          Obriši
+        </button>
+        <button onClick={close}>Odustani</button>
+      </section>
+    </section>
+  );
+}
+
 function UpdateProductModal({
   product,
   handleClose,
@@ -37,10 +77,13 @@ function UpdateProductModal({
 
   const [canUpdate, setCanUpdate] = useState<boolean>(false);
 
+  const [deleting, setDeleting] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Reset all values
   const reset = () => {
+    setDeleting(false);
     setImages([]);
     setName("");
     setPrice(0);
@@ -49,6 +92,7 @@ function UpdateProductModal({
   };
 
   const close = () => {
+    updateData();
     reset();
     handleClose();
   };
@@ -70,8 +114,6 @@ function UpdateProductModal({
       .match({ id: product!.id });
 
     console.log(data, error);
-
-    updateData();
 
     close();
   };
@@ -160,132 +202,141 @@ function UpdateProductModal({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <section className={styles.addProductModal}>
-        <section className={styles.top}>
-          <h3>Ažuriraj Proizvod</h3>
-          <HiXMark onClick={close} />
-        </section>
+      {deleting ? (
+        <DeleteProduct close={close} productId={product.id} />
+      ) : (
+        <section className={styles.addProductModal}>
+          <section className={styles.top}>
+            <h3>Ažuriraj Proizvod</h3>
+            <HiXMark onClick={close} />
+          </section>
 
-        <section className={styles.content}>
-          <div
-            className={styles.image}
-            onClick={() => fileInputRef!.current!.click()}
-          >
-            {images.length > 0 && (
-              <img
-                src={images[0].url}
-                alt="Add Image Thumbnail"
-                className={styles.thumbnail}
-              />
-            )}
+          <section className={styles.content}>
             <div
-              className={styles.thumbnail}
-              style={{ opacity: images.length > 0 ? 0.6 : 0.1 }}
-            />
-            <HiOutlinePlusCircle />
-            <input
-              type="file"
-              multiple
-              hidden
-              ref={fileInputRef}
-              onChange={uploadImages}
-            />
-          </div>
-          <div className={styles.uploadedImages}>
-            {images.map((image, index) => (
+              className={styles.image}
+              onClick={() => fileInputRef!.current!.click()}
+            >
+              {images.length > 0 && (
+                <img
+                  src={images[0].url}
+                  alt="Add Image Thumbnail"
+                  className={styles.thumbnail}
+                />
+              )}
               <div
-                className={styles.uploadedImage}
-                style={{ backgroundImage: `url(${image.url})` }}
-                key={index}
-              >
-                <motion.div
-                  className={styles.delete}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => deleteImage(index)}
-                >
-                  <HiXMark />
-                </motion.div>
-              </div>
-            ))}
-          </div>
-
-          <section className={styles.info}>
-            <section className={styles.name}>
-              <label htmlFor="name">Naziv:</label>
+                className={styles.thumbnail}
+                style={{ opacity: images.length > 0 ? 0.6 : 0.1 }}
+              />
+              <HiOutlinePlusCircle />
               <input
-                type="text"
-                id="name"
-                placeholder="Naziv proizvoda"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+                type="file"
+                multiple
+                hidden
+                ref={fileInputRef}
+                onChange={uploadImages}
               />
-            </section>
-
-            <section className={styles.price}>
-              <label htmlFor="price">Cijena {"(€):"}</label>
-              <input
-                type="number"
-                id="price"
-                placeholder="Cijena u eurima"
-                onChange={(e) => setPrice(parseInt(e.target.value))}
-                value={price}
-              />
-            </section>
-
-            <section className={styles.description}>
-              <label htmlFor="description">Opis:</label>
-              <textarea
-                name="description"
-                id="description"
-                placeholder="Kratki opis proizvoda"
-                rows={4}
-                onChange={(e) => setDescription(e.target.value)}
-                value={description}
-              />
-            </section>
-
-            <section className={styles.category}>
-              <label htmlFor="category">Kategorija:</label>
-              <div className={styles.select}>
+            </div>
+            <div className={styles.uploadedImages}>
+              {images.map((image, index) => (
                 <div
-                  className={
-                    category === "kitchens" ? styles.selected : undefined
-                  }
-                  onClick={() => setCategory("kitchens")}
+                  className={styles.uploadedImage}
+                  style={{ backgroundImage: `url(${image.url})` }}
+                  key={index}
                 >
-                  <p>Kuhinje</p>
+                  <motion.div
+                    className={styles.delete}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => deleteImage(index)}
+                  >
+                    <HiXMark />
+                  </motion.div>
                 </div>
-                <div
-                  className={category === "rooms" ? styles.selected : undefined}
-                  onClick={() => setCategory("rooms")}
-                >
-                  <p>Dječje Sobe</p>
+              ))}
+            </div>
+
+            <section className={styles.info}>
+              <section className={styles.name}>
+                <label htmlFor="name">Naziv:</label>
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Naziv proizvoda"
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                />
+              </section>
+
+              <section className={styles.price}>
+                <label htmlFor="price">Cijena {"(€):"}</label>
+                <input
+                  type="number"
+                  id="price"
+                  placeholder="Cijena u eurima"
+                  onChange={(e) => setPrice(parseInt(e.target.value))}
+                  value={price}
+                />
+              </section>
+
+              <section className={styles.description}>
+                <label htmlFor="description">Opis:</label>
+                <textarea
+                  name="description"
+                  id="description"
+                  placeholder="Kratki opis proizvoda"
+                  rows={4}
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                />
+              </section>
+
+              <section className={styles.category}>
+                <label htmlFor="category">Kategorija:</label>
+                <div className={styles.select}>
+                  <div
+                    className={
+                      category === "kitchens" ? styles.selected : undefined
+                    }
+                    onClick={() => setCategory("kitchens")}
+                  >
+                    <p>Kuhinje</p>
+                  </div>
+                  <div
+                    className={
+                      category === "rooms" ? styles.selected : undefined
+                    }
+                    onClick={() => setCategory("rooms")}
+                  >
+                    <p>Dječje Sobe</p>
+                  </div>
+                  <div
+                    className={
+                      category === "furniture" ? styles.selected : undefined
+                    }
+                    onClick={() => setCategory("furniture")}
+                  >
+                    <p>Namještaj</p>
+                  </div>
                 </div>
-                <div
-                  className={
-                    category === "furniture" ? styles.selected : undefined
-                  }
-                  onClick={() => setCategory("furniture")}
-                >
-                  <p>Namještaj</p>
-                </div>
-              </div>
+              </section>
             </section>
           </section>
-        </section>
 
-        <section className={styles.buttons}>
-          <button
-            className={`${canUpdate ? styles.add : styles.disabled}`}
-            onClick={updateProduct}
-            disabled={!canUpdate}
-          >
-            Ažuriraj
-          </button>
-          <button onClick={close}>Odustani</button>
+          <section className={styles.buttons}>
+            <button
+              className={`${canUpdate ? styles.add : styles.disabled}`}
+              onClick={updateProduct}
+              disabled={!canUpdate}
+            >
+              Ažuriraj
+            </button>
+            <button className={styles.delete} onClick={() => setDeleting(true)}>
+              Obriši
+            </button>
+            <button onClick={close}>Odustani</button>
+          </section>
         </section>
-      </section>
+      )}
     </Modal>
   );
 }
