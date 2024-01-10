@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "@/styles/components/Filters.module.scss";
 
 import {
@@ -98,10 +98,16 @@ function Filters({
             Dječje Sobe <div className={styles.amount}>{categoryCounts[1]}</div>
           </div>
         </Checkbox>
-        <Checkbox value="furniture">
+        <Checkbox value="furniture" style={{ marginBottom: "0.5rem" }}>
           {" "}
           <div className={styles.checkbox}>
             Namještaj <div className={styles.amount}>{categoryCounts[2]}</div>
+          </div>
+        </Checkbox>
+        <Checkbox value="closets">
+          {" "}
+          <div className={styles.checkbox}>
+            Ormari <div className={styles.amount}>{categoryCounts[3]}</div>
           </div>
         </Checkbox>
       </CheckboxGroup>

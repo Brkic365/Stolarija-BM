@@ -13,5 +13,10 @@
     "id": "furniture",
     "name": "Namještaj",
     "description": "Vaša Oaza Stila: Personalizirani Namještaj, Izrađen s Pažnjom i Stručnošću, Oblikovan Za Vaš Prostor."
+  },
+  {
+    "id": "closets",
+    "name": "Ormari",
+    "description": "Savršeni Skladišni Prostor: Ormari Prilagođeni Vašim Potrebama, Funkcionalnost i Elegancija U Jednom."
   }
 ]

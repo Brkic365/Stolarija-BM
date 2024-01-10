@@ -82,6 +82,25 @@ function PurchaseModal({
       console.log(insertRes.error, updateProductRes.error);
       setError("Greška prilikom narudžbe.");
     } else {
+      const emailRes = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product: product.name,
+          price: product.price,
+          first_name: name,
+          last_name: surname,
+          email,
+          telephone: number,
+          address,
+          message,
+        }),
+      });
+
+      console.log(emailRes);
+
       setOrderSuccess(true);
     }
   };

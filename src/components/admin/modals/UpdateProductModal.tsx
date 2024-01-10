@@ -317,6 +317,14 @@ function UpdateProductModal({
                   >
                     <p>Namještaj</p>
                   </div>
+                  <div
+                    className={
+                      category === "closets" ? styles.selected : undefined
+                    }
+                    onClick={() => setCategory("closets")}
+                  >
+                    <p>Ormari</p>
+                  </div>
                 </div>
               </section>
             </section>

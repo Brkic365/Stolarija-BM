@@ -131,7 +131,8 @@ function Products() {
 
     let kitchens = 0,
       rooms = 0,
-      furniture = 0;
+      furniture = 0,
+      closets = 0;
 
     let filteredProducts = originalProducts.filter((product) => {
       let priceInRange =
@@ -145,6 +146,8 @@ function Products() {
           rooms++;
         } else if (product.category === "furniture") {
           furniture++;
+        } else if (product.category === "closets") {
+          closets++;
         }
       }
 
@@ -154,7 +157,7 @@ function Products() {
       );
     });
 
-    setCategoryCounts([kitchens, rooms, furniture]);
+    setCategoryCounts([kitchens, rooms, furniture, closets]);
 
     setLength(filteredProducts.length);
 

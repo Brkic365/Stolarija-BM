@@ -189,6 +189,7 @@
     }
 
     section {
+      cursor: pointer;
       position: relative;
 
       width: 100%;
@@ -243,6 +244,15 @@
           rgba(0, 0, 0, 0.73) 100%
         ),
         url("/images/covers/furniture.webp");
+    }
+
+    .serviceClosets {
+      background-image: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.17) 0%,
+          rgba(0, 0, 0, 0.73) 100%
+        ),
+        url("/images/covers/closets.webp");
     }
   }
 }
@@ -563,6 +573,20 @@
           background-size: cover;
           background-position: center;
         }
+
+        .closetsBg {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-image: linear-gradient(
+              180deg,
+              rgba(0, 0, 0, 0.17) 0%,
+              rgba(0, 0, 0, 0.73) 100%
+            ),
+            url("/images/covers/closets.webp");
+          background-size: cover;
+          background-position: center;
+        }
       }
 
       section {
@@ -610,6 +634,11 @@
       }
 
       .serviceFurniture {
+        background-image: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+      }
+
+      .serviceClosets {
         background-image: none;
         border-left: 1px solid rgba(255, 255, 255, 0.5);
       }

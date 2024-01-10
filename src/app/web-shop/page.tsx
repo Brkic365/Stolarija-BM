@@ -13,6 +13,8 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
+import { CircularProgress } from "@nextui-org/react";
+
 import { motion } from "framer-motion";
 
 const OPTIONS: EmblaOptionsType = {
@@ -56,39 +58,45 @@ function Webshop() {
       </section>
 
       {/* Products section */}
-      <section className={styles.products}>
-        {productSections.map((productSection) => {
-          const sectionProducts = products!.filter(
-            (product) => product.category === productSection.id
-          );
+      {!products || products.length === 0 ? (
+        <div className={styles.loading}>
+          <CircularProgress aria-label="Loading..." size="lg" color="default" />
+        </div>
+      ) : (
+        <section className={styles.products}>
+          {productSections.map((productSection) => {
+            const sectionProducts = products!.filter(
+              (product) => product.category === productSection.id
+            );
 
-          if (sectionProducts.length === 0) return null;
+            if (sectionProducts.length === 0) return null;
 
-          return (
-            <section className={styles.productsType} key={productSection.id}>
-              <section className={styles.top}>
-                <div className={styles.left}>
-                  <h3>{productSection.name}</h3>
-                  <p>{productSection.description}</p>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={styles.emptyButton}
-                  onClick={() =>
-                    router.push(
-                      `/web-shop/proizvodi?category=${productSection.id}`
-                    )
-                  }
-                >
-                  Vidi sve <HiArrowSmRight />
-                </motion.button>
+            return (
+              <section className={styles.productsType} key={productSection.id}>
+                <section className={styles.top}>
+                  <div className={styles.left}>
+                    <h3>{productSection.name}</h3>
+                    <p>{productSection.description}</p>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={styles.emptyButton}
+                    onClick={() =>
+                      router.push(
+                        `/web-shop/proizvodi?category=${productSection.id}`
+                      )
+                    }
+                  >
+                    Vidi sve <HiArrowSmRight />
+                  </motion.button>
+                </section>
+                <Carousel products={sectionProducts} options={OPTIONS} />
               </section>
-              <Carousel products={sectionProducts} options={OPTIONS} />
-            </section>
-          );
-        })}
-      </section>
+            );
+          })}
+        </section>
+      )}
 
       {/* See all section */}
       <section className={styles.seeAll}>

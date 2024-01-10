@@ -14,6 +14,7 @@ export default function Home() {
   const [kitchensActive, setKitchensActive] = useState<boolean>(false);
   const [roomsActive, setRoomsActive] = useState<boolean>(true);
   const [furnitureActive, setFurnitureActive] = useState<boolean>(false);
+  const [closetsActive, setClosetsActive] = useState<boolean>(false);
 
   return (
     <main className={styles.main}>
@@ -229,6 +230,24 @@ export default function Home() {
               },
             }}
           />
+          <motion.div
+            className={styles.closetsBg}
+            initial="hidden"
+            transition={{ duration: 0.5 }}
+            animate={closetsActive ? "visible" : "hidden"}
+            variants={{
+              visible: {
+                transform: "scale(1)",
+                filter: "blur(0px)",
+                opacity: 1,
+              },
+              hidden: {
+                transform: "scale(1.3)",
+                filter: "blur(4px)",
+                opacity: 0,
+              },
+            }}
+          />
         </div>
 
         <section
@@ -238,6 +257,7 @@ export default function Home() {
             setKitchensActive(true);
             setRoomsActive(false);
             setFurnitureActive(false);
+            setClosetsActive(false);
           }}
         >
           <div className={styles.text}>
@@ -258,6 +278,7 @@ export default function Home() {
             setKitchensActive(false);
             setRoomsActive(true);
             setFurnitureActive(false);
+            setClosetsActive(false);
           }}
         >
           <div className={styles.text}>
@@ -278,10 +299,32 @@ export default function Home() {
             setKitchensActive(false);
             setRoomsActive(false);
             setFurnitureActive(true);
+            setClosetsActive(false);
           }}
         >
           <div className={styles.text}>
             <h1>Namještaj</h1>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={styles.emptyButton}
+            >
+              Vidi sve <HiArrowSmRight />
+            </motion.button>
+          </div>
+        </section>
+        <section
+          className={styles.serviceClosets}
+          onClick={() => router.push("/web-shop/proizvodi?category=closets")}
+          onMouseEnter={() => {
+            setKitchensActive(false);
+            setRoomsActive(false);
+            setFurnitureActive(false);
+            setClosetsActive(true);
+          }}
+        >
+          <div className={styles.text}>
+            <h1>Ormari</h1>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
