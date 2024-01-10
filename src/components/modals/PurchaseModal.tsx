@@ -82,6 +82,7 @@ function PurchaseModal({
       console.log(insertRes.error, updateProductRes.error);
       setError("Greška prilikom narudžbe.");
     } else {
+      /*
       const emailRes = await fetch("/api/send-email", {
         method: "POST",
         headers: {
@@ -100,6 +101,7 @@ function PurchaseModal({
       });
 
       console.log(emailRes);
+      */
 
       setOrderSuccess(true);
     }
