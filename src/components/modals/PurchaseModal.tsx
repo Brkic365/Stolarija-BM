@@ -79,7 +79,6 @@ function PurchaseModal({
     });
 
     if (insertRes.error || updateProductRes.error) {
-      console.log(insertRes.error, updateProductRes.error);
       setError("Greška prilikom narudžbe.");
     } else {
       /*
@@ -99,8 +98,6 @@ function PurchaseModal({
           message,
         }),
       });
-
-      console.log(emailRes);
       */
 
       setOrderSuccess(true);

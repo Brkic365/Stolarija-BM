@@ -81,8 +81,6 @@ function OrderModal({
         .from("orders")
         .update({ status: newStatus })
         .eq("id", order.id);
-
-      console.log(updateRes);
     }
   };
 
@@ -135,15 +133,6 @@ function OrderModal({
                     <li>{order.address}</li>
                   </ul>
                 </div>
-              </div>
-
-              <div className={styles.message}>
-                <p className={styles.label}>Poruka:</p>
-                <Scrollbars style={{ height: 250 }}>
-                  <p className={styles.value}>
-                    {order.message || "Nema poruke"}
-                  </p>
-                </Scrollbars>
               </div>
 
               <div className={styles.status}>

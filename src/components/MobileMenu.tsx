@@ -78,8 +78,6 @@ function MobileMenu(props: MenuProps) {
   }, [props.open]);
 
   useEffect(() => {
-    console.log(pathname);
-
     if (props.open) {
       props.setOpen(false);
     }

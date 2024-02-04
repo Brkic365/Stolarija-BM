@@ -65,8 +65,6 @@ function ProductPage() {
     getProduct();
   }, [idQuery]);
 
-  console.log(product);
-
   if (!product) return <ProductPageLoading />;
 
   return (

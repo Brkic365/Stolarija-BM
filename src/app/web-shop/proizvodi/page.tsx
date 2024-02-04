@@ -20,6 +20,16 @@ import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Filters from "@/components/Filters";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCategories,
+  updateCategoryCounts,
+  updateMaxPrice,
+  updateMinPrice,
+  updateSortType,
+  updatePriceRange,
+} from "@/redux/slices/filterSlice";
+
 type SortItemType = {
   label: string;
   value: string;
@@ -45,6 +55,9 @@ const sortItems: Array<SortItemType> = [
 ];
 
 function Products() {
+  const dispatch = useDispatch();
+  const filter = useSelector((state: any) => state.filter);
+
   const searchParams = useSearchParams();
 
   const supabase = createClientComponentClient();
@@ -70,9 +83,9 @@ function Products() {
         }
       });
 
-      setMinPrice(min);
-      setMaxPrice(max);
-      setPriceRange([min, max]);
+      dispatch(updateMinPrice(min));
+      dispatch(updateMaxPrice(max));
+      dispatch(updatePriceRange([min, max]));
 
       setOriginalProducts(data);
       setProducts(data);
@@ -87,16 +100,11 @@ function Products() {
 
   const [openFiltersDrawer, setOpenFiltersDrawer] = useState(false);
 
-  const [priceRange, setPriceRange] = useState([0, 0]);
-  const [categories, setCategories] = useState<Array<string>>([]);
-  const [sortType, setSortType] = useState("popular");
-
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(0);
-
   const [length, setLength] = useState(0);
 
-  const [categoryCounts, setCategoryCounts] = useState<number[]>([0, 0, 0]);
+  const handleSortTypeUpdate = (e: any) => {
+    dispatch(updateSortType(e.target.value));
+  };
 
   // Toggle filters drawer
   const toggleDrawer =
@@ -113,18 +121,6 @@ function Products() {
       setOpenFiltersDrawer(open);
     };
 
-  const updateCategories = (value: any) => {
-    setCategories(value);
-  };
-
-  const updatePriceRange = (value: any) => {
-    setPriceRange(value);
-  };
-
-  const updateSortType = (e: any) => {
-    setSortType(e.target.value);
-  };
-
   // Filter by category and price
   useEffect(() => {
     // Filter based on price and category
@@ -136,7 +132,8 @@ function Products() {
 
     let filteredProducts = originalProducts.filter((product) => {
       let priceInRange =
-        product.price >= priceRange[0] && product.price <= priceRange[1];
+        product.price >= filter.priceRange[0] &&
+        product.price <= filter.priceRange[1];
 
       // Update category counts before filtering categories
       if (priceInRange) {
@@ -153,42 +150,45 @@ function Products() {
 
       return (
         priceInRange &&
-        (categories.length === 0 || categories.includes(product.category))
+        (filter.categories.length === 0 ||
+          filter.categories.includes(product.category))
       );
     });
 
-    setCategoryCounts([kitchens, rooms, furniture, closets]);
+    dispatch(updateCategoryCounts([kitchens, rooms, furniture, closets]));
 
     setLength(filteredProducts.length);
 
     // Sort products
-    if (sortType === "popular") {
+    if (filter.sortType === "popular") {
       filteredProducts.sort((a, b) => {
         return b.orders - a.orders;
       });
-    } else if (sortType === "newest") {
+    } else if (filter.sortType === "newest") {
       filteredProducts.sort((a, b) => {
         return (
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       });
-    } else if (sortType === "priceAsc") {
+    } else if (filter.sortType === "priceAsc") {
       filteredProducts.sort((a, b) => {
         return a.price - b.price;
       });
-    } else if (sortType === "priceDesc") {
+    } else if (filter.sortType === "priceDesc") {
       filteredProducts.sort((a, b) => {
         return b.price - a.price;
       });
     }
 
     setProducts(filteredProducts);
-  }, [categories, priceRange, sortType]);
+  }, [filter.categories, filter.priceRange, filter.sortType]);
 
   // Set categories if there is a category query
   useEffect(() => {
-    setCategories(categoryQuery ? [categoryQuery] : []);
-  }, [categoryQuery]);
+    dispatch(updateCategories(categoryQuery ? [categoryQuery] : []));
+  }, [filter.categoryQuery]);
+
+  useEffect(() => {}, [filter]);
 
   return (
     <main className={styles.mainProducts}>
@@ -205,18 +205,7 @@ function Products() {
           onKeyDown={toggleDrawer(false)}
           style={{ marginTop: "-2rem" }}
         >
-          <Filters
-            includeSort
-            categories={categories}
-            updateCategories={updateCategories}
-            priceRange={priceRange}
-            updatePriceRange={updatePriceRange}
-            sortType={sortType}
-            updateSortType={updateSortType}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            categoryCounts={categoryCounts}
-          />
+          <Filters includeSort />
         </Box>
       </SwipeableDrawer>
 
@@ -226,18 +215,7 @@ function Products() {
       {/* Top section */}
       <section className={styles.content}>
         <section className={styles.filtersContainer}>
-          <Filters
-            includeSort={false}
-            categories={categories}
-            updateCategories={updateCategories}
-            priceRange={priceRange}
-            updatePriceRange={updatePriceRange}
-            sortType={sortType}
-            updateSortType={updateSortType}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            categoryCounts={categoryCounts}
-          />
+          <Filters includeSort={false} />
         </section>
         <section className={styles.mainContent}>
           <section className={styles.top}>
@@ -262,7 +240,7 @@ function Products() {
               <div className={styles.sort}>
                 <Select
                   items={sortItems}
-                  onChange={updateSortType}
+                  onChange={handleSortTypeUpdate}
                   defaultSelectedKeys={["popular"]}
                   disallowEmptySelection
                   style={{

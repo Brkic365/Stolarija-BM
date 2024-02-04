@@ -37,7 +37,6 @@ function AdminLogin() {
     if (res?.ok) {
       router.push("/admin");
     } else {
-      console.log(res);
       setError("Pogrešno korisničko ime ili zaporka.");
     }
   };

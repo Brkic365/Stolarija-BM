@@ -1,5 +1,14 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useEffect } from "react";
 import styles from "@/styles/components/Filters.module.scss";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCategories,
+  updateSortType,
+  updatePriceRange,
+} from "@/redux/slices/filterSlice";
 
 import {
   Select,
@@ -16,15 +25,6 @@ type SortItemType = {
 
 type PropType = {
   includeSort: boolean;
-  categories: string[];
-  updateCategories: (value: any) => void;
-  priceRange: number[];
-  updatePriceRange: (value: any) => void;
-  sortType: string;
-  updateSortType: (value: any) => void;
-  minPrice: number;
-  maxPrice: number;
-  categoryCounts: number[];
 };
 
 const sortItems: Array<SortItemType> = [
@@ -46,19 +46,25 @@ const sortItems: Array<SortItemType> = [
   },
 ];
 
-function Filters({
-  includeSort,
-  categories,
-  updateCategories,
-  priceRange,
-  updatePriceRange,
-  sortType,
-  updateSortType,
-  minPrice,
-  maxPrice,
-  categoryCounts,
-}: PropType) {
-  if (maxPrice === 0) return null;
+function Filters({ includeSort }: PropType) {
+  const dispatch = useDispatch();
+  const filter = useSelector((state: any) => state.filter);
+
+  const sliderRef = useRef<any>(null);
+
+  const handleSortTypeUpdate = (e: any) => {
+    dispatch(updateSortType(e.target.value));
+  };
+
+  const handleCategoriesUpdate = (value: any) => {
+    dispatch(updateCategories(value));
+  };
+
+  const handlePriceRangeUpdate = (value: any) => {
+    dispatch(updatePriceRange(value));
+  };
+
+  if (filter.maxPrice === 0) return null;
 
   return (
     <section className={styles.filters}>
@@ -68,7 +74,7 @@ function Filters({
           <Select
             items={sortItems}
             defaultSelectedKeys={["popular"]}
-            onChange={updateSortType}
+            onChange={handleSortTypeUpdate}
             disallowEmptySelection
             style={{
               width: "12rem",
@@ -87,27 +93,34 @@ function Filters({
         </div>
       )}
       <h2>Kategorija</h2>
-      <CheckboxGroup onChange={updateCategories} value={categories}>
+      <CheckboxGroup
+        onChange={handleCategoriesUpdate}
+        value={filter.categories}
+      >
         <Checkbox value="kitchens" style={{ marginBottom: "0.5rem" }}>
           <div className={styles.checkbox}>
-            Kuhinje <div className={styles.amount}>{categoryCounts[0]}</div>
+            Kuhinje{" "}
+            <div className={styles.amount}>{filter.categoryCounts[0]}</div>
           </div>
         </Checkbox>
         <Checkbox value="rooms" style={{ marginBottom: "0.5rem" }}>
           <div className={styles.checkbox}>
-            Dječje Sobe <div className={styles.amount}>{categoryCounts[1]}</div>
+            Dječje Sobe{" "}
+            <div className={styles.amount}>{filter.categoryCounts[1]}</div>
           </div>
         </Checkbox>
         <Checkbox value="furniture" style={{ marginBottom: "0.5rem" }}>
           {" "}
           <div className={styles.checkbox}>
-            Namještaj <div className={styles.amount}>{categoryCounts[2]}</div>
+            Namještaj{" "}
+            <div className={styles.amount}>{filter.categoryCounts[2]}</div>
           </div>
         </Checkbox>
         <Checkbox value="closets">
           {" "}
           <div className={styles.checkbox}>
-            Ormari <div className={styles.amount}>{categoryCounts[3]}</div>
+            Ormari{" "}
+            <div className={styles.amount}>{filter.categoryCounts[3]}</div>
           </div>
         </Checkbox>
       </CheckboxGroup>
@@ -115,13 +128,14 @@ function Filters({
       <Slider
         size="sm"
         step={1}
-        minValue={minPrice}
-        maxValue={maxPrice}
-        defaultValue={[minPrice, maxPrice]}
+        minValue={filter.minPrice}
+        maxValue={filter.maxPrice}
+        defaultValue={filter.priceRange}
         label=" "
         formatOptions={{ style: "currency", currency: "EUR" }}
         className="max-w-md"
-        onChangeEnd={updatePriceRange}
+        onChangeEnd={handlePriceRangeUpdate}
+        ref={sliderRef}
       />
     </section>
   );

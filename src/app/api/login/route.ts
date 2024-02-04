@@ -8,9 +8,6 @@ interface RequestBody {
 export async function POST(request: Request) {
   const body: RequestBody = await request.json();
 
-  console.log(body.username, body.password);
-  console.log(process.env.USER, process.env.PASSWORD);
-
   if (
     body.username === process.env.USER &&
     body.password === process.env.PASSWORD

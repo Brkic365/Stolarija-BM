@@ -64,8 +64,6 @@ function AddProductModal({
       },
     ]);
 
-    console.log(data, error);
-
     updateData();
 
     close();
@@ -97,8 +95,6 @@ function AddProductModal({
           .from("productImages")
           .getPublicUrl(data.path);
 
-        console.log(urlData);
-
         tempImages.push({ url: urlData.data.publicUrl, pathname: data.path });
       }
     }
@@ -116,8 +112,6 @@ function AddProductModal({
     const { data, error } = await supabase.storage
       .from("productImages")
       .remove([image.pathname]);
-
-    console.log(data, error);
 
     setImages([...tempImages]);
   };

@@ -150,7 +150,6 @@ function Contact() {
     });
 
     if (insertRes.error) {
-      console.log(insertRes.error);
     } else {
       setMessageSuccess(true);
       reset();
