@@ -7,7 +7,6 @@ A modern, full-stack web application for a custom furniture manufacturing busine
 Built with Next.js (App Router), TypeScript, and Supabase.
 
 ✨ Key Features
-🌍 Public Interface
 
 Modern UI/UX: Responsive design with smooth animations using Framer Motion.
 
@@ -20,8 +19,6 @@ Direct Ordering: Users can order products directly via a streamlined purchase mo
 Contact System: Integrated contact form with success/error handling and Google Maps integration.
 
 Company Info: "About Us" section detailing history and machinery/tools.
-
-🔐 Admin Dashboard
 
 Secure Authentication: Protected admin routes using NextAuth.js.
 
