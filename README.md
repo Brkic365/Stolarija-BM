@@ -1,6 +1,4 @@
-Based on the code structure and files you provided, here is a comprehensive README.md tailored specifically for the Stolarija BM project.
-
-Stolarija BM 🪑
+**Stolarija BM 🪑**
 
 A modern, full-stack web application for a custom furniture manufacturing business. This project serves as a digital portfolio, a web shop for products, and includes a fully functional administrative dashboard for managing inventory, orders, and customer messages.
 
