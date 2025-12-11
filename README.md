@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Based on the code structure and files you provided, here is a comprehensive README.md tailored specifically for the Stolarija BM project.
 
-## Getting Started
+Stolarija BM 🪑
 
-First, run the development server:
+A modern, full-stack web application for a custom furniture manufacturing business. This project serves as a digital portfolio, a web shop for products, and includes a fully functional administrative dashboard for managing inventory, orders, and customer messages.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Built with Next.js (App Router), TypeScript, and Supabase.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✨ Key Features
+🌍 Public Interface
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Modern UI/UX: Responsive design with smooth animations using Framer Motion.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Product Catalog: Browse furniture categories (Kitchens, Kids' Rooms, Furniture, Closets).
 
-## Learn More
+Advanced Filtering: Filter products by category and price range; sort by popularity, price, or date (powered by Redux).
 
-To learn more about Next.js, take a look at the following resources:
+Direct Ordering: Users can order products directly via a streamlined purchase modal.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Contact System: Integrated contact form with success/error handling and Google Maps integration.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Company Info: "About Us" section detailing history and machinery/tools.
 
-## Deploy on Vercel
+🔐 Admin Dashboard
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Secure Authentication: Protected admin routes using NextAuth.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Dashboard Overview: Quick stats on orders and messages.
+
+Order Management: View, update status (In Progress, Done, Waiting), and delete customer orders.
+
+Product Management (CMS): Full CRUD capabilities. Add, edit, or delete products and upload images directly to Supabase Storage.
+
+Message Inbox: Read and manage inquiries from the contact form.
+
+🛠️ Tech Stack
+
+Frontend:
+
+Next.js (App Router)
+
+TypeScript
+
+Tailwind CSS & SCSS Modules
+
+Framer Motion (Animations)
+
+Redux Toolkit (State Management for filters)
+
+NextUI & MUI (UI Components)
+
+Backend & Database:
+
+Supabase (PostgreSQL Database, Storage, Auth Helper)
+
+NextAuth.js (Admin Session Management)
+
+Resend (Email Service)
