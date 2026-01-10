@@ -59,13 +59,10 @@ function Model({ product, configuration }: KitchenSceneProps) {
             if (targets.length === 0) return;
 
             let loadedTexture: THREE.Texture | null = null;
-            if (choice.textureUrl || choice.texture) {
-                const url = choice.textureUrl || choice.texture;
-                if (url) {
-                    loadedTexture = textureLoader.current.load(url);
-                    loadedTexture.wrapS = THREE.RepeatWrapping;
-                    loadedTexture.wrapT = THREE.RepeatWrapping;
-                }
+            if (choice.texture) {
+                loadedTexture = textureLoader.current.load(choice.texture);
+                loadedTexture.wrapS = THREE.RepeatWrapping;
+                loadedTexture.wrapT = THREE.RepeatWrapping;
             }
 
             targets.forEach((targetName) => {
