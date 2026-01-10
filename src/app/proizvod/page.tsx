@@ -71,6 +71,8 @@ function ProductPageContent() {
       .select()
       .eq("id", idQuery);
 
+    console.log("Supabase Single Product Fetch:", { idQuery, data, error });
+
     if (data && data.length > 0) {
       setProduct(data[0]);
 

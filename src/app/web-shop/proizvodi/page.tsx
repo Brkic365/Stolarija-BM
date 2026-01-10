@@ -67,6 +67,7 @@ function ProductsContent() {
 
   const getProducts = async () => {
     const { data, error } = await supabase.from("products").select("*");
+    console.log("Supabase Products Fetch:", { data, error });
 
     if (data) {
       // Get min and max price
