@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styles from "@/styles/pages/Products.module.scss";
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -54,7 +54,7 @@ const sortItems: Array<SortItemType> = [
   },
 ];
 
-function Products() {
+function ProductsContent() {
   const dispatch = useDispatch();
   const filter = useSelector((state: any) => state.filter);
 
@@ -277,4 +277,10 @@ function Products() {
   );
 }
 
-export default Products;
+export default function Products() {
+  return (
+    <Suspense fallback={<div className={styles.loading}>Učitavanje...</div>}>
+      <ProductsContent />
+    </Suspense>
+  );
+}
