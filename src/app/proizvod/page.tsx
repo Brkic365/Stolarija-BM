@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styles from "@/styles/pages/ProductPage.module.scss";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -44,7 +44,7 @@ function ProductPageLoading() {
   );
 }
 
-function ProductPage() {
+function ProductPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClientComponentClient();
@@ -365,4 +365,10 @@ function ProductPage() {
   );
 }
 
-export default ProductPage;
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<ProductPageLoading />}>
+      <ProductPageContent />
+    </Suspense>
+  );
+}
