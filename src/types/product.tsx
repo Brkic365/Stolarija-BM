@@ -9,6 +9,11 @@ export type OptionChoice = {
   hex?: string;      // For solid colors
   texture?: string;  // For wood/stone patterns (image URL)
   type: 'color' | 'texture';
+  materialProps?: {
+    roughness?: number;
+    metalness?: number;
+    envMapIntensity?: number;
+  };
 };
 
 export type ProductOption = {
