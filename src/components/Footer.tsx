@@ -6,6 +6,7 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 function Footer() {
@@ -46,10 +47,6 @@ function Footer() {
       <ul>
         <li className={styles.copyright}>© 2023 Stolarija BM d.o.o.</li>
         <li>
-          import Link from "next/link";
-          // ... (keep other imports)
-
-          // ... inside component:
           <Link href="/">Početna</Link>
         </li>
         <li>
