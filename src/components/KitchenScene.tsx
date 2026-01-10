@@ -172,12 +172,11 @@ export default function KitchenScene(props: KitchenSceneProps) {
         <div style={{
             width: "100%",
             height: "100%",
-            minHeight: "500px",
             background: "#f5f5f5",
             borderRadius: "1rem",
             overflow: "hidden",
             position: "relative",
-            maxWidth: "100%" // Fix for infinite widening bug
+            maxWidth: "100%"
         }}>
             {SceneContent}
         </div>

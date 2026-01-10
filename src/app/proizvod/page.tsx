@@ -13,7 +13,7 @@ import PurchaseModal from "@/components/modals/PurchaseModal";
 import dynamic from "next/dynamic";
 const KitchenScene = dynamic(() => import("@/components/KitchenScene"), {
   ssr: false,
-  loading: () => <div style={{ height: "400px", background: "#f5f5f5", borderRadius: "1rem" }} />
+  loading: () => <div style={{ width: "100%", height: "100%", background: "#f5f5f5", borderRadius: "1rem" }} />
 });
 
 import { motion } from "framer-motion";
@@ -135,7 +135,7 @@ function ProductPageContent() {
           >
             {/* 3D Model Section */}
             {product.model_path && (
-              <div style={{ marginBottom: "1rem", height: "400px", width: "100%" }}>
+              <div className={styles.sceneWrapper}>
                 <KitchenScene
                   product={product}
                   configuration={configuration}
