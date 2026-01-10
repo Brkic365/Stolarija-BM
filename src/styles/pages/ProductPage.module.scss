@@ -1,218 +1,381 @@
-.mainProductLoading {
+.mainProduct {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  padding-bottom: 4rem;
 }
 
-.mainProduct,
-.mainProductLoading {
+.hero {
+  height: 80px;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+
+  @media (min-width: 768px) {
+    padding: 3rem 2rem;
+  }
+}
+
+// TOP SECTION
+.topSection {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  margin-bottom: 5rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+  }
+}
+
+.carouselHolder {
+  width: 100%;
+}
+
+.details {
   display: flex;
   flex-direction: column;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-bottom: 2.5rem;
+  }
+}
+
+// OPTION CONFIGURATION
+.optionGroup {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 2rem;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #111;
+  }
+
+  .selectedValue {
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &.placeholder {
+      color: #9ca3af;
+    }
+
+    &.selected {
+      color: #111;
+    }
+  }
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: #d1d5db;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #000000;
+    border-color: transparent;
+  }
+}
+
+// BUTTONS
+.buttons {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderButton {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #1f2937;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.contactButton {
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}
+
+
+// BOTTOM SECTION: Tabs
+.bottomSection {
+  border-top: none; // We will use the tabsHeader border instead
+  padding-top: 3rem;
+  margin-top: 5rem;
+}
+
+.tabsHeader {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 2rem;
+  overflow-x: auto; // Allow scroll on very small screens
+  scrollbar-width: none; // Hide scrollbar
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column; // Stack vertically
+    gap: 0; // Remove gap, use borders instead
+    border-bottom: none; // Remove the main bottom line
+  }
+}
+
+.tabButton {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500; // Medium
+  color: #888; // Gray
+  padding: 1rem 0;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  outline: none; // Fix the yellow box issue
+
+  &:hover {
+    color: #000;
+  }
+
+  &.active {
+    color: #000;
+    font-weight: 600;
+
+    // Active Indicator Line
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; // Sit on top of the container border
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #000;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%; // Full width
+    text-align: left; // Align text to left for menu feel
+    padding: 1rem; // More padding for touch targets
+    border-bottom: 1px solid #f0f0f0; // Separator
+
+    &::after {
+      display: none; // Hide desktop indicator
+    }
+
+    &.active {
+      // Mobile specific active state
+      background-color: #f9f9f9;
+      border-left: 3px solid black; // Left indicator instead of bottom
+      border-bottom: 1px solid #f0f0f0; // Keep separator
+      font-weight: bold;
+    }
+  }
+}
+
+.tabContent {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom styles for NextUI Tabs classes - Since we can't use @apply, we rely on passing classNames or global CSS, 
+   BUT for the content *inside* the tabs, we use these SCSS classes: */
+
+// Tab 1: Specifications (Specs)
+.specsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 56rem; // ~4xl
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr; // 2 columns
+    column-gap: 3rem; // gap-12
+  }
+}
+
+.specRow {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 100vh;
-  color: black;
-  background-color: white;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
 
-  .loading {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  .label {
+    font-weight: 700;
+    color: #111;
   }
 
-  .hero {
-    width: 100%;
+  .value {
+    color: #4b5563; // gray-600
+    text-align: right;
+  }
+}
+
+// Tab 2: Order Process
+.processGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.processStep {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .stepNumber {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: #000;
+    color: #fff;
     display: flex;
     align-items: center;
-    flex-direction: column;
-
-    padding: 2.5rem 1rem;
-
-    background-image: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 1) 47.2%,
-        rgba(0, 0, 0, 0.9) 100%
-      ),
-      url("/images/covers/navbar.webp");
-    background-size: cover;
-    background-position: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    font-weight: 700;
   }
 
-  .product {
-    max-width: 90rem;
-    padding: 5rem 1.25rem 8rem 1.25rem;
-    .carouselHolder {
-      width: 100%;
-    }
+  h5 {
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 0.25rem;
+  }
 
-    .productInfo {
-      margin-top: 1rem;
-
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0.75rem;
-
-      h2 {
-        font-size: 1.4rem;
-        font-weight: 600;
-        line-height: 1.875rem;
-      }
-
-      p {
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5625rem;
-      }
-
-      .buttons {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-
-        margin-top: 2rem;
-
-        button,
-        .emptyButton {
-          color: white;
-          font-size: 0.95rem;
-          font-style: normal;
-          font-weight: 600;
-          line-height: normal;
-
-          border-radius: 0.25rem;
-          border: none;
-          background: black;
-          padding: 0.6rem 2rem;
-
-          transition: all 0.2s ease-in-out;
-
-          &:hover {
-            transform: scale(1.05);
-          }
-
-          &:active {
-            transform: scale(0.95);
-          }
-        }
-
-        .emptyButton {
-          display: flex;
-          align-items: center;
-
-          color: black;
-
-          border: none;
-          background: transparent;
-          padding: 0;
-
-          svg {
-            margin-left: 0.5rem;
-            width: 1.5rem;
-            height: 1.5rem;
-          }
-        }
-      }
-    }
+  p {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.5;
   }
 }
 
-@media only screen and (min-width: 550px) {
-  .mainProduct {
-    .product {
-      padding: 5rem 3rem 8rem 3rem;
-    }
-  }
-}
+// Tab 3: Delivery
+.deliveryBox {
+  background-color: #f9fafb; // gray-50
+  border: 1px solid #f3f4f6;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  max-width: 48rem; // ~3xl
 
-@media only screen and (min-width: 750px) {
-  .mainProduct {
-    .product {
-      padding: 5rem 7rem 8rem 7rem;
+  p {
+    color: #374151; // gray-700
+    line-height: 1.625;
+    font-weight: 500;
 
-      .productInfo {
-        gap: 0;
-
-        h2 {
-          margin-bottom: 0.75rem;
-        }
-
-        p {
-          margin-bottom: 1.25rem;
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1000px) {
-  .mainProduct {
-    .product {
-      padding: 5rem 2rem 8rem 2rem;
-      display: flex;
-      align-items: flex-start;
-      place-content: space-between;
-
-      .carouselHolder {
-        width: 48%;
-      }
-
-      .productInfo {
-        width: 48%;
-        margin-top: 0;
-
-        h2 {
-          margin-bottom: 0.75rem;
-        }
-
-        p {
-          margin-bottom: 1.5rem;
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1250px) {
-  .mainProduct {
-    .product {
-      padding: 5rem 5rem 8rem 5rem;
-
-      .carouselHolder {
-        width: 45%;
-      }
-
-      .productInfo {
-        width: 45%;
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1400px) {
-  .mainProduct {
-    .product {
-      padding: 5rem 7rem 8rem 7rem;
-
-      .carouselHolder {
-        width: 43.5%;
-      }
-
-      .productInfo {
-        width: 43.5%;
-
-        h2 {
-          font-size: 2rem;
-          line-height: 2.5rem;
-        }
-
-        p {
-          margin-bottom: 1.75rem;
-          line-height: 2.25rem;
-        }
-
-        .buttons {
-          gap: 3rem;
-        }
-      }
+    span {
+      font-weight: 700;
+      color: #000;
     }
   }
 }

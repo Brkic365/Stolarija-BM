@@ -6,17 +6,26 @@ import styles from "@/styles/pages/ProductPage.module.scss";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-import { HiArrowSmRight } from "react-icons/hi";
+import { HiArrowSmRight, HiCheck } from "react-icons/hi";
 
 import PurchaseModal from "@/components/modals/PurchaseModal";
-import ProductImagesCarousel from "@/components/ProductImagesCarousel";
+
+import KitchenScene from "@/components/KitchenScene"; // Dynamic 3D Model
 
 import { motion } from "framer-motion";
 
 import { EmblaOptionsType } from "embla-carousel-react";
 
 import { CircularProgress } from "@nextui-org/react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setOption, resetConfiguration } from "@/redux/slices/configurationSlice";
+import clsx from "clsx";
+import { ProductOption, OptionChoice } from "@/types/product";
+
 const OPTIONS: EmblaOptionsType = {};
+
+// Removed hardcoded COLOR_MAP in favor of dynamic DB options
 
 function ProductPageLoading() {
   return (
@@ -39,8 +48,18 @@ function ProductPage() {
   const idQuery = searchParams.get("id");
 
   const [purchaseModalOpen, setPurchaseModalOpen] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState("specifikacije");
   const [product, setProduct] = useState<any | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+  const dispatch = useDispatch();
+  const configuration = useSelector((state: RootState) => state.configuration.selectedOptions);
+
+  useEffect(() => {
+    dispatch(resetConfiguration());
+  }, [idQuery, dispatch]);
+
+  const areAllOptionsSelected = product?.options?.every((opt: any) => configuration[opt.name]);
 
   const getProduct = async () => {
     const { data, error } = await supabase
@@ -58,6 +77,18 @@ function ProductPage() {
       }
 
       setImageUrls(tempUrls);
+
+      // Set Default Options
+      if (data[0].options) {
+        data[0].options.forEach((option: any) => {
+          if (option.default !== undefined && option.choices[option.default]) {
+            dispatch(setOption({
+              name: option.name,
+              value: option.choices[option.default].label
+            }));
+          }
+        });
+      }
     }
   };
 
@@ -78,90 +109,254 @@ function ProductPage() {
       {/* Hero section */}
       <section className={styles.hero}></section>
 
-      {/* Product section */}
-      <section className={styles.product}>
-        <motion.div
-          className={styles.carouselHolder}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          variants={{
-            visible: { opacity: 1, scale: 1 },
-            hidden: { opacity: 0, scale: 0.85 },
-          }}
-        >
-          <ProductImagesCarousel images={imageUrls} options={OPTIONS} />
-        </motion.div>
-        <section className={styles.productInfo}>
-          <motion.h2
+      {/* Main Container */}
+      <div className={styles.container}>
+
+        {/* TOP SECTION: Grid */}
+        <div className={styles.topSection}>
+
+          {/* Left Column: Images */}
+          <motion.div
+            className={styles.carouselHolder}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
             variants={{
               visible: { opacity: 1, scale: 1 },
-              hidden: { opacity: 0, scale: 0.85 },
+              hidden: { opacity: 0, scale: 0.95 },
             }}
           >
-            {product.name}
-          </motion.h2>
-          <motion.p
-            className={styles.price}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            variants={{
-              visible: { opacity: 1 },
-              hidden: { opacity: 0 },
-            }}
-          >
-            Od €{product.price.toLocaleString("en-US")}
-          </motion.p>
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            variants={{
-              visible: { opacity: 1 },
-              hidden: { opacity: 0 },
-            }}
-          >
-            {product.description}
-          </motion.p>
-          <div className={styles.buttons}>
-            <motion.button
-              onClick={() => setPurchaseModalOpen(true)}
+            {/* 3D Model Section */}
+            {product.model_path && (
+              <div style={{ marginBottom: "1rem", height: "400px", width: "100%" }}>
+                <KitchenScene
+                  product={product}
+                  configuration={configuration}
+                />
+              </div>
+            )}
+
+
+          </motion.div>
+
+          {/* Right Column: Details */}
+          <section className={styles.details}>
+            <motion.h2
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={{
+                visible: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, y: 20 },
+              }}
+            >
+              {product.name}
+            </motion.h2>
+            <motion.p
+              className={styles.price}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               variants={{
                 visible: { opacity: 1 },
                 hidden: { opacity: 0 },
               }}
             >
-              Naruči
-            </motion.button>
-            <motion.button
-              className={styles.emptyButton}
-              onClick={() => router.push("/kontakt")}
+              Od €{product.price.toLocaleString("en-US")}
+            </motion.p>
+            <motion.p
+              className={styles.description}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
               variants={{
                 visible: { opacity: 1 },
                 hidden: { opacity: 0 },
               }}
             >
-              Kontaktiraj nas <HiArrowSmRight />
-            </motion.button>
-          </div>
-        </section>
-      </section>
+              {product.description}
+            </motion.p>
+
+            {product.options && product.options.length > 0 && (
+              <div>
+                {product.options.map((option: ProductOption) => (
+                  <div key={option.name} className={styles.optionGroup}>
+                    {/* Header */}
+                    <div className={styles.optionHeader}>
+                      <h3>{option.name}</h3>
+                      <span
+                        className={clsx(
+                          styles.selectedValue,
+                          configuration[option.name] ? styles.selected : styles.placeholder
+                        )}
+                      >
+                        {configuration[option.name] || "Odaberite..."}
+                      </span>
+                    </div>
+
+                    {/* Swatches Grid */}
+                    <div className={styles.swatches}>
+                      {option.choices.map((choice: OptionChoice) => (
+                        <button
+                          key={choice.label}
+                          onClick={() => dispatch(setOption({ name: option.name, value: choice.label }))}
+                          className={clsx(
+                            styles.swatch,
+                            configuration[option.name] === choice.label && styles.selected
+                          )}
+                          style={{
+                            backgroundColor: choice.type === 'color' ? choice.hex : undefined,
+                            backgroundImage: choice.type === 'texture' && choice.texture ? `url(${choice.texture})` : undefined,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                          title={choice.label}
+                          aria-label={choice.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className={styles.buttons}>
+              <motion.button
+                className={styles.orderButton}
+                onClick={() => setPurchaseModalOpen(true)}
+                disabled={product?.options && product.options.length > 0 && !areAllOptionsSelected}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                variants={{
+                  visible: { opacity: 1, y: 0 },
+                  hidden: { opacity: 0, y: 20 },
+                }}
+              >
+                Naruči Konfiguraciju
+              </motion.button>
+
+              <motion.button
+                className={styles.contactButton}
+                onClick={() => router.push("/kontakt")}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                variants={{
+                  visible: { opacity: 1 },
+                  hidden: { opacity: 0 },
+                }}
+              >
+                Imate pitanja? Kontaktirajte nas <HiArrowSmRight />
+              </motion.button>
+            </div>
+          </section>
+        </div>
+
+        {/* BOTTOM SECTION: Tabs */}
+        <div className={styles.bottomSection}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Manual Tabs Implementation */}
+            <div className={styles.tabsHeader}>
+              <button
+                className={clsx(styles.tabButton, activeTab === "specifikacije" && styles.active)}
+                onClick={() => setActiveTab("specifikacije")}
+              >
+                Mogućnosti & Detalji
+              </button>
+              <button
+                className={clsx(styles.tabButton, activeTab === "proces" && styles.active)}
+                onClick={() => setActiveTab("proces")}
+              >
+                Proces Narudžbe
+              </button>
+              <button
+                className={clsx(styles.tabButton, activeTab === "dostava" && styles.active)}
+                onClick={() => setActiveTab("dostava")}
+              >
+                Dostava
+              </button>
+            </div>
+
+            <div className={styles.tabContent}>
+              {activeTab === "specifikacije" && (
+                <div className={styles.specsGrid}>
+                  <div className={styles.specRow}>
+                    <span className={styles.label}>Korpus</span>
+                    <span className={styles.value}>Iveral 18mm (Egger)</span>
+                  </div>
+                  <div className={styles.specRow}>
+                    <span className={styles.label}>Fronte</span>
+                    <span className={styles.value}>MDF Lakirani ili Akril (19mm)</span>
+                  </div>
+                  <div className={styles.specRow}>
+                    <span className={styles.label}>Okovi</span>
+                    <span className={styles.value}>Blum Soft-Close (Doživotno jamstvo)</span>
+                  </div>
+                  <div className={styles.specRow}>
+                    <span className={styles.label}>Radna ploča</span>
+                    <span className={styles.value}>Otporna na vlagu (38mm)</span>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "proces" && (
+                <ul className={styles.processGrid}>
+                  <li className={styles.processStep}>
+                    <div className={styles.stepNumber}>1</div>
+                    <div>
+                      <h5>Online Upit</h5>
+                      <p>Odaberite boje i pošaljite neobavezujući upit.</p>
+                    </div>
+                  </li>
+                  <li className={styles.processStep}>
+                    <div className={styles.stepNumber}>2</div>
+                    <div>
+                      <h5>Izmjera</h5>
+                      <p>Kontaktiramo vas za termin točne izmjere.</p>
+                    </div>
+                  </li>
+                  <li className={styles.processStep}>
+                    <div className={styles.stepNumber}>3</div>
+                    <div>
+                      <h5>3D Dizajn</h5>
+                      <p>Izrada nacrta i finalna ponuda.</p>
+                    </div>
+                  </li>
+                  <li className={styles.processStep}>
+                    <div className={styles.stepNumber}>4</div>
+                    <div>
+                      <h5>Montaža</h5>
+                      <p>Isporuka i montaža u roku 4-6 tjedana.</p>
+                    </div>
+                  </li>
+                </ul>
+              )}
+
+              {activeTab === "dostava" && (
+                <div className={styles.deliveryBox}>
+                  <p>
+                    <span>Besplatna dostava i montaža</span> vrijedi za područje grada Zagreba i zagrebačkog prstena.
+                    <br /><br />
+                    Za dostavu u druge dijelove Hrvatske ili otoke, cijena se formira na upit ovisno o udaljenosti i obujmu narudžbe. Kontaktirajte nas za preciznu ponudu.
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </main>
   );
 }

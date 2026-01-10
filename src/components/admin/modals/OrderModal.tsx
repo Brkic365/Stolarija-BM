@@ -135,31 +135,41 @@ function OrderModal({
                 </div>
               </div>
 
+              {order.configuration && Object.keys(order.configuration).length > 0 && (
+                <div style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f9fafb", borderRadius: "0.5rem" }}>
+                  <h4 style={{ fontWeight: 600, marginBottom: "0.5rem" }}>Konfiguracija:</h4>
+                  <ul style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                    {Object.entries(order.configuration).map(([key, value]) => (
+                      <li key={key} style={{ fontSize: "0.9rem" }}>
+                        <span style={{ fontWeight: 500 }}>{key}:</span> {value as string}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className={styles.status}>
                 <p className={styles.label}>Status:</p>
                 <div className={styles.statusOptions}>
                   <div
-                    className={`${styles.green} ${
-                      statusOption === "done" ? styles.selected : undefined
-                    }`}
+                    className={`${styles.green} ${statusOption === "done" ? styles.selected : undefined
+                      }`}
                     onClick={() => changeStatus("done")}
                   >
                     <HiOutlineCheckCircle />
                     <p>Gotovo</p>
                   </div>
                   <div
-                    className={`${styles.blue} ${
-                      statusOption === "working" ? styles.selected : undefined
-                    }`}
+                    className={`${styles.blue} ${statusOption === "working" ? styles.selected : undefined
+                      }`}
                     onClick={() => changeStatus("working")}
                   >
                     <HiOutlineClock />
                     <p>U izradi</p>
                   </div>
                   <div
-                    className={`${styles.red} ${
-                      statusOption === "waiting" ? styles.selected : undefined
-                    }`}
+                    className={`${styles.red} ${statusOption === "waiting" ? styles.selected : undefined
+                      }`}
                     onClick={() => changeStatus("waiting")}
                   >
                     <HiOutlineClock />

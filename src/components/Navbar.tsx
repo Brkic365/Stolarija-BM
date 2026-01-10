@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/styles/components/Navbar.module.scss";
+import clsx from "clsx";
 
 import { AiOutlineTwitter } from "react-icons/ai";
 
@@ -15,9 +16,12 @@ import { useRouter } from "next/navigation";
 
 import { usePathname } from "next/navigation";
 
-function Navbar() {
+function Navbar({ theme }: { theme?: "light" | "dark" }) {
   const router = useRouter();
   const pathname = usePathname();
+
+  // Determine theme based on path if not explicitly provided
+  const effectiveTheme = theme || (pathname.includes("/proizvod") ? "dark" : "light");
 
   // State that handles opening and closing of the mobile menu
   const [openMenu, setOpenMenu] = useState(false);
@@ -50,7 +54,7 @@ function Navbar() {
   };
 
   return (
-    <nav className={styles.nav}>
+    <nav className={clsx(styles.nav, effectiveTheme === "dark" ? styles.dark : styles.light)}>
       <MobileMenu
         open={openMenu}
         links={links}

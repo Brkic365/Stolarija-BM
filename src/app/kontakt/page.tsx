@@ -149,6 +149,8 @@ function Contact() {
       message,
     });
 
+    console.log(insertRes);
+
     if (insertRes.error) {
     } else {
       setMessageSuccess(true);

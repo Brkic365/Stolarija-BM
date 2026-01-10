@@ -84,7 +84,6 @@ function Filters({ includeSort }: PropType) {
               marginRight: "0",
               padding: "0 1rem",
             }}
-            className="w-fit"
           >
             {(sortItem: SortItemType) => (
               <SelectItem key={sortItem.value}>{sortItem.label}</SelectItem>
@@ -133,7 +132,6 @@ function Filters({ includeSort }: PropType) {
         defaultValue={filter.priceRange}
         label=" "
         formatOptions={{ style: "currency", currency: "EUR" }}
-        className="max-w-md"
         onChangeEnd={handlePriceRangeUpdate}
         ref={sliderRef}
       />

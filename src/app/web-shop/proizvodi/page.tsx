@@ -16,7 +16,7 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
 import { Select, SelectItem } from "@nextui-org/react";
 
-import Box from "@mui/material/Box";
+
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Filters from "@/components/Filters";
 
@@ -188,7 +188,7 @@ function Products() {
     dispatch(updateCategories(categoryQuery ? [categoryQuery] : []));
   }, [filter.categoryQuery]);
 
-  useEffect(() => {}, [filter]);
+  useEffect(() => { }, [filter]);
 
   return (
     <main className={styles.mainProducts}>
@@ -198,15 +198,14 @@ function Products() {
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
       >
-        <Box
-          sx={{ width: 250 }}
+        <div
+          style={{ width: 250, marginTop: "-2rem" }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
-          style={{ marginTop: "-2rem" }}
         >
           <Filters includeSort />
-        </Box>
+        </div>
       </SwipeableDrawer>
 
       {/* Hero section */}
@@ -251,7 +250,6 @@ function Products() {
                     marginRight: "0",
                     padding: "0 1rem",
                   }}
-                  className="w-fit"
                 >
                   {(sortItem: SortItemType) => (
                     <SelectItem key={sortItem.value}>

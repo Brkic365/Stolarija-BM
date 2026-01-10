@@ -10,4 +10,5 @@ export type OrderType = {
   address: string;
   message: string;
   status: string;
+  configuration?: Record<string, string>;
 };

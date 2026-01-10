@@ -1,7 +1,7 @@
 .carousel {
   --slide-spacing: 1rem;
-  --slide-size: 100%;
-  --slide-height: 30rem;
+  --slide-size: 25%;
+  --slide-height: 10rem;
   position: relative;
   margin-bottom: 3rem;
 
@@ -23,26 +23,28 @@
       position: relative;
 
       .parallax {
-        border-radius: 0.3125rem;
+        border-radius: 1rem;
         height: 100%;
         overflow: hidden;
 
         .slideImg {
-          border-radius: 0.3125rem;
+          border-radius: 1rem;
           display: block;
           height: var(--slide-height);
           width: 100%;
           object-fit: cover;
+          cursor: pointer;
+          /* Interaction hint */
         }
 
         .parallaxLayer {
-          border-radius: 0.3125rem;
+          border-radius: 1rem;
           position: relative;
           height: 100%;
           width: 100%;
 
           .parallaxImg {
-            border-radius: 0.3125rem;
+            border-radius: 1rem;
             max-width: none;
             width: calc(100% + (var(--slide-spacing) * 2));
             margin-left: calc(var(--slide-spacing) * -1);
@@ -51,6 +53,7 @@
       }
     }
   }
+
   .dots {
     position: relative;
     z-index: 2;
@@ -94,11 +97,5 @@
         background: black;
       }
     }
-  }
-}
-
-@media only screen and (min-width: 700px) {
-  .carousel {
-    --slide-height: 40rem;
   }
 }
