@@ -28,4 +28,5 @@ export type ProductType = {
   created_at: Date;
   orders: number;
   options?: ProductOption[];
+  model_path?: string;
 };
