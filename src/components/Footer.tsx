@@ -46,16 +46,20 @@ function Footer() {
       <ul>
         <li className={styles.copyright}>© 2023 Stolarija BM d.o.o.</li>
         <li>
-          <a href="/">Početna</a>
+          import Link from "next/link";
+          // ... (keep other imports)
+
+          // ... inside component:
+          <Link href="/">Početna</Link>
         </li>
         <li>
-          <a href="/o-nama">O nama</a>
+          <Link href="/o-nama">O nama</Link>
         </li>
         <li>
-          <a href="/web-shop">Web shop</a>
+          <Link href="/web-shop">Web shop</Link>
         </li>
         <li>
-          <a href="/kontakt">Kontaktiraj nas</a>
+          <Link href="/kontakt">Kontaktiraj nas</Link>
         </li>
       </ul>
     </section>
