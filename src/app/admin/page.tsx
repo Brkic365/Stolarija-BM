@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styles from "@/styles/pages/admin/Mainpage.module.scss";
 
 import {
@@ -14,7 +14,7 @@ import Products from "@/components/admin/Products";
 
 import { useSearchParams, useRouter } from "next/navigation";
 
-function Mainpage() {
+function AdminContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -120,4 +120,10 @@ function Mainpage() {
   );
 }
 
-export default Mainpage;
+export default function Mainpage() {
+  return (
+    <Suspense fallback={<div className={styles.loading}>Učitavanje...</div>}>
+      <AdminContent />
+    </Suspense>
+  );
+}
