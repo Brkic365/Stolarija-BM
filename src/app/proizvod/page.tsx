@@ -10,7 +10,11 @@ import { HiArrowSmRight, HiCheck } from "react-icons/hi";
 
 import PurchaseModal from "@/components/modals/PurchaseModal";
 
-import KitchenScene from "@/components/KitchenScene"; // Dynamic 3D Model
+import dynamic from "next/dynamic";
+const KitchenScene = dynamic(() => import("@/components/KitchenScene"), {
+  ssr: false,
+  loading: () => <div style={{ height: "400px", background: "#f5f5f5", borderRadius: "1rem" }} />
+});
 
 import { motion } from "framer-motion";
 
