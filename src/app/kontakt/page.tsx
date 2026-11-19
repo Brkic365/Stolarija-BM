@@ -19,9 +19,11 @@ import { motion } from "framer-motion";
 function MessageSuccessMessage({
   open,
   handleClose,
+  failed = false,
 }: {
   open: boolean;
   handleClose: () => void;
+  failed?: boolean;
 }) {
   return (
     <Modal
@@ -33,12 +35,12 @@ function MessageSuccessMessage({
       <section className={styles.sentMessageModal}>
         <section className={styles.success}>
           <motion.img
-            src="/images/icons/success.webp"
-            alt="Success icon"
+            src={failed ? "/images/icons/fail.webp" : "/images/icons/success.webp"}
+            alt={failed ? "Greška" : "Uspjeh"}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -46,8 +48,8 @@ function MessageSuccessMessage({
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
@@ -56,7 +58,7 @@ function MessageSuccessMessage({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
             variants={{
               visible: {
                 opacity: 1,
@@ -66,13 +68,13 @@ function MessageSuccessMessage({
               },
             }}
           >
-            Poruka uspješno poslana!
+            {failed ? "Poruka nije poslana" : "Poruka uspješno poslana!"}
           </motion.h3>
           <motion.p
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
             variants={{
               visible: {
                 opacity: 1,
@@ -82,14 +84,16 @@ function MessageSuccessMessage({
               },
             }}
           >
-            Hvala Vam na poruci. Javit ćemo Vam se u najkraćem mogućem roku.
+            {failed
+              ? "Došlo je do greške. Nazovite nas na 095 198 9479 ili pišite na WhatsApp."
+              : "Hvala Vam na poruci. Javit ćemo Vam se u najkraćem mogućem roku."}
           </motion.p>
           <motion.button
             onClick={handleClose}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             variants={{
               visible: {
                 opacity: 1,
@@ -116,6 +120,7 @@ function Contact() {
   const [message, setMessage] = useState<string>("");
 
   const [messageSuccess, setMessageSuccess] = useState<boolean>(false);
+  const [messageFailed, setMessageFailed] = useState<boolean>(false);
   const [canSend, setCanSend] = useState<boolean>(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -149,9 +154,9 @@ function Contact() {
       message,
     });
 
-    console.log(insertRes);
-
     if (insertRes.error) {
+      console.error("Failed to send message:", insertRes.error.message);
+      setMessageFailed(true);
     } else {
       setMessageSuccess(true);
       reset();
@@ -172,6 +177,11 @@ function Contact() {
       <MessageSuccessMessage
         open={messageSuccess}
         handleClose={() => setMessageSuccess(false)}
+      />
+      <MessageSuccessMessage
+        open={messageFailed}
+        failed
+        handleClose={() => setMessageFailed(false)}
       />
 
       {/* Hero section */}
@@ -201,10 +211,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.06 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Dragutina Domjanića 37
@@ -213,10 +223,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
+                transition={{ duration: 0.5, delay: 0.12 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Sesvetski Kraljevec
@@ -225,10 +235,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.18 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Zagreb, HR-10361
@@ -242,10 +252,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.06 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Pon - Pet: 8:00 - 17:00
@@ -259,22 +269,22 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.06 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
-                Mobitel: 095 198 9479
+                <a href="tel:+385951989479">Mobitel: 095 198 9479</a>
               </motion.li>
               <motion.li
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
+                transition={{ duration: 0.5, delay: 0.12 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Fax: 01 2046 348
@@ -288,10 +298,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.06 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 stolarijabm123@gmail.com
@@ -305,10 +315,10 @@ function Contact() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.06 }}
                 variants={{
-                  visible: { transform: "translateX(0)", opacity: 1 },
-                  hidden: { transform: "translateX(100%)", opacity: 0 },
+                  visible: { transform: "translateY(0)", opacity: 1 },
+                  hidden: { transform: "translateY(16px)", opacity: 0 },
                 }}
               >
                 Pošalji nam poruku
@@ -320,10 +330,10 @@ function Contact() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  transition={{ duration: 0.5, delay: 0.12 }}
                   variants={{
-                    visible: { transform: "translateX(0)", opacity: 1 },
-                    hidden: { transform: "translateX(100%)", opacity: 0 },
+                    visible: { transform: "translateY(0)", opacity: 1 },
+                    hidden: { transform: "translateY(16px)", opacity: 0 },
                   }}
                   ref={nameRef}
                   onChange={(e) => setName(e.target.value)}
@@ -335,10 +345,10 @@ function Contact() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
+                  transition={{ duration: 0.5, delay: 0.18 }}
                   variants={{
-                    visible: { transform: "translateX(0)", opacity: 1 },
-                    hidden: { transform: "translateX(100%)", opacity: 0 },
+                    visible: { transform: "translateY(0)", opacity: 1 },
+                    hidden: { transform: "translateY(16px)", opacity: 0 },
                   }}
                   ref={numberRef}
                   onChange={(e) => setNumber(e.target.value)}
@@ -349,10 +359,10 @@ function Contact() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
+                  transition={{ duration: 0.5, delay: 0.24 }}
                   variants={{
-                    visible: { transform: "translateX(0)", opacity: 1 },
-                    hidden: { transform: "translateX(100%)", opacity: 0 },
+                    visible: { transform: "translateY(0)", opacity: 1 },
+                    hidden: { transform: "translateY(16px)", opacity: 0 },
                   }}
                   ref={emailRef}
                   onChange={(e) => setEmail(e.target.value)}
@@ -363,10 +373,10 @@ function Contact() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                   variants={{
-                    visible: { transform: "translateX(0)", opacity: 1 },
-                    hidden: { transform: "translateX(100%)", opacity: 0 },
+                    visible: { transform: "translateY(0)", opacity: 1 },
+                    hidden: { transform: "translateY(16px)", opacity: 0 },
                   }}
                   ref={messageRef}
                   onChange={(e) => setMessage(e.target.value)}
@@ -375,10 +385,10 @@ function Contact() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
+                  transition={{ duration: 0.5, delay: 0.36 }}
                   variants={{
-                    visible: { transform: "translateX(0)", opacity: 1 },
-                    hidden: { transform: "translateX(100%)", opacity: 0 },
+                    visible: { transform: "translateY(0)", opacity: 1 },
+                    hidden: { transform: "translateY(16px)", opacity: 0 },
                   }}
                   onClick={sendMessage}
                   disabled={!canSend}
@@ -400,7 +410,7 @@ function Contact() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           variants={{
             visible: {
               transform: "scale(1)",
@@ -408,8 +418,8 @@ function Contact() {
               opacity: 1,
             },
             hidden: {
-              transform: "scale(1.5)",
-              filter: "blur(4px)",
+              transform: "scale(1.03)",
+              filter: "blur(0px)",
               opacity: 0,
             },
           }}

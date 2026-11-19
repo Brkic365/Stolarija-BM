@@ -9,6 +9,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import Status from "./Status";
 import OrderModal from "./modals/OrderModal";
+import { formatPrice } from "@/lib/format";
 
 function OrderTable({ updateData }: { updateData: () => void }) {
   const supabase = createClientComponentClient();
@@ -62,7 +63,7 @@ function OrderTable({ updateData }: { updateData: () => void }) {
         {orders.map((order) => (
           <tr key={order.id} onClick={() => setOpenedOrder(order)}>
             <td>{order.product}</td>
-            <td>{order.price.toLocaleString("en-US")} €</td>
+            <td>{formatPrice(order.price)}</td>
             <td>{new Date(order.created_at).toLocaleDateString("en-GB")}</td>
             <td className={styles.status}>
               <Status status={order.status} />

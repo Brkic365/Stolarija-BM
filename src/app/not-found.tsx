@@ -22,7 +22,7 @@ function NotFound() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.06 }}
           variants={{
             visible: {
               transform: "scale(1)",
@@ -30,8 +30,8 @@ function NotFound() {
               opacity: 1,
             },
             hidden: {
-              transform: "scale(1.5)",
-              filter: "blur(4px)",
+              transform: "scale(1.03)",
+              filter: "blur(0px)",
               opacity: 0,
             },
           }}
@@ -43,7 +43,7 @@ function NotFound() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.12 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -51,8 +51,8 @@ function NotFound() {
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
@@ -63,7 +63,7 @@ function NotFound() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.18 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -71,8 +71,8 @@ function NotFound() {
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
@@ -85,7 +85,7 @@ function NotFound() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
             variants={{
               visible: {
                 filter: "blur(0px)",

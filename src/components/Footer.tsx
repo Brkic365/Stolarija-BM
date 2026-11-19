@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { PHONE_DISPLAY, PHONE_HREF, WORKING_HOURS } from "@/lib/contact";
 
 function Footer() {
   const router = useRouter();
@@ -31,7 +32,7 @@ function Footer() {
               className={styles.emptyButton}
               onClick={() => router.push("/web-shop")}
             >
-              Posjeti web shop <HiArrowSmRight />
+              Pogledaj ponudu <HiArrowSmRight />
             </motion.button>
           </div>
         </section>
@@ -41,11 +42,15 @@ function Footer() {
           <li>Dragutina Domjanića 37, HR-10361</li>
           <li>Sesvetski Kraljevec</li>
           <li>OIB: 78796206166</li>
+          <li>
+            <a href={PHONE_HREF}>Mob: {PHONE_DISPLAY}</a>
+          </li>
+          <li>{WORKING_HOURS}</li>
         </ul>
       </section>
 
       <ul>
-        <li className={styles.copyright}>© 2023 Stolarija BM d.o.o.</li>
+        <li className={styles.copyright}>© {new Date().getFullYear()} Stolarija BM d.o.o.</li>
         <li>
           <Link href="/">Početna</Link>
         </li>
@@ -53,7 +58,7 @@ function Footer() {
           <Link href="/o-nama">O nama</Link>
         </li>
         <li>
-          <Link href="/web-shop">Web shop</Link>
+          <Link href="/web-shop">Ponuda</Link>
         </li>
         <li>
           <Link href="/kontakt">Kontaktiraj nas</Link>

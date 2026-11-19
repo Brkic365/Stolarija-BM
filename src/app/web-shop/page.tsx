@@ -13,7 +13,8 @@ import { HiArrowSmRight } from "react-icons/hi";
 
 import { useRouter } from "next/navigation";
 
-import { CircularProgress } from "@nextui-org/react";
+import StatusMessage from "@/components/StatusMessage";
+import ProductSkeleton from "@/components/ProductSkeleton";
 
 import { motion } from "framer-motion";
 
@@ -27,12 +28,23 @@ function Webshop() {
 
   const supabase = createClientComponentClient();
 
-  const [products, setProducts] = useState<any[] | null>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(
+    "loading"
+  );
 
   const getProducts = async () => {
+    setStatus("loading");
     const { data, error } = await supabase.from("products").select("*");
 
-    setProducts(data);
+    if (error) {
+      console.error("Failed to load products:", error.message);
+      setStatus("error");
+      return;
+    }
+
+    setProducts(data ?? []);
+    setStatus("ready");
   };
 
   useEffect(() => {
@@ -53,19 +65,21 @@ function Webshop() {
             hidden: { opacity: 0, scale: 0.85 },
           }}
         >
-          Web shop
+          Ponuda
         </motion.h1>
       </section>
 
       {/* Products section */}
-      {!products || products.length === 0 ? (
-        <div className={styles.loading}>
-          <CircularProgress aria-label="Loading..." size="lg" color="default" />
-        </div>
+      {status === "loading" ? (
+        <ProductSkeleton count={4} />
+      ) : status === "error" ? (
+        <StatusMessage variant="error" onRetry={getProducts} />
+      ) : products.length === 0 ? (
+        <StatusMessage variant="empty" />
       ) : (
         <section className={styles.products}>
           {productSections.map((productSection) => {
-            const sectionProducts = products!.filter(
+            const sectionProducts = products.filter(
               (product) => product.category === productSection.id
             );
 
@@ -118,7 +132,7 @@ function Webshop() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
           variants={{
             visible: { opacity: 1 },
             hidden: { opacity: 0 },
