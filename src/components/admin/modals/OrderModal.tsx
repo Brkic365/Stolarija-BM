@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/modals/OrderModal.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import { OrderType } from "@/types/order";
 
@@ -22,10 +22,9 @@ function DeleteOrder({
   close: () => void;
   orderId: number;
 }) {
-  const supabase = createClientComponentClient();
 
   const deleteOrder = async () => {
-    await supabase.from("orders").delete().eq("id", orderId);
+    await adminApi.remove("orders", orderId);
 
     close();
   };
@@ -62,7 +61,6 @@ function OrderModal({
   order: OrderType | null;
   handleClose: () => void;
 }) {
-  const supabase = createClientComponentClient();
 
   const [statusOption, setStatusOption] = useState<string | null>(null);
 
@@ -77,10 +75,7 @@ function OrderModal({
     setStatusOption(newStatus);
 
     if (order) {
-      const updateRes = await supabase
-        .from("orders")
-        .update({ status: newStatus })
-        .eq("id", order.id);
+      await adminApi.update("orders", order.id, { status: newStatus });
     }
   };
 

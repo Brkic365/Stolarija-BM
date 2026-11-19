@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/MainComponents.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import OrderTable from "./OrderTable";
 
 function Orders() {
-  const supabase = createClientComponentClient();
 
   const [total, setTotal] = useState<number>(0);
   const [done, setDone] = useState<number>(0);
@@ -16,21 +15,18 @@ function Orders() {
   const [waiting, setWaiting] = useState<number>(0);
 
   const getOrders = async () => {
-    const { data, error } = await supabase
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await adminApi.list("orders");
 
     if (data) {
       setTotal(data.length);
 
-      const doneOrders = data.filter((order) => order.status === "done");
+      const doneOrders = data.filter((order: any) => order.status === "done");
       setDone(doneOrders.length);
 
-      const workingOrders = data.filter((order) => order.status === "working");
+      const workingOrders = data.filter((order: any) => order.status === "working");
       setWorking(workingOrders.length);
 
-      const waitingOrders = data.filter((order) => order.status === "waiting");
+      const waitingOrders = data.filter((order: any) => order.status === "waiting");
       setWaiting(waitingOrders.length);
     }
   };

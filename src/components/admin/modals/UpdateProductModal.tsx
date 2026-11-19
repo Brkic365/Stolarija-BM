@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "@/styles/components/admin/modals/AddProductModal.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import Modal from "@mui/material/Modal";
 
@@ -25,10 +25,9 @@ function DeleteProduct({
   close: () => void;
   productId: number;
 }) {
-  const supabase = createClientComponentClient();
 
   const deleteMessage = async () => {
-    await supabase.from("products").delete().eq("id", productId);
+    await adminApi.remove("products", productId);
 
     close();
   };
@@ -67,7 +66,6 @@ function UpdateProductModal({
   handleClose: () => void;
   updateData: () => void;
 }) {
-  const supabase = createClientComponentClient();
 
   const [images, setImages] = useState<ImageType[]>([]);
   const [name, setName] = useState<string>("");
@@ -100,18 +98,18 @@ function UpdateProductModal({
   const updateProduct = async (e: any) => {
     e.preventDefault();
 
-    const { data, error } = await supabase
-      .from("products")
-      .update([
-        {
-          name: name,
-          price: price,
-          description: description,
-          category: category,
-          images: images,
-        },
-      ])
-      .match({ id: product!.id });
+    const { error } = await adminApi.update("products", product!.id, {
+      name,
+      price,
+      description,
+      category,
+      images,
+    });
+
+    if (error) {
+      alert(`Proizvod nije spremljen: ${error}`);
+      return;
+    }
 
     close();
   };
@@ -122,27 +120,12 @@ function UpdateProductModal({
     let tempImages = images;
 
     for await (let file of e.target.files) {
-      const noSpecialCharacters = file.name.replace(/[^a-zA-Z0-9 ]/g, "");
+      const { data, error } = await adminApi.uploadImage(file);
 
-      const { data, error } = await supabase.storage
-        .from("productImages")
-        .upload(
-          `public/${
-            noSpecialCharacters + (Math.random() + 1).toString(36).substring(7)
-          }`,
-          file,
-          {
-            cacheControl: "3600",
-            upsert: false,
-          }
-        );
-
-      if (!error && data) {
-        const urlData = supabase.storage
-          .from("productImages")
-          .getPublicUrl(data.path);
-
-        tempImages.push({ url: urlData.data.publicUrl, pathname: data.path });
+      if (error) {
+        alert(`Slika ${file.name} nije učitana: ${error}`);
+      } else if (data) {
+        tempImages.push(data);
       }
     }
 
@@ -156,9 +139,7 @@ function UpdateProductModal({
 
     tempImages.splice(index, 1);
 
-    const { data, error } = await supabase.storage
-      .from("productImages")
-      .remove([image.pathname]);
+    await adminApi.deleteImage(image.pathname);
 
     setImages([...tempImages]);
   };

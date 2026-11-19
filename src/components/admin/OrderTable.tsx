@@ -5,23 +5,19 @@ import styles from "@/styles/components/admin/Table.module.scss";
 
 import { OrderType } from "@/types/order";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import Status from "./Status";
 import OrderModal from "./modals/OrderModal";
 import { formatPrice } from "@/lib/format";
 
 function OrderTable({ updateData }: { updateData: () => void }) {
-  const supabase = createClientComponentClient();
 
   const [openedOrder, setOpenedOrder] = useState<OrderType | null>(null);
   const [orders, setOrders] = useState<OrderType[]>([]);
 
   const getOrders = async () => {
-    const { data, error } = await supabase
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await adminApi.list("orders");
 
     if (data) {
       setOrders(data);
