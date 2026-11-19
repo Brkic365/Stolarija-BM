@@ -397,6 +397,112 @@
   }
 }
 
+.formats {
+  margin: -4px 0 0;
+  @include figure;
+  font-size: 10.5px;
+  color: $faint;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+
+  .app & button {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1px;
+    padding: 0 0 5px;
+    border: 1px solid $rule-strong;
+    background: $sheet;
+    text-align: left;
+    overflow: hidden;
+
+    &:hover:not(:disabled) {
+      background: $sheet;
+      color: $ink;
+      border-color: $ink;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-bottom: 1px solid $rule;
+      margin-bottom: 4px;
+    }
+    span {
+      padding: 0 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    small {
+      padding: 0 6px;
+      font-size: 10px;
+      color: $faint;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .app & button.presetActive {
+    border-color: $red;
+    box-shadow: inset 0 0 0 1px $red;
+  }
+}
+
+.credit {
+  margin: 2px 0 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: $faint;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(251, 250, 246, 0.82);
+  z-index: 2;
+
+  span {
+    @include figure;
+    font-size: 13px;
+    padding: 10px 16px;
+    border: 1px solid $ink;
+    background: $sheet;
+    position: relative;
+    overflow: hidden;
+
+    // a saw cut running along the bottom edge
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 30%;
+      height: 2px;
+      background: $red;
+      animation: kerf 1.1s linear infinite;
+    }
+  }
+}
+
+@keyframes kerf {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(340%); }
+}
+
 // ---------- Main area ----------
 
 .main {

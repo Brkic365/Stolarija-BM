@@ -192,51 +192,252 @@ export function buildHeightMap(
 
 export interface OrientationPreview {
   axis: FrontAxis;
+  /** In-plane rotation that stands this view upright (model "up" pointing up) */
+  rotation: 0 | 90 | 180 | 270;
   nx: number;
   ny: number;
-  /** 0..1 brightness per cell (1 = closest), -1 = empty; row 0 = bottom */
+  /** 0..1 brightness per cell (1 = closest), -1 = empty; row 0 = bottom. Already rotated upright. */
   data: Float32Array;
-  score: number;
+}
+
+export interface FrontGuess {
+  axis: FrontAxis;
+  rotation: 0 | 90 | 180 | 270;
+  /** Which way is up in the model file */
+  up: FrontAxis;
 }
 
 export const FRONT_AXES: FrontAxis[] = ["+z", "-z", "+x", "-x", "-y", "+y"];
 
+const OPPOSITE: Record<FrontAxis, FrontAxis> = { "+x": "-x", "-x": "+x", "+y": "-y", "-y": "+y", "+z": "-z", "-z": "+z" };
+const UNIT: Record<FrontAxis, [number, number, number]> = {
+  "+x": [1, 0, 0], "-x": [-1, 0, 0], "+y": [0, 1, 0], "-y": [0, -1, 0], "+z": [0, 0, 1], "-z": [0, 0, -1],
+};
+
+/** Rotation (0/90/180/270) that makes the model's `up` point up when seen from `front`. */
+export function uprightRotation(front: FrontAxis, up: FrontAxis): 0 | 90 | 180 | 270 {
+  const u = new Float32Array(UNIT[up]);
+  for (const r of [0, 90, 180, 270] as const) {
+    const o = orientPositions(u, front, r, false);
+    if (o[1] > 0.5) return r;
+  }
+  return 0;
+}
+
+/** Rotate a row-0-at-bottom grid by 90° steps, counter-clockwise like orientPositions. */
+function rotateGrid(data: Float32Array, nx: number, ny: number, r: number) {
+  if (r === 0) return { data, nx, ny };
+  const tx = r === 180 ? nx : ny;
+  const ty = r === 180 ? ny : nx;
+  const out = new Float32Array(tx * ty);
+  for (let y = 0; y < ny; y++) {
+    for (let x = 0; x < nx; x++) {
+      let X: number, Y: number;
+      if (r === 90) { X = ny - 1 - y; Y = x; }
+      else if (r === 180) { X = nx - 1 - x; Y = ny - 1 - y; }
+      else { X = y; Y = nx - 1 - x; }
+      out[Y * tx + X] = data[y * nx + x];
+    }
+  }
+  return { data: out, nx: tx, ny: ty };
+}
+
+interface ViewStats {
+  axis: FrontAxis;
+  nx: number;
+  ny: number;
+  data: Float32Array;
+  /** silhouette area in model units² */
+  area: number;
+  /** depth range in preview pixels, to turn 0..1 depth back into geometry */
+  rpx: number;
+}
+
+function renderView(positions: Float32Array, axis: FrontAxis, size: number, stride: number): ViewStats {
+  const p = orientPositions(positions, axis, 0, false);
+  const b = bounds(p);
+  const bx = Math.max(b.maxx - b.minx, 1e-9);
+  const by = Math.max(b.maxy - b.miny, 1e-9);
+  const sc = (size - 1) / Math.max(bx, by);
+  const nx = Math.max(2, Math.round(bx * sc) + 1);
+  const ny = Math.max(2, Math.round(by * sc) + 1);
+  const zb = zbuffer(p, nx, ny, (x) => (x - b.minx) * sc, (y) => (y - b.miny) * sc, (z) => z, stride);
+  let zlo = Infinity, zhi = -Infinity, hits = 0;
+  for (let k = 0; k < zb.length; k++) {
+    const z = zb[k];
+    if (z !== -Infinity) { hits++; if (z < zlo) zlo = z; if (z > zhi) zhi = z; }
+  }
+  const range = Math.max(zhi - zlo, 1e-9);
+  const data = new Float32Array(nx * ny).fill(-1);
+  for (let k = 0; k < zb.length; k++) if (zb[k] !== -Infinity) data[k] = (zb[k] - zlo) / range;
+  return { axis, nx, ny, data, area: (hits / (nx * ny)) * bx * by, rpx: range * sc };
+}
+
 /**
- * Small depth previews of the model seen from each of the six directions,
- * plus a guess which one is the front: the view with the largest silhouette
- * and the most surface detail (faces have noses and eyes, backs of heads don't).
+ * Surface measures on one depth view, away from the silhouette edge:
+ * flat = share of perfectly flat cells (a sawn-off base or the back of a plaque),
+ * hollows = share of concave cells (eye sockets, mouth, folds; the back of a head has none),
+ * detail = mean curvature.
  */
-export function orientationPreviews(positions: Float32Array, size = 72): OrientationPreview[] {
-  const tris = positions.length / 9;
-  const stride = Math.max(1, Math.floor(tris / 120000));
-  return FRONT_AXES.map((axis) => {
-    const p = orientPositions(positions, axis, 0, false);
-    const b = bounds(p);
-    const bx = Math.max(b.maxx - b.minx, 1e-9);
-    const by = Math.max(b.maxy - b.miny, 1e-9);
-    const sc = (size - 1) / Math.max(bx, by);
-    const nx = Math.max(2, Math.round(bx * sc) + 1);
-    const ny = Math.max(2, Math.round(by * sc) + 1);
-    const zb = zbuffer(p, nx, ny, (x) => (x - b.minx) * sc, (y) => (y - b.miny) * sc, (z) => z, stride);
-    let zlo = Infinity, zhi = -Infinity, hits = 0;
-    for (const z of Array.from(zb)) if (z !== -Infinity) { hits++; if (z < zlo) zlo = z; if (z > zhi) zhi = z; }
-    const range = Math.max(zhi - zlo, 1e-9);
-    const data = new Float32Array(nx * ny).fill(-1);
-    for (let k = 0; k < zb.length; k++) if (zb[k] !== -Infinity) data[k] = (zb[k] - zlo) / range;
-    // Detail: mean depth change between neighbouring covered cells
-    let grad = 0, pairs = 0;
-    for (let y = 0; y < ny - 1; y++) {
-      for (let x = 0; x < nx - 1; x++) {
-        const k = y * nx + x;
-        if (data[k] < 0) continue;
-        if (data[k + 1] >= 0) { grad += Math.abs(data[k + 1] - data[k]); pairs++; }
-        if (data[k + nx] >= 0) { grad += Math.abs(data[k + nx] - data[k]); pairs++; }
+function surfaceStats(v: { nx: number; ny: number; data: Float32Array; rpx: number }) {
+  const { nx, ny, data, rpx } = v;
+  const E = 3;
+  let n = 0, flat = 0, hollows = 0, detail = 0;
+  for (let y = E; y < ny - E; y++) {
+    for (let x = E; x < nx - E; x++) {
+      let edge = false;
+      for (let dy = -E; dy <= E && !edge; dy++)
+        for (let dx = -E; dx <= E; dx++)
+          if (data[(y + dy) * nx + x + dx] < 0) { edge = true; break; }
+      if (edge) continue;
+      const k = y * nx + x;
+      const c = data[k], l = data[k - 1], r = data[k + 1], u = data[k + nx], d = data[k - nx];
+      const L = (l + r + u + d - 4 * c) * rpx;
+      n++;
+      detail += Math.min(0.3, Math.abs(L));
+      if (L > 0.1) hollows++;
+      if (Math.abs(L) < 0.02 && Math.abs(r - l) * rpx < 0.05 && Math.abs(u - d) * rpx < 0.05) flat++;
+    }
+  }
+  return n ? { flat: flat / n, hollows: hollows / n, detail: detail / n } : { flat: 0, hollows: 0, detail: 0 };
+}
+
+/** Left/right mirror similarity of an upright view (faces and figures are symmetric from the front and back, not from the side). */
+function symmetry(v: { nx: number; ny: number; data: Float32Array }) {
+  const { nx, ny, data } = v;
+  let hits = 0, cx = 0;
+  for (let y = 0; y < ny; y++) for (let x = 0; x < nx; x++) if (data[y * nx + x] >= 0) { hits++; cx += x; }
+  if (!hits) return 0;
+  cx /= hits;
+  let best = 0;
+  const span = Math.round(nx * 0.1);
+  for (let c2 = Math.round(2 * cx) - span; c2 <= Math.round(2 * cx) + span; c2++) {
+    let u = 0, diff = 0;
+    for (let y = 0; y < ny; y++) {
+      for (let x = 0; x < nx; x++) {
+        const a = data[y * nx + x];
+        const xm = c2 - x;
+        const b = xm >= 0 && xm < nx ? data[y * nx + xm] : -1;
+        if (a < 0 && b < 0) continue;
+        u++;
+        diff += a < 0 || b < 0 ? 1 : Math.min(1, Math.abs(a - b) * 4);
       }
     }
-    const area = (hits / (nx * ny)) * bx * by;
-    const detail = pairs ? (grad / pairs) * size : 0;
-    return { axis, nx, ny, data, score: area * (1 + detail) };
-  });
+    const S = u ? 1 - diff / u : 0;
+    if (S > best) best = S;
+  }
+  return best;
+}
+
+/**
+ * Front-versus-back vote between two opposite views. Fitted on 18 scanned
+ * heads, busts and statues (all heads and busts right, a few full statues not): the front has more surface detail and fewer
+ * cells right at the nearest depth (a nose and chin, not a round skull or a
+ * flat back).
+ */
+function faceScore(
+  st: { hollows: number; detail: number; flat: number },
+  p: { nx: number; ny: number; data: Float32Array }
+) {
+  let h = 0, near = 0, mean = 0;
+  let x0 = Infinity, x1 = -Infinity;
+  for (let y = 0; y < p.ny; y++) {
+    for (let x = 0; x < p.nx; x++) {
+      const v = p.data[y * p.nx + x];
+      if (v < 0) continue;
+      h++;
+      mean += v;
+      if (v > 0.9) near++;
+      if (x < x0) x0 = x;
+      if (x > x1) x1 = x;
+    }
+  }
+  if (!h) return -Infinity;
+  // Where the nearest points sit: a nose is on the centre line, the rim of a
+  // hollow mask seen from behind is not.
+  const cx = (x0 + x1) / 2, half = Math.max(1, (x1 - x0) / 2);
+  let off = 0, nTop = 0;
+  for (let y = 0; y < p.ny; y++) {
+    for (let x = 0; x < p.nx; x++) {
+      if (p.data[y * p.nx + x] > 0.95) { off += Math.abs(x - cx) / half; nTop++; }
+    }
+  }
+  const offCentre = nTop ? off / nTop : 0;
+  return 5 * st.detail - 0.5 * (near / h) + mean / h - st.hollows - 2 * st.flat - 0.3 * offCentre;
+}
+
+/**
+ * Six small depth previews of the model, each stood upright, plus a guess of
+ * which side is the front and which way is up.
+ *
+ * Up: a flat sawn-off base gives it away; otherwise the taller of Y/Z
+ * (OBJ/glTF are usually Y-up, scans and STL often Z-up); a flat plaque faces
+ * along its thin axis. Front: of the four side views, the left/right
+ * symmetric pair (front + back, not the profiles); then the one of the two
+ * with hollows (eyes, mouth, folds) rather than the smooth back.
+ */
+export function orientationPreviews(
+  positions: Float32Array,
+  size = 112
+): { previews: OrientationPreview[]; guess: FrontGuess } {
+  const tris = positions.length / 9;
+  const stride = Math.max(1, Math.floor(tris / 400000));
+  const views = FRONT_AXES.map((a) => renderView(positions, a, size, stride));
+  const stats = views.map((v) => surfaceStats(v));
+
+  let mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity];
+  for (let i = 0; i < positions.length; i += 3) {
+    for (let k = 0; k < 3; k++) {
+      const c = positions[i + k];
+      if (c < mn[k]) mn[k] = c;
+      if (c > mx[k]) mx[k] = c;
+    }
+  }
+  const ext = [0, 1, 2].map((k) => mx[k] - mn[k]);
+  const sorted = [...ext].sort((a, b) => a - b);
+  const AX = ["x", "y", "z"] as const;
+
+  const idx = (a: FrontAxis) => FRONT_AXES.indexOf(a);
+  const amax = Math.max(...views.map((v) => v.area), 1e-12);
+  const flatIdx = stats.reduce((bi, s, i) => (s.flat > stats[bi].flat ? i : bi), 0);
+  const thinK = ext.indexOf(sorted[0]);
+  const isPlaque = sorted[0] < 0.45 * sorted[1];
+
+  // Possible "up" directions. A sawn-off base settles it; otherwise try Y and
+  // Z (and X for a plaque lying on its side) and keep whichever stands the
+  // model up symmetrically.
+  let ups: FrontAxis[];
+  if (isPlaque) ups = [AX[thinK] === "y" ? "+z" : "+y"];
+  else if (stats[flatIdx].flat > 0.5) ups = [OPPOSITE[FRONT_AXES[flatIdx]]];
+  else ups = ["+y", "+z"];
+
+  const upright = (axis: FrontAxis, up: FrontAxis) => {
+    const v = views[idx(axis)];
+    const rotation = axis[1] === up[1] ? 0 : uprightRotation(axis, up);
+    const g = rotateGrid(v.data, v.nx, v.ny, rotation);
+    return { axis, rotation, nx: g.nx, ny: g.ny, data: g.data } as OrientationPreview;
+  };
+
+  let best: { axis: FrontAxis; up: FrontAxis; score: number } = { axis: "+z", up: "+y", score: -Infinity };
+  for (const up of ups) {
+    const cands: FrontAxis[] = isPlaque
+      ? ([`+${AX[thinK]}`, `-${AX[thinK]}`] as FrontAxis[])
+      : FRONT_AXES.filter((a) => a[1] !== up[1]);
+    const prev = new Map(cands.map((a) => [a, upright(a, up)]));
+    const sym = new Map(cands.map((a) => [a, symmetry(prev.get(a)!)]));
+    for (const a of cands) {
+      const o = OPPOSITE[a];
+      const pair = (((sym.get(a) ?? 0) + (sym.get(o) ?? 0)) / 2) * Math.sqrt(views[idx(a)].area / amax);
+      const face = faceScore(stats[idx(a)], prev.get(a)!);
+      const faceO = faceScore(stats[idx(o)], prev.get(o)!);
+      // Y-up is the most common convention, so it wins a near tie.
+      const score = pair * 10 + (face > faceO ? 1 : 0) + (up === "+y" ? 0.2 : 0);
+      if (score > best.score) best = { axis: a, up, score };
+    }
+  }
+  const up = best.up;
+  const previews = views.map((v) => upright(v.axis, up));
+  return { previews, guess: { axis: best.axis, rotation: previews[idx(best.axis)].rotation, up } };
 }
 
 /** Separable box blur, in place. */
