@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "@/styles/components/admin/modals/AddProductModal.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import Modal from "@mui/material/Modal";
 
@@ -25,7 +25,6 @@ function AddProductModal({
   handleClose: () => void;
   updateData: () => void;
 }) {
-  const supabase = createClientComponentClient();
 
   const [images, setImages] = useState<ImageType[]>([]);
   const [name, setName] = useState<string>("");
@@ -54,15 +53,18 @@ function AddProductModal({
   const addProduct = async (e: any) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.from("products").insert([
-      {
-        name: name,
-        price: price,
-        description: description,
-        category: category,
-        images: images,
-      },
-    ]);
+    const { error } = await adminApi.create("products", {
+      name,
+      price,
+      description,
+      category,
+      images,
+    });
+
+    if (error) {
+      alert(`Proizvod nije dodan: ${error}`);
+      return;
+    }
 
     updateData();
 
@@ -75,27 +77,12 @@ function AddProductModal({
     let tempImages = images;
 
     for await (let file of e.target.files) {
-      const noSpecialCharacters = file.name.replace(/[^a-zA-Z0-9 ]/g, "");
+      const { data, error } = await adminApi.uploadImage(file);
 
-      const { data, error } = await supabase.storage
-        .from("productImages")
-        .upload(
-          `public/${
-            noSpecialCharacters + (Math.random() + 1).toString(36).substring(7)
-          }`,
-          file,
-          {
-            cacheControl: "3600",
-            upsert: false,
-          }
-        );
-
-      if (!error && data) {
-        const urlData = supabase.storage
-          .from("productImages")
-          .getPublicUrl(data.path);
-
-        tempImages.push({ url: urlData.data.publicUrl, pathname: data.path });
+      if (error) {
+        alert(`Slika ${file.name} nije učitana: ${error}`);
+      } else if (data) {
+        tempImages.push(data);
       }
     }
 
@@ -109,9 +96,7 @@ function AddProductModal({
 
     tempImages.splice(index, 1);
 
-    const { data, error } = await supabase.storage
-      .from("productImages")
-      .remove([image.pathname]);
+    await adminApi.deleteImage(image.pathname);
 
     setImages([...tempImages]);
   };

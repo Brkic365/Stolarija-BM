@@ -3,7 +3,7 @@ import styles from "@/styles/components/admin/modals/MessageModal.module.scss";
 
 import { Scrollbars } from "react-custom-scrollbars-2";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import Modal from "@mui/material/Modal";
 
@@ -17,10 +17,9 @@ function DeleteMessage({
   close: () => void;
   messageId: number;
 }) {
-  const supabase = createClientComponentClient();
 
   const deleteMessage = async () => {
-    await supabase.from("messages").delete().eq("id", messageId);
+    await adminApi.remove("messages", messageId);
 
     close();
   };
@@ -56,7 +55,6 @@ function MessageModal({
   message: MessageType | null;
   handleClose: () => void;
 }) {
-  const supabase = createClientComponentClient();
 
   const [deleting, setDeleting] = useState(false);
 
@@ -67,10 +65,7 @@ function MessageModal({
 
   const changeStatus = async () => {
     if (message && !message.read) {
-      await supabase
-        .from("messages")
-        .update({ read: true })
-        .eq("id", message.id);
+      await adminApi.update("messages", message.id, { read: true });
     }
   };
 
