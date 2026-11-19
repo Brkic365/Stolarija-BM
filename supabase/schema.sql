@@ -45,7 +45,7 @@ create table if not exists public.messages (
   read       boolean     not null default false
 );
 
--- Order counter used by PurchaseModal: supabase.rpc("increment", { x, row_id })
+-- Order counter helper (server-side only; the API route updates the counter directly)
 create or replace function public.increment(x integer, row_id bigint)
 returns void
 language sql
@@ -55,7 +55,7 @@ as $$
   update public.products set orders = orders + x where id = row_id;
 $$;
 
-grant execute on function public.increment(integer, bigint) to anon, authenticated;
+revoke execute on function public.increment(integer, bigint) from public, anon, authenticated;
 
 -- Tiny view for the keep-alive cron (/api/keep-alive) so it never reads real data
 create or replace view public.health as select 1 as ok;
@@ -64,56 +64,39 @@ grant select on public.health to anon, authenticated;
 -- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
--- Public visitors: read products, create orders and contact messages.
+-- The browser (anon key) may only READ products. Everything else (orders, contact
+-- messages, admin edits, uploads) goes through Next.js API routes that use the
+-- service-role key, which bypasses RLS. The service-role key must never reach the browser.
 alter table public.products enable row level security;
 alter table public.orders   enable row level security;
 alter table public.messages enable row level security;
 
-drop policy if exists "Public can read products" on public.products;
+-- Remove any older, more permissive policies (e.g. from the previous project setup)
+do $$
+declare pol record;
+begin
+  for pol in
+    select policyname, tablename from pg_policies
+    where schemaname = 'public' and tablename in ('products', 'orders', 'messages')
+  loop
+    execute format('drop policy if exists %I on public.%I', pol.policyname, pol.tablename);
+  end loop;
+end $$;
+
 create policy "Public can read products" on public.products
   for select using (true);
 
-drop policy if exists "Public can create orders" on public.orders;
-create policy "Public can create orders" on public.orders
-  for insert with check (true);
-
-drop policy if exists "Public can send messages" on public.messages;
-create policy "Public can send messages" on public.messages
-  for insert with check (true);
-
--- WARNING (matches how the current admin dashboard works):
--- /admin is protected by NextAuth, but it talks to Supabase from the browser with the
--- public anon key. For it to add/edit/delete products and manage orders/messages, the
--- anon role needs the policies below. That means anyone who extracts the anon key could
--- do the same. Recommended follow-up: move admin reads/writes to Next.js API routes that
--- use the service-role key server-side, then delete this block.
-drop policy if exists "Admin (anon) manages products" on public.products;
-create policy "Admin (anon) manages products" on public.products
-  for all using (true) with check (true);
-
-drop policy if exists "Admin (anon) manages orders" on public.orders;
-create policy "Admin (anon) manages orders" on public.orders
-  for all using (true) with check (true);
-
-drop policy if exists "Admin (anon) manages messages" on public.messages;
-create policy "Admin (anon) manages messages" on public.messages
-  for all using (true) with check (true);
+-- No anon policies on orders / messages: the public cannot read or write them directly.
 
 -- ---------------------------------------------------------------------------
 -- Storage: product images and customer sketches (bucket name used in the code)
 -- ---------------------------------------------------------------------------
+-- Public bucket = files are readable by URL. Uploads/deletes only via the service role.
 insert into storage.buckets (id, name, public)
 values ('productImages', 'productImages', true)
-on conflict (id) do nothing;
-
-drop policy if exists "Public can view productImages" on storage.objects;
-create policy "Public can view productImages" on storage.objects
-  for select using (bucket_id = 'productImages');
+on conflict (id) do update set public = true;
 
 drop policy if exists "Public can upload productImages" on storage.objects;
-create policy "Public can upload productImages" on storage.objects
-  for insert with check (bucket_id = 'productImages');
-
 drop policy if exists "Admin (anon) deletes productImages" on storage.objects;
-create policy "Admin (anon) deletes productImages" on storage.objects
-  for delete using (bucket_id = 'productImages');
+-- If the old project had other insert/update/delete policies on storage.objects for
+-- this bucket, remove them in Dashboard -> Storage -> Policies.

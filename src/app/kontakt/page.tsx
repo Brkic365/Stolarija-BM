@@ -12,7 +12,6 @@ import {
 
 import Modal from "@mui/material/Modal";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { motion } from "framer-motion";
 
@@ -112,8 +111,6 @@ function MessageSuccessMessage({
 }
 
 function Contact() {
-  const supabase = createClientComponentClient();
-
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [number, setNumber] = useState<string>("");
@@ -147,15 +144,19 @@ function Contact() {
       return;
     }
 
-    const insertRes = await supabase.from("messages").insert({
-      name,
-      email,
-      telephone: number,
-      message,
-    });
+    let ok = false;
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, telephone: number, message }),
+      });
+      ok = res.ok;
+    } catch {
+      ok = false;
+    }
 
-    if (insertRes.error) {
-      console.error("Failed to send message:", insertRes.error.message);
+    if (!ok) {
       setMessageFailed(true);
     } else {
       setMessageSuccess(true);

@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import styles from "@/styles/components/modals/PurchaseModal.module.scss";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { motion } from "framer-motion";
 import { ProductType } from "@/types/product";
 import { useSelector } from "react-redux";
@@ -20,8 +19,6 @@ function PurchaseModal({
   handleClose: () => void;
   product: ProductType;
 }) {
-  const supabase = createClientComponentClient();
-
   const [orderSuccess, setOrderSuccess] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -62,81 +59,33 @@ function PurchaseModal({
       return;
     }
 
-    let fileUrl = "";
+    const form = new FormData();
+    form.append("productId", String(product.id));
+    form.append("first_name", name);
+    form.append("last_name", surname);
+    form.append("email", email);
+    form.append("telephone", number);
+    form.append("address", address);
+    form.append("message", message);
+    form.append("configuration", JSON.stringify(configuration ?? {}));
+    if (selectedFile) form.append("sketch", selectedFile);
 
-    if (selectedFile) {
-      setIsUploading(true);
-      const fileExt = selectedFile.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `customer-uploads/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("productImages")
-        .upload(filePath, selectedFile);
-
-      if (uploadError) {
-        setIsUploading(false);
-        setError("Greška prilikom učitavanja datoteke.");
-        return;
+    setIsUploading(true);
+    try {
+      const res = await fetch("/api/orders", { method: "POST", body: form });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) {
+        setError(body?.error ?? "Greška prilikom narudžbe.");
+      } else {
+        setError(null);
+        setOrderSuccess(true);
       }
-
-      const { data } = supabase.storage
-        .from("productImages")
-        .getPublicUrl(filePath);
-
-      fileUrl = data.publicUrl;
+    } catch (err) {
+      setError("Greška prilikom narudžbe. Provjerite internetsku vezu.");
+    } finally {
       setIsUploading(false);
     }
-
-    const finalMessage = fileUrl
-      ? `${message}\n\nPriložena skica: ${fileUrl}`
-      : message;
-
-    const insertRes = await supabase.from("orders").insert({
-      product: product.name,
-      price: product.price,
-      first_name: name,
-      last_name: surname,
-      email,
-      telephone: number,
-      address,
-      message: finalMessage,
-      configuration,
-    });
-
-    const updateProductRes = await supabase.rpc("increment", {
-      x: 1,
-      row_id: product.id,
-    });
-
-    if (insertRes.error || updateProductRes.error) {
-      setError("Greška prilikom narudžbe.");
-    } else {
-      setOrderSuccess(true);
-
-      try {
-        await fetch("/api/send-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            product: product.name,
-            price: product.price,
-            first_name: name,
-            last_name: surname,
-            email,
-            telephone: number,
-            address,
-            message: finalMessage,
-            configuration,
-          }),
-        });
-      } catch (err) {
-        console.error("Failed to send email", err);
-      }
-    }
-  }
+  };
 
   useEffect(() => {
     if (error) {

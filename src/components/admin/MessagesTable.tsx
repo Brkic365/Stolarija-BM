@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/Table.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import { MessageType } from "@/types/message";
 
@@ -12,16 +12,12 @@ import Status from "./Status";
 import MessageModal from "./modals/MessageModal";
 
 function MessageTable({ updateData }: { updateData: () => void }) {
-  const supabase = createClientComponentClient();
 
   const [openedMessage, setOpenedMessage] = useState<MessageType | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
-    const { data, error } = await supabase
-      .from("messages")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await adminApi.list("messages");
 
     if (data) {
       setMessages(data);

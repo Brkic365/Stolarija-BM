@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/admin/MainComponents.module.scss";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { adminApi } from "@/lib/adminApi";
 
 import { ProductType } from "@/types/product";
 
@@ -14,7 +14,6 @@ import SmallProduct from "./SmallProduct";
 import { HiPlus } from "react-icons/hi";
 
 function Products() {
-  const supabase = createClientComponentClient();
 
   const [total, setTotal] = useState<number>(0);
 
@@ -22,7 +21,7 @@ function Products() {
   const [addingProduct, setAddingProduct] = useState(false);
 
   const getProducts = async () => {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await adminApi.list("products");
 
     if (data) {
       setProducts(data);
