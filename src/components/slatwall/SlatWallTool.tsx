@@ -6,10 +6,10 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import styles from "@/styles/pages/admin/SlatWall.module.scss";
 
-import { buildHeightMap, orientationPreviews } from "@/lib/slatwall/heightmap";
+import { buildHeightMap } from "@/lib/slatwall/heightmap";
 import { sliceWall, notchCentres } from "@/lib/slatwall/slice";
 import { nestParts } from "@/lib/slatwall/nest";
-import { demoModel, loadModelFile, type LoadedModel } from "@/lib/slatwall/model";
+import { ACCEPT_ATTR, PRESETS, demoModel, loadModelFile, loadPreset, type LoadedModel, type Preset } from "@/lib/slatwall/model";
 import { buildZip, downloadBlob, dxfBlob, dxfName, slug } from "@/lib/slatwall/export";
 import { buildGuidePdf, type GuideInput } from "@/lib/slatwall/pdf";
 import type { FrontAxis, SheetSettings, WallSettings } from "@/lib/slatwall/types";
@@ -201,7 +201,6 @@ export default function SlatWallTool() {
   const [sheet, setSheet] = useState<SheetSettings>(DEFAULT_SHEET);
   const [projectName, setProjectName] = useState("Lamelni zid");
   const [model, setModel] = useState<LoadedModel | null>(null);
-  const [suggested, setSuggested] = useState<FrontAxis | null>(null);
   const [tab, setTab] = useState<Tab>("3d");
   const [finish, setFinish] = useState<Finish>("breza");
   const [busy, setBusy] = useState<string | null>(null);
@@ -215,7 +214,15 @@ export default function SlatWallTool() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        if (saved.wall) setWall({ ...DEFAULT_WALL, ...saved.wall, notches: { ...DEFAULT_WALL.notches, ...saved.wall.notches } });
+        // The page always opens on the sample, so its front is +Z whatever the last model was.
+        if (saved.wall)
+          setWall({
+            ...DEFAULT_WALL,
+            ...saved.wall,
+            frontAxis: "+z",
+            rotation: 0,
+            notches: { ...DEFAULT_WALL.notches, ...saved.wall.notches },
+          });
         if (saved.sheet) setSheet({ ...DEFAULT_SHEET, ...saved.sheet });
         if (saved.projectName) setProjectName(saved.projectName);
         if (saved.finish) setFinish(saved.finish);
@@ -229,7 +236,8 @@ export default function SlatWallTool() {
     } catch {}
   }, [wall, sheet, projectName, finish]);
 
-  const previews = useMemo(() => (model ? orientationPreviews(model.positions) : []), [model]);
+  const previews = model?.previews ?? [];
+  const suggested: FrontAxis | null = model && !model.preset ? model.guess.axis : null;
 
   const w = useDeferredValue(wall);
   const sh = useDeferredValue(sheet);
@@ -268,20 +276,44 @@ export default function SlatWallTool() {
     setWall((p) => ({ ...p, notches: { ...p.notches, [k]: v } }));
   const setS = <K extends keyof SheetSettings>(k: K, v: SheetSettings[K]) => setSheet((p) => ({ ...p, [k]: v }));
 
+  const applyModel = (m: LoadedModel, name: string) => {
+    setWall((p) => ({
+      ...p,
+      frontAxis: m.guess.axis,
+      rotation: m.guess.rotation,
+      mirror: false,
+      invert: false,
+      offsetX: 0,
+      offsetY: 0,
+    }));
+    setModel(m);
+    setProjectName(name);
+  };
+
   const onFile = async (f: File | undefined) => {
     if (!f) return;
     setError(null);
     setBusy("Učitavam model…");
     try {
-      const m = await loadModelFile(f);
-      // Guess which side is the front so a Z-up export doesn't end up viewed from the top.
-      const best = orientationPreviews(m.positions).reduce((a, b) => (b.score > a.score ? b : a));
-      setSuggested(best.axis);
-      setWall((p) => ({ ...p, frontAxis: best.axis, rotation: 0, mirror: false, invert: false, offsetX: 0, offsetY: 0 }));
-      setModel(m);
-      setProjectName(f.name.replace(/\.[^.]+$/, ""));
+      // Parsing, simplifying and the front-side guess run in a background worker.
+      const m = await loadModelFile(f, (msg) => setBusy(msg));
+      applyModel(m, f.name.replace(/\.[^.]+$/, ""));
     } catch (e: any) {
+      console.error(e);
       setError(e?.message || "Model nije moguće učitati.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const onPreset = async (p: Preset | null) => {
+    setError(null);
+    if (!p) return applyModel(demoModel(), "Valovi");
+    setBusy(`Učitavam primjer: ${p.name}…`);
+    try {
+      applyModel(await loadPreset(p, (msg) => setBusy(msg)), p.name);
+    } catch (e: any) {
+      setError(e?.message || "Primjer nije moguće učitati.");
     } finally {
       setBusy(null);
     }
@@ -338,35 +370,61 @@ export default function SlatWallTool() {
         </header>
 
         <Section n="01" title="Model">
-          <div className={styles.row}>
-            <button type="button" className={styles.primary} onClick={() => fileRef.current?.click()}>
-              Učitaj STL / OBJ
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setModel(demoModel());
-                setSuggested(null);
-                setW("frontAxis", "+z");
-              }}
-            >
-              Primjer
-            </button>
-          </div>
+          <button type="button" className={styles.primary} onClick={() => fileRef.current?.click()} disabled={!!busy}>
+            Učitaj model
+          </button>
+          <p className={styles.formats}>STL · OBJ · PLY · GLB · FBX · 3MF · ZIP, i skenovi s milijunima trokuta</p>
           <input
             ref={fileRef}
             type="file"
-            accept=".stl,.obj"
+            accept={ACCEPT_ATTR}
             hidden
             onChange={(e) => {
               onFile(e.target.files?.[0]);
               e.target.value = "";
             }}
           />
+          <div className={styles.field}>
+            <span>Ili krenite od primjera</span>
+            <div className={styles.presets}>
+              {PRESETS.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  disabled={!!busy}
+                  className={model?.preset && model.name === p.name ? styles.presetActive : undefined}
+                  onClick={() => onPreset(p)}
+                  title={`${p.name}: ${p.kind}. Izvor: ${p.credit}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/images/lamele/presets/${p.id}.webp`} alt="" width={120} height={150} />
+                  <span>{p.name}</span>
+                  <small>{p.kind}</small>
+                </button>
+              ))}
+              <button
+                type="button"
+                disabled={!!busy}
+                className={model?.preset && model.name === "Valovi" ? styles.presetActive : undefined}
+                onClick={() => onPreset(null)}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/lamele/presets/valovi.webp" alt="" width={120} height={150} />
+                <span>Valovi</span>
+                <small>apstraktno</small>
+              </button>
+            </div>
+            <p className={styles.credit}>
+              Skenovi: Three D Scans (slobodni za korištenje) · Glava: Lee Perry-Smith / Infinite Realities, CC BY 3.0
+            </p>
+          </div>
           {model && (
             <p className={styles.meta}>
               <span>{model.name}</span>
-              <span>{model.triangles.toLocaleString("hr-HR")} trokuta</span>
+              <span>
+                {model.sourceTriangles.toLocaleString("hr-HR")} trokuta
+                {model.sourceTriangles > model.triangles && ` (radim s ${model.triangles.toLocaleString("hr-HR")})`}
+              </span>
               {height && (
                 <span>
                   {Math.round(height.fit.sizeX)} × {Math.round(height.fit.sizeY)} mm na zidu
@@ -381,7 +439,9 @@ export default function SlatWallTool() {
                 previews={previews}
                 value={wall.frontAxis}
                 suggested={suggested}
-                onChange={(a) => setWall((p) => ({ ...p, frontAxis: a, rotation: 0 }))}
+                onChange={(a) =>
+                  setWall((p) => ({ ...p, frontAxis: a, rotation: previews.find((v) => v.axis === a)?.rotation ?? 0 }))
+                }
               />
             </div>
           )}
@@ -600,6 +660,11 @@ export default function SlatWallTool() {
           {tab === "3d" && (
             <>
               {sliced ? <Preview3D slats={sliced.slats} wall={w} finish={finish} /> : <div className={styles.placeholder}>Učitajte model.</div>}
+              {busy && (
+                <div className={styles.loading} role="status">
+                  <span>{busy}</span>
+                </div>
+              )}
               <div className={styles.finishes} aria-label="Završna obrada">
                 {FINISHES.map((f) => (
                   <button
