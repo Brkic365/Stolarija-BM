@@ -65,27 +65,33 @@ function AdminLogin() {
   }, [error]);
 
   const errorVariants = {
-    visible: { opacity: 1, height: "100%" },
+    visible: { opacity: 1, height: "auto" },
     hidden: { opacity: 0, height: "0" },
   };
 
   return (
     <main className={styles.mainLogin}>
-      <div className={styles.leftTriangles} />
-      <div className={styles.rightTriangles} />
-
       <form>
-        <h2>Admin login</h2>
+        <p className={styles.eyebrow}>Stolarija BM · radionica</p>
+        <h2>Prijava</h2>
 
-        <input
-          placeholder="Korisničko ime"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          placeholder="Zaporka"
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-        />
+        <label>
+          <span>Korisničko ime</span>
+          <input
+            placeholder="Korisničko ime"
+            autoComplete="username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </label>
+        <label>
+          <span>Zaporka</span>
+          <input
+            placeholder="Zaporka"
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            autoComplete="current-password"
+          />
+        </label>
         <motion.div
           className={styles.error}
           animate={error ? "visible" : "hidden"}

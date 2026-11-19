@@ -60,7 +60,7 @@ function OrderTable({ updateData }: { updateData: () => void }) {
           <tr key={order.id} onClick={() => setOpenedOrder(order)}>
             <td>{order.product}</td>
             <td>{formatPrice(order.price)}</td>
-            <td>{new Date(order.created_at).toLocaleDateString("en-GB")}</td>
+            <td>{new Date(order.created_at).toLocaleDateString("hr-HR")}</td>
             <td className={styles.status}>
               <Status status={order.status} />
             </td>

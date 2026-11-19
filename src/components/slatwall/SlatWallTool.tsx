@@ -6,7 +6,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import styles from "@/styles/pages/admin/SlatWall.module.scss";
 
-import { buildHeightMap } from "@/lib/slatwall/heightmap";
+import { buildHeightMap, orientationPreviews } from "@/lib/slatwall/heightmap";
 import { sliceWall, notchCentres } from "@/lib/slatwall/slice";
 import { nestParts } from "@/lib/slatwall/nest";
 import { demoModel, loadModelFile, type LoadedModel } from "@/lib/slatwall/model";
@@ -15,6 +15,8 @@ import { buildGuidePdf, type GuideInput } from "@/lib/slatwall/pdf";
 import type { FrontAxis, SheetSettings, WallSettings } from "@/lib/slatwall/types";
 import SheetView from "./SheetView";
 import DepthMapView from "./DepthMapView";
+import OrientationPicker from "./OrientationPicker";
+import { FINISHES, type Finish } from "./finishes";
 
 const Preview3D = dynamic(() => import("./Preview3D"), {
   ssr: false,
@@ -28,8 +30,9 @@ const DEFAULT_WALL: WallSettings = {
   gap: 20,
   direction: "vertical",
   baseDepth: 40,
-  reliefDepth: 120,
+  reliefDepth: 200,
   depthMode: "fit",
+  depthCut: 0.6,
   frontAxis: "+z",
   rotation: 0,
   mirror: false,
@@ -37,7 +40,7 @@ const DEFAULT_WALL: WallSettings = {
   fill: 0.9,
   offsetX: 0,
   offsetY: 0,
-  smoothing: 0,
+  smoothing: 3,
   notches: { enabled: false, count: 2, width: 20, depth: 15 },
 };
 
@@ -96,6 +99,40 @@ function NumberField({
   );
 }
 
+/** A ruler-like slider with the value printed beside the label. */
+function RangeField({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  unit = "%",
+  onChange,
+  hint,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  unit?: string;
+  onChange: (v: number) => void;
+  hint?: string;
+}) {
+  return (
+    <label className={styles.range} title={hint}>
+      <span>
+        {label}
+        <b>
+          {value}
+          {unit && <em>{unit}</em>}
+        </b>
+      </span>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </label>
+  );
+}
+
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <label className={styles.toggle}>
@@ -125,6 +162,7 @@ function Segmented<T extends string | number>({
             key={String(o.value)}
             type="button"
             className={o.value === value ? styles.segActive : undefined}
+            aria-pressed={o.value === value}
             onClick={() => onChange(o.value)}
           >
             {o.label}
@@ -135,12 +173,37 @@ function Segmented<T extends string | number>({
   );
 }
 
+function Section({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
+  return (
+    <section className={styles.panel}>
+      <h3>
+        <i>{n}</i>
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+function SlatMark() {
+  return (
+    <svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+      {[0, 1, 2, 3, 4, 5].map((i) => {
+        const h = 6 + Math.round(7 * Math.sin((Math.PI * (i + 0.5)) / 6));
+        return <rect key={i} x={2 + i * 4.3} y={14 - h} width="2.4" height={h * 2} fill="currentColor" />;
+      })}
+    </svg>
+  );
+}
+
 export default function SlatWallTool() {
   const [wall, setWall] = useState<WallSettings>(DEFAULT_WALL);
   const [sheet, setSheet] = useState<SheetSettings>(DEFAULT_SHEET);
   const [projectName, setProjectName] = useState("Lamelni zid");
   const [model, setModel] = useState<LoadedModel | null>(null);
+  const [suggested, setSuggested] = useState<FrontAxis | null>(null);
   const [tab, setTab] = useState<Tab>("3d");
+  const [finish, setFinish] = useState<Finish>("breza");
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -155,15 +218,18 @@ export default function SlatWallTool() {
         if (saved.wall) setWall({ ...DEFAULT_WALL, ...saved.wall, notches: { ...DEFAULT_WALL.notches, ...saved.wall.notches } });
         if (saved.sheet) setSheet({ ...DEFAULT_SHEET, ...saved.sheet });
         if (saved.projectName) setProjectName(saved.projectName);
+        if (saved.finish) setFinish(saved.finish);
       }
     } catch {}
     setModel(demoModel());
   }, []);
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ wall, sheet, projectName }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ wall, sheet, projectName, finish }));
     } catch {}
-  }, [wall, sheet, projectName]);
+  }, [wall, sheet, projectName, finish]);
+
+  const previews = useMemo(() => (model ? orientationPreviews(model.positions) : []), [model]);
 
   const w = useDeferredValue(wall);
   const sh = useDeferredValue(sheet);
@@ -173,7 +239,7 @@ export default function SlatWallTool() {
     if (!model) return null;
     return buildHeightMap(model.positions, w);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model, w.width, w.height, w.reliefDepth, w.depthMode, w.frontAxis, w.rotation, w.mirror, w.invert, w.fill, w.offsetX, w.offsetY, w.smoothing]);
+  }, [model, w.width, w.height, w.reliefDepth, w.depthMode, w.depthCut, w.frontAxis, w.rotation, w.mirror, w.invert, w.fill, w.offsetX, w.offsetY, w.smoothing]);
 
   const sliced = useMemo(() => {
     if (!height) return null;
@@ -208,6 +274,10 @@ export default function SlatWallTool() {
     setBusy("Učitavam model…");
     try {
       const m = await loadModelFile(f);
+      // Guess which side is the front so a Z-up export doesn't end up viewed from the top.
+      const best = orientationPreviews(m.positions).reduce((a, b) => (b.score > a.score ? b : a));
+      setSuggested(best.axis);
+      setWall((p) => ({ ...p, frontAxis: best.axis, rotation: 0, mirror: false, invert: false, offsetX: 0, offsetY: 0 }));
       setModel(m);
       setProjectName(f.name.replace(/\.[^.]+$/, ""));
     } catch (e: any) {
@@ -230,24 +300,34 @@ export default function SlatWallTool() {
     }
   };
 
-  const settingsJson = () => ({ version: 1, projectName, modelName: model?.name, wall, sheet });
+  const settingsJson = () => ({ version: 2, projectName, modelName: model?.name, wall, sheet });
 
-  const totals = useMemo(() => {
-    if (!nested || !sliced) return null;
+  const util = useMemo(() => {
+    if (!nested) return null;
     const area = nested.sheets.length * sh.length * sh.width;
     const used = nested.sheets.reduce((a, s) => a + s.partArea, 0);
-    return { util: area ? (used / area) * 100 : 0 };
-  }, [nested, sliced, sh]);
+    return area ? (used / area) * 100 : 0;
+  }, [nested, sh]);
 
+  const maxDepth = sliced?.slats.length ? Math.round(Math.max(...sliced.slats.map((s) => s.maxDepth))) : null;
   const labelSize = Math.max(14, Math.min(40, w.baseDepth * 0.7));
+  const hasAlerts = !!(error || sliced?.warnings.length || nested?.unplaced.length);
 
   return (
     <div className={styles.app}>
       <aside className={styles.sidebar}>
         <header className={styles.brand}>
-          <div>
-            <strong>Lamelni zid</strong>
-            <small>Stolarija BM · interni alat</small>
+          <div className={styles.mark}>
+            <SlatMark />
+            <div>
+              <small>Stolarija BM · radionica</small>
+              <input
+                className={styles.projectName}
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                aria-label="Naziv projekta"
+              />
+            </div>
           </div>
           <nav>
             <Link href="/admin">Admin</Link>
@@ -257,19 +337,19 @@ export default function SlatWallTool() {
           </nav>
         </header>
 
-        <section className={styles.panel}>
-          <h3>1. Model</h3>
-          <label className={styles.field}>
-            <span>Naziv projekta</span>
-            <div className={styles.inputWrap}>
-              <input value={projectName} onChange={(e) => setProjectName(e.target.value)} />
-            </div>
-          </label>
+        <Section n="01" title="Model">
           <div className={styles.row}>
             <button type="button" className={styles.primary} onClick={() => fileRef.current?.click()}>
               Učitaj STL / OBJ
             </button>
-            <button type="button" onClick={() => setModel(demoModel())}>
+            <button
+              type="button"
+              onClick={() => {
+                setModel(demoModel());
+                setSuggested(null);
+                setW("frontAxis", "+z");
+              }}
+            >
               Primjer
             </button>
           </div>
@@ -284,31 +364,29 @@ export default function SlatWallTool() {
             }}
           />
           {model && (
-            <p className={styles.muted}>
-              {model.name} · {model.triangles.toLocaleString("hr-HR")} trokuta
+            <p className={styles.meta}>
+              <span>{model.name}</span>
+              <span>{model.triangles.toLocaleString("hr-HR")} trokuta</span>
               {height && (
-                <>
-                  {" "}
-                  · na zidu {Math.round(height.fit.sizeX)} × {Math.round(height.fit.sizeY)} mm
-                </>
+                <span>
+                  {Math.round(height.fit.sizeX)} × {Math.round(height.fit.sizeY)} mm na zidu
+                </span>
               )}
             </p>
           )}
-          <label className={styles.field}>
-            <span>Prednja strana modela</span>
-            <div className={styles.inputWrap}>
-              <select value={wall.frontAxis} onChange={(e) => setW("frontAxis", e.target.value as FrontAxis)}>
-                <option value="+z">+Z (Blender/OBJ, Y gore)</option>
-                <option value="-y">−Y (STL iz CAD-a, Z gore)</option>
-                <option value="-z">−Z</option>
-                <option value="+y">+Y</option>
-                <option value="+x">+X</option>
-                <option value="-x">−X</option>
-              </select>
+          {!!previews.length && (
+            <div className={styles.field}>
+              <span>Prednja strana: kliknite pogled na kojem se vidi lice modela</span>
+              <OrientationPicker
+                previews={previews}
+                value={wall.frontAxis}
+                suggested={suggested}
+                onChange={(a) => setWall((p) => ({ ...p, frontAxis: a, rotation: 0 }))}
+              />
             </div>
-          </label>
+          )}
           <Segmented
-            label="Rotacija"
+            label="Zakreni"
             value={wall.rotation}
             options={[0, 90, 180, 270].map((r) => ({ value: r as 0 | 90 | 180 | 270, label: `${r}°` }))}
             onChange={(v) => setW("rotation", v)}
@@ -317,34 +395,21 @@ export default function SlatWallTool() {
             <Toggle label="Zrcali" checked={wall.mirror} onChange={(v) => setW("mirror", v)} />
             <Toggle label="Obrni dubinu" checked={wall.invert} onChange={(v) => setW("invert", v)} />
           </div>
+          <RangeField label="Veličina modela" value={Math.round(wall.fill * 100)} min={10} max={100} onChange={(v) => setW("fill", v / 100)} />
           <div className={styles.grid2}>
-            <NumberField label="Veličina modela" unit="%" value={Math.round(wall.fill * 100)} min={5} max={100} onChange={(v) => setW("fill", v / 100)} />
-            <NumberField label="Zaglađivanje" value={wall.smoothing} min={0} max={100} onChange={(v) => setW("smoothing", v)} />
-            <NumberField label="Pomak lijevo/desno" value={wall.offsetX} onChange={(v) => setW("offsetX", v)} />
-            <NumberField label="Pomak gore/dolje" value={wall.offsetY} onChange={(v) => setW("offsetY", v)} />
+            <NumberField label="Pomak lijevo / desno" value={wall.offsetX} onChange={(v) => setW("offsetX", v)} />
+            <NumberField label="Pomak gore / dolje" value={wall.offsetY} onChange={(v) => setW("offsetY", v)} />
           </div>
-        </section>
+        </Section>
 
-        <section className={styles.panel}>
-          <h3>2. Zid i lamele</h3>
+        <Section n="02" title="Zid">
           <div className={styles.grid2}>
-            <NumberField label="Širina zida" value={wall.width} min={50} max={20000} onChange={(v) => setW("width", v)} />
-            <NumberField label="Visina zida" value={wall.height} min={50} max={20000} onChange={(v) => setW("height", v)} />
+            <NumberField label="Širina" value={wall.width} min={50} max={20000} onChange={(v) => setW("width", v)} />
+            <NumberField label="Visina" value={wall.height} min={50} max={20000} onChange={(v) => setW("height", v)} />
           </div>
-          <Segmented
-            label="Smjer lamela"
-            value={wall.direction}
-            options={[
-              { value: "vertical", label: "Okomito" },
-              { value: "horizontal", label: "Vodoravno" },
-            ]}
-            onChange={(v) => setW("direction", v)}
-          />
           <div className={styles.grid2}>
-            <NumberField label="Debljina lamele" value={wall.slatThickness} min={3} max={100} step={0.5} onChange={(v) => setW("slatThickness", v)} hint="Debljina ploče iz koje se reže" />
-            <NumberField label="Razmak lamela" value={wall.gap} min={0} max={500} step={0.5} onChange={(v) => setW("gap", v)} />
-            <NumberField label="Osnovna dubina" value={wall.baseDepth} min={5} max={500} onChange={(v) => setW("baseDepth", v)} hint="Puni dio uz zid koji ima svaka lamela" />
-            <NumberField label="Dubina reljefa" value={wall.reliefDepth} min={0} max={1000} onChange={(v) => setW("reliefDepth", v)} hint="Koliko najviša točka modela izlazi ispred osnove" />
+            <NumberField label="Osnova" value={wall.baseDepth} min={5} max={500} onChange={(v) => setW("baseDepth", v)} hint="Puni dio uz zid koji ima svaka lamela" />
+            <NumberField label="Reljef do" value={wall.reliefDepth} min={0} max={1000} onChange={(v) => setW("reliefDepth", v)} hint="Koliko najistaknutija točka izlazi ispred osnove" />
           </div>
           <Segmented
             label="Dubina modela"
@@ -355,28 +420,53 @@ export default function SlatWallTool() {
             ]}
             onChange={(v) => setW("depthMode", v)}
           />
+          {wall.depthMode === "fit" && (
+            <RangeField
+              label="Koristi prednji dio modela"
+              value={Math.round(wall.depthCut * 100)}
+              min={10}
+              max={100}
+              onChange={(v) => setW("depthCut", v / 100)}
+              hint="Manje = lice dobiva više dubine, a stražnji dio modela legne na zid"
+            />
+          )}
+          <RangeField label="Zaglađivanje" unit="mm" value={wall.smoothing} min={0} max={40} onChange={(v) => setW("smoothing", v)} />
+        </Section>
+
+        <Section n="03" title="Lamele">
+          <Segmented
+            label="Smjer"
+            value={wall.direction}
+            options={[
+              { value: "vertical", label: "Okomito" },
+              { value: "horizontal", label: "Vodoravno" },
+            ]}
+            onChange={(v) => setW("direction", v)}
+          />
+          <div className={styles.grid2}>
+            <NumberField label="Debljina" value={wall.slatThickness} min={3} max={100} step={0.5} onChange={(v) => setW("slatThickness", v)} hint="Debljina ploče iz koje se reže" />
+            <NumberField label="Razmak" value={wall.gap} min={0} max={500} step={0.5} onChange={(v) => setW("gap", v)} />
+          </div>
           <Toggle label="Utori za montažne letve" checked={wall.notches.enabled} onChange={(v) => setN("enabled", v)} />
           {wall.notches.enabled && (
             <div className={styles.grid3}>
-              <NumberField label="Broj" unit="" value={wall.notches.count} min={1} max={10} onChange={(v) => setN("count", Math.round(v))} />
+              <NumberField label="Broj" unit="kom" value={wall.notches.count} min={1} max={10} onChange={(v) => setN("count", Math.round(v))} />
               <NumberField label="Širina" value={wall.notches.width} min={3} max={200} onChange={(v) => setN("width", v)} />
               <NumberField label="Dubina" value={wall.notches.depth} min={2} max={200} onChange={(v) => setN("depth", v)} />
             </div>
           )}
-        </section>
+        </Section>
 
-        <section className={styles.panel}>
-          <h3>3. Ploča i CNC</h3>
+        <Section n="04" title="Ploča i glodalo">
           <div className={styles.grid2}>
             <NumberField label="Dužina ploče" value={sheet.length} min={100} max={6000} onChange={(v) => setS("length", v)} hint="Dulja strana; lamele idu uzduž (smjer vlakana)" />
             <NumberField label="Širina ploče" value={sheet.width} min={100} max={3000} onChange={(v) => setS("width", v)} />
-            <NumberField label="Rub ploče" value={sheet.margin} min={0} max={200} onChange={(v) => setS("margin", v)} hint="Neiskorišteni rub uz svaku stranicu" />
+            <NumberField label="Rub" value={sheet.margin} min={0} max={200} onChange={(v) => setS("margin", v)} hint="Neiskorišteni rub uz svaku stranicu" />
             <NumberField label="Razmak glodala" value={sheet.spacing} min={0} max={100} step={0.5} onChange={(v) => setS("spacing", v)} hint="Najmanji razmak između dijelova: promjer glodala + sigurnost" />
           </div>
-        </section>
+        </Section>
 
-        <section className={styles.panel}>
-          <h3>4. Izvoz</h3>
+        <Section n="05" title="Izvoz">
           <button
             type="button"
             className={styles.primary}
@@ -388,7 +478,7 @@ export default function SlatWallTool() {
               )
             }
           >
-            Preuzmi sve (DXF + PDF)
+            Preuzmi sve: DXF + PDF
           </button>
           <div className={styles.row}>
             <button
@@ -431,36 +521,45 @@ export default function SlatWallTool() {
               }
             }}
           />
-          <p className={styles.muted}>Postavke se pamte u ovom pregledniku. Model treba ponovno učitati nakon osvježavanja.</p>
-        </section>
+          <p className={styles.note}>Postavke se pamte u ovom pregledniku. Model treba ponovno učitati nakon osvježavanja.</p>
+        </Section>
       </aside>
 
       <main className={styles.main}>
-        <div className={styles.stats}>
+        <div className={styles.titleBlock}>
           <div>
-            <b>{sliced?.slats.length ?? "-"}</b>
-            <span>lamela</span>
+            <span>Lamela</span>
+            <b>{sliced?.slats.length ?? "–"}</b>
           </div>
           <div>
-            <b>{sliced?.parts.length ?? "-"}</b>
-            <span>dijelova</span>
+            <span>Dijelova</span>
+            <b>{sliced?.parts.length ?? "–"}</b>
           </div>
           <div>
-            <b>{nested?.sheets.length ?? "-"}</b>
-            <span>ploča</span>
+            <span>Ploča</span>
+            <b>{nested?.sheets.length ?? "–"}</b>
           </div>
           <div>
-            <b>{totals ? `${Math.round(totals.util)} %` : "-"}</b>
-            <span>iskorištenost</span>
+            <span>Iskorištenost</span>
+            <b>
+              {util !== null ? Math.round(util) : "–"}
+              <em>%</em>
+            </b>
           </div>
           <div>
-            <b>{sliced?.slats.length ? `${Math.round(Math.max(...sliced.slats.map((s) => s.maxDepth)))}` : "-"}</b>
-            <span>max dubina mm</span>
+            <span>Najveća dubina</span>
+            <b>
+              {maxDepth ?? "–"}
+              <em>mm</em>
+            </b>
           </div>
-          {(stale || busy) && <div className={styles.busy}>{busy ?? "Računam…"}</div>}
+          <div className={styles.titleStatus}>
+            <span>Stanje</span>
+            <b className={stale || busy ? styles.working : undefined}>{busy ?? (stale ? "Računam…" : "Spremno")}</b>
+          </div>
         </div>
 
-        {!!(error || sliced?.warnings.length || nested?.unplaced.length) && (
+        {hasAlerts && (
           <div className={styles.alerts}>
             {error && <p className={styles.error}>{error}</p>}
             {sliced?.warnings.map((x) => (
@@ -474,24 +573,50 @@ export default function SlatWallTool() {
           </div>
         )}
 
-        <div className={styles.tabs}>
+        <div className={styles.tabs} role="tablist">
           {(
             [
-              ["3d", "3D prikaz"],
-              ["sheets", "Ploče"],
-              ["list", "Popis dijelova"],
-              ["map", "Dubinska mapa"],
-            ] as [Tab, string][]
-          ).map(([k, l]) => (
-            <button key={k} type="button" className={tab === k ? styles.tabActive : undefined} onClick={() => setTab(k)}>
+              ["3d", "A", "3D prikaz"],
+              ["sheets", "B", "Ploče"],
+              ["list", "C", "Popis dijelova"],
+              ["map", "D", "Dubinska mapa"],
+            ] as [Tab, string, string][]
+          ).map(([k, letter, l]) => (
+            <button
+              key={k}
+              type="button"
+              role="tab"
+              aria-selected={tab === k}
+              className={tab === k ? styles.tabActive : undefined}
+              onClick={() => setTab(k)}
+            >
+              <i>{letter}</i>
               {l}
             </button>
           ))}
         </div>
 
         <div className={styles.view}>
-          {tab === "3d" &&
-            (sliced ? <Preview3D slats={sliced.slats} wall={w} /> : <div className={styles.placeholder}>Učitajte model.</div>)}
+          {tab === "3d" && (
+            <>
+              {sliced ? <Preview3D slats={sliced.slats} wall={w} finish={finish} /> : <div className={styles.placeholder}>Učitajte model.</div>}
+              <div className={styles.finishes} aria-label="Završna obrada">
+                {FINISHES.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    className={finish === f.id ? styles.finishActive : undefined}
+                    onClick={() => setFinish(f.id)}
+                    aria-pressed={finish === f.id}
+                  >
+                    <i style={{ background: f.color }} />
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <p className={styles.viewHint}>Povuci za okretanje · kotačić za zum</p>
+            </>
+          )}
 
           {tab === "map" && height && sliced && (
             <div className={styles.mapWrap}>
@@ -504,11 +629,9 @@ export default function SlatWallTool() {
               {nested.sheets.map((s) => (
                 <figure key={s.index} className={styles.sheetCard}>
                   <figcaption>
-                    <b>
-                      Ploča {s.index} / {nested.sheets.length}
-                    </b>
+                    <b>Ploča {String(s.index).padStart(2, "0")}</b>
                     <span>
-                      {s.placements.length} dijelova · {Math.round((s.partArea / (sh.length * sh.width)) * 100)} %
+                      {s.placements.length} dijelova · {Math.round((s.partArea / (sh.length * sh.width)) * 100)} % · {sh.length} × {sh.width}
                     </span>
                     <button type="button" onClick={() => downloadBlob(dxfBlob(guide, s.index), dxfName(s.index))}>
                       DXF
@@ -527,11 +650,11 @@ export default function SlatWallTool() {
                   <tr>
                     <th>Dio</th>
                     <th>Lamela</th>
-                    <th>Položaj na zidu</th>
-                    <th>Duljina</th>
-                    <th>Dubina min</th>
-                    <th>Dubina max</th>
-                    <th>Ploča</th>
+                    <th className={styles.num}>Položaj na zidu</th>
+                    <th className={styles.num}>Duljina</th>
+                    <th className={styles.num}>Dubina min</th>
+                    <th className={styles.num}>Dubina max</th>
+                    <th className={styles.num}>Ploča</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -544,11 +667,11 @@ export default function SlatWallTool() {
                             <b>{p.id}</b>
                           </td>
                           <td>{p.slat}</td>
-                          <td>{(Math.round(s.position * 10) / 10).toLocaleString("hr-HR")} mm</td>
-                          <td>{Math.round(p.length)} mm</td>
-                          <td>{Math.round(p.minDepth)} mm</td>
-                          <td>{Math.round(p.maxDepth)} mm</td>
-                          <td>{sheetNo ?? "-"}</td>
+                          <td className={styles.num}>{(Math.round(s.position * 10) / 10).toLocaleString("hr-HR")}</td>
+                          <td className={styles.num}>{Math.round(p.length)}</td>
+                          <td className={styles.num}>{Math.round(p.minDepth)}</td>
+                          <td className={styles.num}>{Math.round(p.maxDepth)}</td>
+                          <td className={styles.num}>{sheetNo ? String(sheetNo).padStart(2, "0") : "–"}</td>
                         </tr>
                       );
                     })

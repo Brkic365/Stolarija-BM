@@ -1,143 +1,92 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
+import Link from "next/link";
 import styles from "@/styles/pages/admin/Mainpage.module.scss";
 
-import {
-  HiOutlineClipboardDocumentList,
-  HiOutlineChatBubbleLeftRight,
-  HiOutlineWallet,
-  HiOutlineViewColumns,
-} from "react-icons/hi2";
+import { signOut } from "next-auth/react";
 import Orders from "@/components/admin/Orders";
 import Messages from "@/components/admin/Messages";
 import Products from "@/components/admin/Products";
 
 import { useSearchParams, useRouter } from "next/navigation";
 
+const SECTIONS = [
+  { n: "01", label: "Narudžbe" },
+  { n: "02", label: "Poruke" },
+  { n: "03", label: "Proizvodi" },
+];
+
 function AdminContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const pageQuery = searchParams.get("page");
+  const opened = pageQuery ? parseInt(pageQuery) || 0 : 0;
 
-  // Set opened page state to 0 if query is not set
-  const [opened, setOpened] = useState<number>(
-    pageQuery ? parseInt(pageQuery) : 0
-  );
-
-  // Change opened page on query change
-  useEffect(() => {
-    setOpened(pageQuery ? parseInt(pageQuery) : 0);
-  }, [pageQuery]);
+  const today = new Date().toLocaleDateString("hr-HR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <main className={styles.mainPage}>
-      {/* Hero section */}
-      <section className={styles.hero} />
+    <div className={styles.shell}>
+      <aside className={styles.rail}>
+        <div className={styles.brand}>
+          <span className={styles.brandMark} aria-hidden="true">
+            BM
+          </span>
+          <div>
+            <strong>Stolarija BM</strong>
+            <small>Radionica · admin</small>
+          </div>
+        </div>
 
-      {/* Content section */}
-      <section className={styles.content}>
-        {/* Top nav */}
-        <section className={styles.topNav}>
-          <button
-            className={opened == 0 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=0")}
-          >
-            <HiOutlineClipboardDocumentList />
-            Narudžbe
-          </button>
-          <button
-            className={opened == 1 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=1")}
-          >
-            <HiOutlineChatBubbleLeftRight />
-            Poruke
-          </button>
-          <button
-            className={opened == 2 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=2")}
-          >
-            <HiOutlineWallet />
-            Proizvodi
-          </button>
-          <button
-            className={styles.navItem}
-            onClick={() => router.push("/admin/lamele")}
-          >
-            <HiOutlineViewColumns />
+        <nav className={styles.nav} aria-label="Admin">
+          {SECTIONS.map((s, i) => (
+            <button
+              key={s.n}
+              type="button"
+              className={opened === i ? styles.navActive : undefined}
+              aria-current={opened === i ? "page" : undefined}
+              onClick={() => router.push(`/admin?page=${i}`)}
+            >
+              <i>{s.n}</i>
+              {s.label}
+            </button>
+          ))}
+          <Link href="/admin/lamele" className={styles.navTool}>
+            <i>04</i>
             Lamelni zid
-          </button>
-        </section>
+            <span aria-hidden="true">↗</span>
+          </Link>
+        </nav>
 
-        {/* Side nav */}
-        <section className={styles.sideNav}>
-          <h1>
-            Stolarija <span>BM</span>
-          </h1>
-          <button
-            className={opened == 0 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=0")}
-          >
-            <HiOutlineClipboardDocumentList />
-            Narudžbe
+        <div className={styles.railFoot}>
+          <Link href="/">Javna stranica</Link>
+          <button type="button" onClick={() => signOut({ callbackUrl: "/admin/login" })}>
+            Odjava
           </button>
-          <button
-            className={opened == 1 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=1")}
-          >
-            <HiOutlineChatBubbleLeftRight />
-            Poruke
-          </button>
-          <button
-            className={opened == 2 ? styles.active : styles.navItem}
-            onClick={() => router.push("/admin?page=2")}
-          >
-            <HiOutlineWallet />
-            Proizvodi
-          </button>
-          <button
-            className={styles.navItem}
-            onClick={() => router.push("/admin/lamele")}
-          >
-            <HiOutlineViewColumns />
-            Lamelni zid
-          </button>
-        </section>
+        </div>
+      </aside>
 
-        {opened == 0 && <Orders />}
-        {opened == 1 && <Messages />}
-        {opened == 2 && <Products />}
-      </section>
-
-      {/* Bottom nav */}
-      <section className={styles.bottomNav}>
-        <button
-          className={opened == 0 ? styles.active : styles.navItem}
-          onClick={() => router.push("/admin?page=0")}
-        >
-          <HiOutlineClipboardDocumentList />
-        </button>
-        <button
-          className={opened == 1 ? styles.active : styles.navItem}
-          onClick={() => router.push("/admin?page=1")}
-        >
-          <HiOutlineChatBubbleLeftRight />
-        </button>
-        <button
-          className={opened == 2 ? styles.active : styles.navItem}
-          onClick={() => router.push("/admin?page=2")}
-        >
-          <HiOutlineWallet />
-        </button>
-      </section>
-    </main>
+      <main className={styles.main}>
+        <header className={styles.header}>
+          <p>{today}</p>
+        </header>
+        {opened === 0 && <Orders />}
+        {opened === 1 && <Messages />}
+        {opened === 2 && <Products />}
+      </main>
+    </div>
   );
 }
 
 export default function Mainpage() {
   return (
-    <Suspense fallback={<div className={styles.loading}>Učitavanje...</div>}>
+    <Suspense fallback={<div className={styles.loading}>Učitavanje…</div>}>
       <AdminContent />
     </Suspense>
   );

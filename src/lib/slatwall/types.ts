@@ -21,6 +21,8 @@ export interface WallSettings {
   reliefDepth: number;
   /** "fit" stretches the model depth to reliefDepth, "true" keeps proportions (clipped) */
   depthMode: "fit" | "true";
+  /** Fraction of the model's depth (from the front) that becomes relief, 0.05..1 */
+  depthCut: number;
 
   // Model placement
   frontAxis: FrontAxis;

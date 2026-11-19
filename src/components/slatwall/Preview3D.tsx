@@ -6,6 +6,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { Slat, WallSettings } from "@/lib/slatwall/types";
+import { FINISHES, type Finish } from "./finishes";
 
 function buildSlatGeometry(slats: Slat[], wall: WallSettings): THREE.BufferGeometry | null {
   const t = wall.slatThickness;
@@ -29,32 +30,60 @@ function buildSlatGeometry(slats: Slat[], wall: WallSettings): THREE.BufferGeome
   if (!geos.length) return null;
   const merged = mergeGeometries(geos, false);
   geos.forEach((g) => g.dispose());
+  merged.computeVertexNormals();
   return merged;
 }
 
-export default function Preview3D({ slats, wall }: { slats: Slat[]; wall: WallSettings }) {
+export default function Preview3D({
+  slats,
+  wall,
+  finish = "breza",
+}: {
+  slats: Slat[];
+  wall: WallSettings;
+  finish?: Finish;
+}) {
   const geometry = useMemo(() => buildSlatGeometry(slats, wall), [slats, wall]);
   useEffect(() => () => geometry?.dispose(), [geometry]);
+  const f = FINISHES.find((x) => x.id === finish) ?? FINISHES[0];
 
-  const size = Math.max(wall.width, wall.height) / 1000;
+  const W = wall.width / 1000;
+  const H = wall.height / 1000;
+  const size = Math.max(W, H);
   return (
     <Canvas
-      camera={{ position: [size * 0.55, size * 0.15, size * 1.35], fov: 40, near: 0.01, far: 100 }}
+      camera={{ position: [-size * 0.8, size * 0.1, size * 1.6], fov: 35, near: 0.01, far: 100 }}
       dpr={[1, 2]}
-      shadows={false}
+      shadows
+      gl={{ antialias: true }}
     >
-      <color attach="background" args={["#eceae6"]} />
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[-size * 2, size, size * 1.2]} intensity={1.6} />
-      <directionalLight position={[size, -size * 0.3, size]} intensity={0.35} />
-      <group scale={0.001} position={[-wall.width / 2000, -wall.height / 2000, 0]}>
-        <mesh position={[wall.width / 2, wall.height / 2, -1]}>
-          <planeGeometry args={[wall.width + 200, wall.height + 200]} />
-          <meshStandardMaterial color="#f6f3ee" roughness={1} />
+      <color attach="background" args={["#f3f0e9"]} />
+      <hemisphereLight args={["#fffaf0", "#8a8174", 0.55]} />
+      {/* Raking key light from the side, the way a slat wall is usually lit, so the relief reads */}
+      <directionalLight
+        castShadow
+        position={[-size * 1.6, size * 0.9, size * 0.9]}
+        intensity={2.2}
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.002}
+        shadow-camera-left={-size}
+        shadow-camera-right={size}
+        shadow-camera-top={size}
+        shadow-camera-bottom={-size}
+        shadow-camera-near={0.01}
+        shadow-camera-far={size * 6}
+      />
+      <directionalLight position={[size, size * 0.2, size * 1.5]} intensity={0.35} />
+      <group scale={0.001} position={[-W / 2, -H / 2, 0]}>
+        <mesh position={[wall.width / 2, wall.height / 2, -0.5]} receiveShadow>
+          <planeGeometry args={[wall.width + 600, wall.height + 600]} />
+          <meshStandardMaterial color={f.wall} roughness={1} />
         </mesh>
         {geometry && (
-          <mesh geometry={geometry}>
-            <meshStandardMaterial color="#d8b98e" roughness={0.75} metalness={0} />
+          <mesh geometry={geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={f.color} roughness={f.roughness} metalness={0} />
           </mesh>
         )}
       </group>
