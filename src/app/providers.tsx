@@ -15,16 +15,18 @@ import { MotionConfig } from "framer-motion";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  // The slat-wall tool is a full-screen app: no site chrome.
+  const isTool = pathname.startsWith("/admin/lamele");
 
   return (
     <Provider store={store}>
       <SessionProvider>
         <NextUIProvider>
           <MotionConfig reducedMotion="user">
-            {!pathname.includes("/admin/login") && <Navbar />}
+            {!pathname.includes("/admin/login") && !isTool && <Navbar />}
             {children}
             {!pathname.includes("/admin") && <Footer />}
-            <ContactFab />
+            {!isTool && <ContactFab />}
           </MotionConfig>
         </NextUIProvider>
       </SessionProvider>

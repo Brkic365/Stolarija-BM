@@ -35,7 +35,18 @@ function AdminLogin() {
     });
 
     if (res?.ok) {
-      router.push("/admin");
+      // Return to the protected page that sent us here (e.g. the slat-wall tool).
+      const callback = new URLSearchParams(window.location.search).get("callbackUrl");
+      let target = "/admin";
+      if (callback) {
+        try {
+          const url = new URL(callback, window.location.origin);
+          if (url.origin === window.location.origin && url.pathname.startsWith("/admin")) {
+            target = url.pathname + url.search;
+          }
+        } catch {}
+      }
+      router.push(target);
     } else {
       setError("Pogrešno korisničko ime ili zaporka.");
     }
