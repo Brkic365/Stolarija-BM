@@ -19,6 +19,8 @@ import { Select, SelectItem } from "@nextui-org/react";
 
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Filters from "@/components/Filters";
+import StatusMessage from "@/components/StatusMessage";
+import ProductSkeleton from "@/components/ProductSkeleton";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -64,33 +66,39 @@ function ProductsContent() {
 
   const [originalProducts, setOriginalProducts] = useState<ProductType[]>([]);
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(
+    "loading"
+  );
 
   const getProducts = async () => {
+    setStatus("loading");
     const { data, error } = await supabase.from("products").select("*");
-    console.log("Supabase Products Fetch:", { data, error });
 
-    if (data) {
-      // Get min and max price
-      let min = data[0].price;
-      let max = min;
-
-      data.forEach((product) => {
-        if (product.price < min) {
-          min = product.price;
-        }
-
-        if (product.price > max) {
-          max = product.price;
-        }
-      });
-
-      dispatch(updateMinPrice(min));
-      dispatch(updateMaxPrice(max));
-      dispatch(updatePriceRange([min, max]));
-
-      setOriginalProducts(data);
-      setProducts(data);
+    if (error) {
+      console.error("Failed to load products:", error.message);
+      setStatus("error");
+      return;
     }
+
+    if (!data || data.length === 0) {
+      setOriginalProducts([]);
+      setProducts([]);
+      setStatus("ready");
+      return;
+    }
+
+    // Get min and max price
+    const prices = data.map((product) => Number(product.price) || 0);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+
+    dispatch(updateMinPrice(min));
+    dispatch(updateMaxPrice(max));
+    dispatch(updatePriceRange([min, max]));
+
+    setOriginalProducts(data);
+    setProducts(data);
+    setStatus("ready");
   };
 
   useEffect(() => {
@@ -182,7 +190,7 @@ function ProductsContent() {
     }
 
     setProducts(filteredProducts);
-  }, [filter.categories, filter.priceRange, filter.sortType]);
+  }, [originalProducts, filter.categories, filter.priceRange, filter.sortType]);
 
   // Set categories if there is a category query
   useEffect(() => {
@@ -222,7 +230,7 @@ function ProductsContent() {
             <div className={styles.text}>
               <h2>Proizvodi</h2>
               <p>
-                <Link href="/web-shop">Web shop</Link>
+                <Link href="/web-shop">Ponuda</Link>
                 <span>/</span>Proizvodi
               </p>
             </div>
@@ -263,15 +271,29 @@ function ProductsContent() {
           </section>
 
           {/* Products section */}
-          <section className={styles.products}>
-            {products.map((product: ProductType, i: number) => {
-              return (
-                <div className={styles.productContainer} key={i}>
-                  <Product product={product} />
-                </div>
-              );
-            })}
-          </section>
+          {status === "loading" ? (
+            <ProductSkeleton count={6} />
+          ) : status === "error" ? (
+            <StatusMessage variant="error" onRetry={getProducts} />
+          ) : originalProducts.length === 0 ? (
+            <StatusMessage variant="empty" />
+          ) : products.length === 0 ? (
+            <StatusMessage
+              variant="empty"
+              title="Nema proizvoda za odabrane filtere"
+              text="Pokušajte promijeniti kategoriju ili raspon cijene."
+            />
+          ) : (
+            <section className={styles.products}>
+              {products.map((product: ProductType) => {
+                return (
+                  <div className={styles.productContainer} key={product.id}>
+                    <Product product={product} />
+                  </div>
+                );
+              })}
+            </section>
+          )}
         </section>
       </section>
     </main>

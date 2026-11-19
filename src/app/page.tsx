@@ -7,6 +7,7 @@ import { HiArrowSmRight } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 
 import { motion } from "framer-motion";
+import TrustStrip from "@/components/TrustStrip";
 
 export default function Home() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -33,26 +34,26 @@ export default function Home() {
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
           >
-            Prilagođavamo Drvo Vašim Snovima.
+            Prilagođavamo drvo vašim snovima.
           </motion.h1>
           <motion.p
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.7 }}
+            transition={{ duration: 0.5, delay: 0.21 }}
             variants={{
-              visible: { transform: "translateX(0)", opacity: 1 },
-              hidden: { transform: "translateX(100%)", opacity: 0 },
+              visible: { transform: "translateY(0)", opacity: 1 },
+              hidden: { transform: "translateY(16px)", opacity: 0 },
             }}
           >
-            Izrađujemo Namještaj i Kuhinje Sa Stilom i Pažnjom, Nasljedujući
-            Stolarsku Umjetnost Od 1992.
+            Izrađujemo namještaj i kuhinje sa stilom i pažnjom, nastavljajući
+            stolarsku tradiciju od 1992.
           </motion.p>
         </section>
         <motion.section
@@ -60,10 +61,10 @@ export default function Home() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           variants={{
-            visible: { transform: "translateX(0)", opacity: 1 },
-            hidden: { transform: "translateX(100%)", opacity: 0 },
+            visible: { transform: "translateY(0)", opacity: 1 },
+            hidden: { transform: "translateY(16px)", opacity: 0 },
           }}
         >
           <motion.button
@@ -71,7 +72,7 @@ export default function Home() {
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push("/web-shop")}
           >
-            Web shop
+            Pogledaj ponudu
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -84,6 +85,9 @@ export default function Home() {
         </motion.section>
       </section>
 
+      {/* Trust strip */}
+      <TrustStrip />
+
       {/* About section */}
       <section className={styles.about}>
         <section className={styles.top}>
@@ -92,7 +96,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.12 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -100,8 +104,8 @@ export default function Home() {
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
@@ -112,14 +116,14 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
             variants={{
-              visible: { transform: "translateX(0)", opacity: 1 },
-              hidden: { transform: "translateX(100%)", opacity: 0 },
+              visible: { transform: "translateY(0)", opacity: 1 },
+              hidden: { transform: "translateY(16px)", opacity: 0 },
             }}
           >
             Više od 30 godina kreiramo unikatni namještaj i kuhinje po mjeri.
-            Otkrijte našu stolarsku baštinu, Od kuhinja do personaliziranih
+            Otkrijte našu stolarsku baštinu, od kuhinja do personaliziranih
             dizajna.
           </motion.h2>
         </section>
@@ -129,7 +133,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1.1 }}
+            transition={{ duration: 0.5, delay: 0.33 }}
             variants={{
               visible: { opacity: 1 },
               hidden: { opacity: 0 },
@@ -156,7 +160,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 1.2 }}
+            transition={{ duration: 0.5, delay: 0.36 }}
             variants={{
               visible: {
                 transform: "scale(1)",
@@ -164,8 +168,8 @@ export default function Home() {
                 opacity: 1,
               },
               hidden: {
-                transform: "scale(1.5)",
-                filter: "blur(4px)",
+                transform: "scale(1.03)",
+                filter: "blur(0px)",
                 opacity: 0,
               },
             }}
@@ -282,7 +286,7 @@ export default function Home() {
           }}
         >
           <div className={styles.text}>
-            <h1>Dječje Sobe</h1>
+            <h1>Dječje sobe</h1>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

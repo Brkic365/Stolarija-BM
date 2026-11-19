@@ -8,8 +8,10 @@ import { store } from "@/redux/store";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ContactFab from "@/components/ContactFab";
 
 import { usePathname } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,9 +20,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <Provider store={store}>
       <SessionProvider>
         <NextUIProvider>
-          {!pathname.includes("/admin/login") && <Navbar />}
-          {children}
-          {!pathname.includes("/admin") && <Footer />}
+          <MotionConfig reducedMotion="user">
+            {!pathname.includes("/admin/login") && <Navbar />}
+            {children}
+            {!pathname.includes("/admin") && <Footer />}
+            <ContactFab />
+          </MotionConfig>
         </NextUIProvider>
       </SessionProvider>
     </Provider>

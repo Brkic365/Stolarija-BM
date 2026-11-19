@@ -6,6 +6,7 @@ import styles from "@/styles/components/Product.module.scss";
 import { ProductType } from "@/types/product";
 
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/format";
 
 function Product({ product }: { product: ProductType }) {
   const router = useRouter();
@@ -16,10 +17,12 @@ function Product({ product }: { product: ProductType }) {
       onClick={() => router.push(`/proizvod?id=${product.id}`)}
     >
       <div className={styles.image}>
-        <img src={product.images[0].url} alt={product.name} />
+        {product.images?.[0]?.url ? (
+          <img src={product.images[0].url} alt={product.name} loading="lazy" />
+        ) : null}
       </div>
       <h4>{product.name}</h4>
-      <p>Od €{product.price.toLocaleString("en-US")}</p>
+      <p>Od {formatPrice(product.price)}</p>
     </section>
   );
 }

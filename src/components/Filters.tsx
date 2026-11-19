@@ -104,7 +104,7 @@ function Filters({ includeSort }: PropType) {
         </Checkbox>
         <Checkbox value="rooms" style={{ marginBottom: "0.5rem" }}>
           <div className={styles.checkbox}>
-            Dječje Sobe{" "}
+            Dječje sobe{" "}
             <div className={styles.amount}>{filter.categoryCounts[1]}</div>
           </div>
         </Checkbox>

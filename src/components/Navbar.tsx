@@ -36,7 +36,7 @@ function Navbar({ theme }: { theme?: "light" | "dark" }) {
       href: "/o-nama",
     },
     {
-      title: "Web shop",
+      title: "Ponuda",
       href: "/web-shop",
     },
   ]);

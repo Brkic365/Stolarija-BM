@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import Modal from "@mui/material/Modal";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { formatPrice } from "@/lib/format";
 
 function PurchaseModal({
   open,
@@ -223,7 +224,7 @@ function PurchaseModal({
                 )}
                 <div className={styles.productInfo}>
                   <h3>{product.name}</h3>
-                  <p>€{product.price.toLocaleString("en-US")}</p>
+                  <p>{formatPrice(product.price)}</p>
                 </div>
               </div>
 

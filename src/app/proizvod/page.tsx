@@ -9,6 +9,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { HiArrowSmRight, HiCheck } from "react-icons/hi";
 
 import PurchaseModal from "@/components/modals/PurchaseModal";
+import ProductImagesCarousel from "@/components/ProductImagesCarousel";
+import StatusMessage from "@/components/StatusMessage";
+import { formatPrice } from "@/lib/format";
 
 import dynamic from "next/dynamic";
 const KitchenScene = dynamic(() => import("@/components/KitchenScene"), {
@@ -54,6 +57,7 @@ function ProductPageContent() {
   const [purchaseModalOpen, setPurchaseModalOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState("specifikacije");
   const [product, setProduct] = useState<any | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "notFound" | "error">("loading");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const dispatch = useDispatch();
@@ -66,41 +70,68 @@ function ProductPageContent() {
   const areAllOptionsSelected = product?.options?.every((opt: any) => configuration[opt.name]);
 
   const getProduct = async () => {
+    if (!idQuery) {
+      setStatus("notFound");
+      return;
+    }
+
+    setStatus("loading");
     const { data, error } = await supabase
       .from("products")
       .select()
       .eq("id", idQuery);
 
-    console.log("Supabase Single Product Fetch:", { idQuery, data, error });
+    if (error) {
+      console.error("Failed to load product:", error.message);
+      setStatus("error");
+      return;
+    }
 
-    if (data && data.length > 0) {
-      setProduct(data[0]);
+    if (!data || data.length === 0) {
+      setStatus("notFound");
+      return;
+    }
 
-      let tempUrls = [];
+    setProduct(data[0]);
+    setStatus("ready");
 
-      for await (let image of data[0].images) {
-        tempUrls.push(image.url);
-      }
+    setImageUrls(
+      (data[0].images ?? []).map((image: { url: string }) => image.url)
+    );
 
-      setImageUrls(tempUrls);
-
-      // Set Default Options
-      if (data[0].options) {
-        data[0].options.forEach((option: any) => {
-          if (option.default !== undefined && option.choices[option.default]) {
-            dispatch(setOption({
-              name: option.name,
-              value: option.choices[option.default].label
-            }));
-          }
-        });
-      }
+    // Set Default Options
+    if (data[0].options) {
+      data[0].options.forEach((option: any) => {
+        if (option.default !== undefined && option.choices[option.default]) {
+          dispatch(setOption({
+            name: option.name,
+            value: option.choices[option.default].label
+          }));
+        }
+      });
     }
   };
 
   useEffect(() => {
     getProduct();
   }, [idQuery]);
+
+  if (status === "error" || status === "notFound") {
+    return (
+      <main className={styles.mainProductLoading}>
+        <section className={styles.hero} />
+        {status === "error" ? (
+          <StatusMessage variant="error" onRetry={getProduct} />
+        ) : (
+          <StatusMessage
+            variant="empty"
+            title="Proizvod nije pronađen"
+            text="Moguće je da proizvod više nije u ponudi. Pogledajte ostale proizvode ili nas kontaktirajte."
+          />
+        )}
+      </main>
+    );
+  }
 
   if (!product) return <ProductPageLoading />;
 
@@ -134,14 +165,16 @@ function ProductPageContent() {
             }}
           >
             {/* 3D Model Section */}
-            {product.model_path && (
+            {product.model_path ? (
               <div className={styles.sceneWrapper}>
                 <KitchenScene
                   product={product}
                   configuration={configuration}
                 />
               </div>
-            )}
+            ) : imageUrls.length > 0 ? (
+              <ProductImagesCarousel images={imageUrls} options={OPTIONS} />
+            ) : null}
 
 
           </motion.div>
@@ -152,7 +185,7 @@ function ProductPageContent() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.06 }}
               variants={{
                 visible: { opacity: 1, y: 0 },
                 hidden: { opacity: 0, y: 20 },
@@ -165,20 +198,20 @@ function ProductPageContent() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.09 }}
               variants={{
                 visible: { opacity: 1 },
                 hidden: { opacity: 0 },
               }}
             >
-              Od €{product.price.toLocaleString("en-US")}
+              Od {formatPrice(product.price)}
             </motion.p>
             <motion.p
               className={styles.description}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.12 }}
               variants={{
                 visible: { opacity: 1 },
                 hidden: { opacity: 0 },
@@ -238,13 +271,13 @@ function ProductPageContent() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.18 }}
                 variants={{
                   visible: { opacity: 1, y: 0 },
                   hidden: { opacity: 0, y: 20 },
                 }}
               >
-                Naruči Konfiguraciju
+                Zatraži ponudu
               </motion.button>
 
               <motion.button
@@ -253,7 +286,7 @@ function ProductPageContent() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.5, delay: 0.24 }}
                 variants={{
                   visible: { opacity: 1 },
                   hidden: { opacity: 0 },

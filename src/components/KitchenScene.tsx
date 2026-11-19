@@ -33,11 +33,6 @@ function Model({ product, configuration }: KitchenSceneProps) {
     // Load the GLB model from product.model_path or fallback
     const modelPath = product.model_path || "/models/kitchen.glb";
 
-    // Debug 
-    useEffect(() => {
-        console.log("Attempting to load 3D model from:", modelPath);
-    }, [modelPath]);
-
     const { scene } = useGLTF(modelPath);
 
     // Texture Loader

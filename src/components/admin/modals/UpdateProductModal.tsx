@@ -301,7 +301,7 @@ function UpdateProductModal({
                     }
                     onClick={() => setCategory("rooms")}
                   >
-                    <p>Dječje Sobe</p>
+                    <p>Dječje sobe</p>
                   </div>
                   <div
                     className={

@@ -2,21 +2,21 @@
   {
     "id": "kitchens",
     "name": "Kuhinje",
-    "description": "Kreirajte Kulinarski Raj: Prilagođene Kuhinje Po Vašoj Mjeri, Spojevi Estetike i Funkcionalnosti."
+    "description": "Kuhinje po vašoj mjeri koje spajaju estetiku i funkcionalnost."
   },
   {
     "id": "rooms",
-    "name": "Dječje Sobe",
-    "description": "Dječje Carstvo Snova: Namještaj Za Male Avanturiste, Unikatno Prilagođen Za Sretno Odrastanje."
+    "name": "Dječje sobe",
+    "description": "Namještaj za male avanturiste, prilagođen za sretno odrastanje."
   },
   {
     "id": "furniture",
     "name": "Namještaj",
-    "description": "Vaša Oaza Stila: Personalizirani Namještaj, Izrađen s Pažnjom i Stručnošću, Oblikovan Za Vaš Prostor."
+    "description": "Personalizirani namještaj, izrađen s pažnjom i oblikovan za vaš prostor."
   },
   {
     "id": "closets",
     "name": "Ormari",
-    "description": "Savršeni Skladišni Prostor: Ormari Prilagođeni Vašim Potrebama, Funkcionalnost i Elegancija U Jednom."
+    "description": "Ormari prilagođeni vašim potrebama, funkcionalni i elegantni."
   }
 ]

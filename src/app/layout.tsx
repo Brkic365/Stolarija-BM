@@ -10,9 +10,13 @@ import { Providers } from "./providers";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Stolarija BM",
+  metadataBase: new URL("https://stolarijabm.vercel.app"),
+  title: {
+    default: "Stolarija BM | Kuhinje i namještaj po mjeri",
+    template: "%s | Stolarija BM",
+  },
   description:
-    "Izrađujemo Namještaj i Kuhinje Sa Stilom i Pažnjom, Nasljedujući Stolarsku Umjetnost Od 1992.",
+    "Izrađujemo kuhinje i namještaj po mjeri sa stilom i pažnjom. Obiteljska stolarija iz Sesvetskog Kraljevca, od 1992.",
 };
 
 export default function RootLayout({
@@ -21,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="hr">
       <body className={font.className}>
         <Providers>
           {children}

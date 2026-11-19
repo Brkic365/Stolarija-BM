@@ -234,7 +234,7 @@ function AddProductModal({
                   className={category === "rooms" ? styles.selected : undefined}
                   onClick={() => setCategory("rooms")}
                 >
-                  <p>Dječje Sobe</p>
+                  <p>Dječje sobe</p>
                 </div>
                 <div
                   className={
