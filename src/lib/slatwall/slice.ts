@@ -121,16 +121,19 @@ export function sliceWall(hm: HeightMap, s: WallSettings, maxPartLength: number)
   const cells = vertical ? ny : nx;
 
   positions.forEach((pos, i) => {
-    // Cells across the slat thickness
-    const a0 = Math.max(0, Math.floor(pos / res));
-    const a1 = Math.min((vertical ? nx : ny) - 1, Math.ceil((pos + t) / res) - 1);
+    // Sample the model on the slat's mid-plane (like a contour/section cut),
+    // interpolating between the two nearest grid columns. Taking the max over
+    // the whole thickness made silhouettes blocky and swallowed fine detail.
+    const across = vertical ? nx : ny;
+    const mid = (pos + t / 2) / res - 0.5;
+    const c0 = Math.min(across - 1, Math.max(0, Math.floor(mid)));
+    const c1 = Math.min(across - 1, c0 + 1);
+    const f = Math.min(1, Math.max(0, mid - c0));
     const raw: Pt[] = [];
     for (let k = 0; k < cells; k++) {
-      let h = 0;
-      for (let a = a0; a <= a1; a++) {
-        const idx = vertical ? k * nx + a : a * nx + k;
-        if (data[idx] > h) h = data[idx];
-      }
+      const i0 = vertical ? k * nx + c0 : c0 * nx + k;
+      const i1 = vertical ? k * nx + c1 : c1 * nx + k;
+      const h = data[i0] * (1 - f) + data[i1] * f;
       raw.push([Math.min(length, (k + 0.5) * res), s.baseDepth + h]);
     }
     if (!raw.length) return;

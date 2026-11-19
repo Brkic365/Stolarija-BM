@@ -43,7 +43,7 @@ function Products() {
       <section className={styles.top}>
         <section className={styles.left}>
           <h3>Proizvodi</h3>
-          <p>{total} Ukupno</p>
+          <p>{total} ukupno</p>
         </section>
         <section className={styles.right}>
           <button onClick={() => setAddingProduct(true)}>

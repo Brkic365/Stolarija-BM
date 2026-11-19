@@ -29,7 +29,7 @@ export default function DepthMapView({ map, slats, wall }: { map: HeightMap; sla
       }
     }
     ctx.putImageData(img, 0, 0);
-    ctx.fillStyle = "rgba(230, 120, 40, 0.28)";
+    ctx.fillStyle = "rgba(180, 56, 31, 0.32)";
     const s = nx / wall.width;
     for (const sl of slats) {
       if (wall.direction === "vertical") ctx.fillRect(sl.position * s, 0, wall.slatThickness * s, ny);

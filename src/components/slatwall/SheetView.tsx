@@ -21,14 +21,14 @@ export default function SheetView({
       role="img"
       aria-label={`Raspored ploče ${layout.index}`}
     >
-      <rect x={0} y={0} width={sheet.length} height={sheet.width} fill="#efe4d2" stroke="#9b8a73" strokeWidth={3} />
+      <rect x={0} y={0} width={sheet.length} height={sheet.width} fill="#ece3d1" stroke="#1d1b18" strokeWidth={3} />
       <rect
         x={sheet.margin}
         y={sheet.margin}
         width={sheet.length - 2 * sheet.margin}
         height={sheet.width - 2 * sheet.margin}
         fill="none"
-        stroke="#c9b89f"
+        stroke="#b4381f"
         strokeDasharray="12 10"
         strokeWidth={2}
       />
@@ -43,14 +43,14 @@ export default function SheetView({
         const [lx, ly] = toSheet(pl, pl.part.label);
         return (
           <g key={pl.part.id}>
-            <path d={d} fill="#d8b98e" stroke="#5b4630" strokeWidth={2} />
+            <path d={d} fill="#dcc39b" stroke="#1d1b18" strokeWidth={1.6} />
             <text
               x={lx}
               y={H - ly}
               fontSize={labelSize}
               textAnchor="middle"
               dominantBaseline="middle"
-              fill="#2b2117"
+              fill="#1d1b18"
               fontWeight={700}
             >
               {pl.part.id}

@@ -1,109 +1,67 @@
+@use "../../admin/tokens" as *;
+
 .empty {
-  position: absolute;
-  left: 50%;
-  top: 20%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  padding: 64px 0;
+  text-align: left;
+  border-bottom: 1px solid $rule;
 
   h3 {
-    font-size: 1rem;
+    font-size: 17px;
     font-weight: 600;
   }
 
   p {
-    margin-top: 0.5rem;
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 0.875rem;
-    font-weight: 400;
+    margin-top: 4px;
+    color: $graphite;
+    font-size: 14px;
   }
 }
 
 .table {
   width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 14px;
 
-  tr {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0.5rem 1rem;
+  th,
+  td {
+    text-align: left;
+    padding: 11px 12px;
+    border-bottom: 1px solid $rule;
+    vertical-align: middle;
 
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
+  th {
+    @include eyebrow;
+    font-size: 10px;
+    font-weight: 400;
+    padding-top: 14px;
+    border-bottom: 1px solid $rule-strong;
+  }
+
+  tbody tr {
     cursor: pointer;
 
-    td,
-    th {
-      width: 10rem;
-      text-align: left;
+    td {
+      @include figure;
+      font-size: 13px;
+    }
+    td:first-child {
+      font-family: $sans;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    &:hover td {
+      background: $paper-2;
     }
   }
 
-  thead {
-    display: flex;
-    align-items: center;
-
-    tr {
-      th {
-        width: 10rem;
-        color: rgba(0, 0, 0, 0.6);
-        font-size: 0.875rem;
-        font-weight: 400;
-      }
-    }
-  }
-
-  tbody {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 0.5rem;
-    tr {
-      background-color: white;
-      border-radius: 0.3125rem;
-
-      td {
-        color: #000;
-        font-size: 0.875rem;
-        font-weight: 500;
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 700px) {
-  .empty {
-    h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    p {
-      margin-top: 0.75rem;
-      font-size: 1rem;
-    }
-  }
-}
-
-@media only screen and (min-width: 800px) {
-  .table {
-    tr {
-      td,
-      th {
-        width: 25%;
-        max-width: 25%;
-        min-width: 25%;
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 1000px) {
-  .table {
-    max-width: 100%;
-    tr {
-      .status {
-        width: 15%;
-        min-width: 15%;
-        max-width: 15%;
-      }
-    }
+  .status {
+    width: 150px;
   }
 }

@@ -1,3 +1,5 @@
+@use "../../../admin/tokens" as tk;
+
 .addProductModal,
 .deleteModal {
   position: absolute;
@@ -314,4 +316,11 @@
     .content {
     }
   }
+}
+
+
+// Workshop skin (see styles/admin/_tokens.scss)
+.addProductModal,
+.deleteModal {
+  @include tk.modal-skin;
 }

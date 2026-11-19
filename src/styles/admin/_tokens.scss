@@ -1,0 +1,178 @@
+// Shared look for the owner-facing pages (admin + slat-wall tool).
+// Direction: a joiner's shop drawing. Warm paper, ink linework, mono
+// figures for anything measured, one marking-crayon red for emphasis.
+// No gradients, no glass, no soft shadows, nothing rounder than 3px.
+
+$paper: #f3f0e9;
+$paper-2: #ebe6db;
+$sheet: #fbfaf6;
+$ink: #1d1b18;
+$graphite: #6b655b;
+$faint: #9a9387;
+$rule: #d8d1c3;
+$rule-strong: #b9b0a0;
+$red: #b4381f;
+$red-soft: #f3ddd5;
+$birch: #e3cba3;
+$green: #3f6b3a;
+$blue: #2f5577;
+
+$sans: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+$mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+$radius: 2px;
+
+@mixin eyebrow {
+  font-family: $mono;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $graphite;
+}
+
+@mixin figure {
+  font-family: $mono;
+  font-variant-numeric: tabular-nums;
+}
+
+// Faint drafting grid, 10 px minor / 50 px major
+@mixin drafting-grid($bg: $sheet) {
+  background-color: $bg;
+  background-image: linear-gradient(rgba(29, 27, 24, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 27, 24, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(29, 27, 24, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 27, 24, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+}
+
+@mixin button-base {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: $ink;
+  background: transparent;
+  border: 1px solid $ink;
+  border-radius: $radius;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s;
+
+  &:hover:not(:disabled) {
+    background: $ink;
+    color: $paper;
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  &:focus-visible {
+    outline: 2px solid $red;
+    outline-offset: 2px;
+  }
+}
+
+// Re-skin for the older admin modals (MUI portals) so they match the rest.
+@mixin modal-skin {
+  font-family: $sans;
+  color: $ink;
+  background: $sheet;
+  border: 1px solid $ink;
+  border-top: 4px solid $ink;
+  border-radius: 0;
+  box-shadow: 0 0 0 100vmax rgba(29, 27, 24, 0.001); // no drop shadow
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li::marker {
+    content: "";
+  }
+
+  .top {
+    border-bottom: 1px solid $rule-strong;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+
+    h3 {
+      @include eyebrow;
+      opacity: 1;
+      font-size: 11px;
+    }
+    svg {
+      opacity: 0.7;
+    }
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    border-radius: $radius !important;
+  }
+
+  button {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: $radius;
+    background: $ink !important;
+    color: $paper !important;
+    border: 1px solid $ink;
+
+    &:hover {
+      background: $red !important;
+      border-color: $red;
+    }
+  }
+  button.delete,
+  .delete {
+    background: transparent !important;
+    color: $red !important;
+    border: 1px solid $red !important;
+
+    &:hover {
+      background: $red !important;
+      color: $paper !important;
+    }
+  }
+
+  .green,
+  .blue,
+  .red {
+    border-radius: 1px !important;
+    background: transparent !important;
+    border: 1px solid currentColor !important;
+    opacity: 1 !important;
+    font-family: $mono;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .green {
+    color: $green !important;
+  }
+  .blue {
+    color: $blue !important;
+  }
+  .red {
+    color: $red !important;
+  }
+  .selected {
+    color: $paper !important;
+    background: $ink !important;
+    border-color: $ink !important;
+  }
+  .green.selected {
+    background: $green !important;
+    border-color: $green !important;
+  }
+  .blue.selected {
+    background: $blue !important;
+    border-color: $blue !important;
+  }
+  .red.selected {
+    background: $red !important;
+    border-color: $red !important;
+  }
+}

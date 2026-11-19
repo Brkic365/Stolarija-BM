@@ -1,32 +1,34 @@
+@use "../../admin/tokens" as *;
+
+// Status as a stamped label: coloured rule + text, no pill backgrounds.
 .green,
 .blue,
 .red {
-  border-radius: 0.3125rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
-
-  font-size: 0.9rem;
-  font-weight: 500;
+  gap: 6px;
+  padding: 2px 8px 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  font-family: $mono;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 
   svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 13px;
+    height: 13px;
   }
 }
 
 .green {
-  background: rgba(147, 209, 131, 0.3);
-  color: #5dad49;
+  color: $green;
 }
 
 .blue {
-  background: rgba(131, 176, 209, 0.3);
-  color: #83b0d1;
+  color: $blue;
 }
 
 .red {
-  background: rgba(232, 19, 19, 0.3);
-  color: #e81313;
+  color: $red;
 }

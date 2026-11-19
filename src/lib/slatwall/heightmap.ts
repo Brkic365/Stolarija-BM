@@ -46,17 +46,7 @@ export interface FitInfo {
   sizeZ: number;
 }
 
-/**
- * Z-buffer the oriented model onto a grid covering the wall and turn it
- * into a relief height field (0 = wall surface, reliefDepth = closest point).
- */
-export function buildHeightMap(
-  positions: Float32Array,
-  s: WallSettings,
-  maxCells = 1400
-): { map: HeightMap; fit: FitInfo } {
-  const p = orientPositions(positions, s.frontAxis, s.rotation, s.mirror);
-
+function bounds(p: Float32Array) {
   let minx = Infinity, miny = Infinity, minz = Infinity;
   let maxx = -Infinity, maxy = -Infinity, maxz = -Infinity;
   for (let i = 0; i < p.length; i += 3) {
@@ -65,32 +55,35 @@ export function buildHeightMap(
     if (y < miny) miny = y; if (y > maxy) maxy = y;
     if (z < minz) minz = z; if (z > maxz) maxz = z;
   }
-  const bx = Math.max(maxx - minx, 1e-9);
-  const by = Math.max(maxy - miny, 1e-9);
-  const scale = Math.max(0.01, Math.min(1, s.fill)) * Math.min(s.width / bx, s.height / by);
-  const cx = (minx + maxx) / 2;
-  const cy = (miny + maxy) / 2;
-  const tx = s.width / 2 + s.offsetX;
-  const ty = s.height / 2 + s.offsetY;
+  return { minx, miny, minz, maxx, maxy, maxz };
+}
 
-  const res = Math.max(0.5, Math.max(s.width, s.height) / maxCells);
-  const nx = Math.max(1, Math.ceil(s.width / res));
-  const ny = Math.max(1, Math.ceil(s.height / res));
+/**
+ * Z-buffer a triangle soup into an nx × ny grid. gx/gy map model x/y to grid
+ * coordinates (cell centres at integers), gz maps z. Returns -Infinity where
+ * nothing was hit.
+ */
+function zbuffer(
+  p: Float32Array,
+  nx: number,
+  ny: number,
+  gx: (x: number) => number,
+  gy: (y: number) => number,
+  gz: (z: number) => number,
+  stride = 1
+): Float32Array {
   const zb = new Float32Array(nx * ny).fill(-Infinity);
-
-  const gx = (x: number) => ((x - cx) * scale + tx) / res - 0.5;
-  const gy = (y: number) => ((y - cy) * scale + ty) / res - 0.5;
   const splat = (X: number, Y: number, Z: number) => {
     const ix = Math.round(X), iy = Math.round(Y);
     if (ix < 0 || iy < 0 || ix >= nx || iy >= ny) return;
     const k = iy * nx + ix;
     if (Z > zb[k]) zb[k] = Z;
   };
-
-  for (let i = 0; i + 8 < p.length; i += 9) {
-    const X0 = gx(p[i]), Y0 = gy(p[i + 1]), Z0 = (p[i + 2] - minz) * scale;
-    const X1 = gx(p[i + 3]), Y1 = gy(p[i + 4]), Z1 = (p[i + 5] - minz) * scale;
-    const X2 = gx(p[i + 6]), Y2 = gy(p[i + 7]), Z2 = (p[i + 8] - minz) * scale;
+  const step = 9 * Math.max(1, Math.floor(stride));
+  for (let i = 0; i + 8 < p.length; i += step) {
+    const X0 = gx(p[i]), Y0 = gy(p[i + 1]), Z0 = gz(p[i + 2]);
+    const X1 = gx(p[i + 3]), Y1 = gy(p[i + 4]), Z1 = gz(p[i + 5]);
+    const X2 = gx(p[i + 6]), Y2 = gy(p[i + 7]), Z2 = gz(p[i + 8]);
 
     const ix0 = Math.max(0, Math.ceil(Math.min(X0, X1, X2)));
     const ix1 = Math.min(nx - 1, Math.floor(Math.max(X0, X1, X2)));
@@ -119,6 +112,39 @@ export function buildHeightMap(
       }
     }
   }
+  return zb;
+}
+
+/**
+ * Z-buffer the oriented model onto a grid covering the wall and turn it
+ * into a relief height field (0 = wall surface, reliefDepth = closest point).
+ */
+export function buildHeightMap(
+  positions: Float32Array,
+  s: WallSettings,
+  maxCells = 1400
+): { map: HeightMap; fit: FitInfo } {
+  const p = orientPositions(positions, s.frontAxis, s.rotation, s.mirror);
+  const { minx, miny, minz, maxx, maxy, maxz } = bounds(p);
+  const bx = Math.max(maxx - minx, 1e-9);
+  const by = Math.max(maxy - miny, 1e-9);
+  const scale = Math.max(0.01, Math.min(1, s.fill)) * Math.min(s.width / bx, s.height / by);
+  const cx = (minx + maxx) / 2;
+  const cy = (miny + maxy) / 2;
+  const tx = s.width / 2 + s.offsetX;
+  const ty = s.height / 2 + s.offsetY;
+
+  const res = Math.max(0.5, Math.max(s.width, s.height) / maxCells);
+  const nx = Math.max(1, Math.ceil(s.width / res));
+  const ny = Math.max(1, Math.ceil(s.height / res));
+  const zb = zbuffer(
+    p,
+    nx,
+    ny,
+    (x) => ((x - cx) * scale + tx) / res - 0.5,
+    (y) => ((y - cy) * scale + ty) / res - 0.5,
+    (z) => (z - minz) * scale
+  );
 
   // Relief normalisation
   let zlo = Infinity, zhi = -Infinity, hits = 0;
@@ -133,20 +159,24 @@ export function buildHeightMap(
     }
   }
   const data = new Float32Array(nx * ny);
-  const range = zhi - zlo;
   const R = Math.max(0, s.reliefDepth);
+  // Only the front part of the model becomes relief; whatever lies behind
+  // the cut sits flat on the wall. A full head is mostly "back of the head",
+  // so keeping the front ~60% gives the face far more of the available depth.
+  const cut = Math.min(1, Math.max(0.05, s.depthCut ?? 1));
+  const front = s.invert ? zlo : zhi;
+  const span = (zhi - zlo) * cut;
   for (let k = 0; k < zb.length; k++) {
     if (!hit[k]) continue;
-    const z = zb[k];
+    const d = Math.abs(front - zb[k]); // distance behind the frontmost point
     let h: number;
     if (s.depthMode === "true") {
-      h = s.invert ? zhi - z : z - zlo;
-      h = Math.min(R, h);
-    } else if (range < 1e-9) {
+      // Real proportions at wall scale: the front R mm of the model.
+      h = Math.max(0, R - d);
+    } else if (span < 1e-9) {
       h = R;
     } else {
-      const t = (z - zlo) / range;
-      h = (s.invert ? 1 - t : t) * R;
+      h = Math.max(0, 1 - d / span) * R;
     }
     data[k] = h;
   }
@@ -158,6 +188,55 @@ export function buildHeightMap(
     map: { nx, ny, res, data, hit, coverage: hits / (nx * ny) },
     fit: { scale, sizeX: bx * scale, sizeY: by * scale, sizeZ: (maxz - minz) * scale },
   };
+}
+
+export interface OrientationPreview {
+  axis: FrontAxis;
+  nx: number;
+  ny: number;
+  /** 0..1 brightness per cell (1 = closest), -1 = empty; row 0 = bottom */
+  data: Float32Array;
+  score: number;
+}
+
+export const FRONT_AXES: FrontAxis[] = ["+z", "-z", "+x", "-x", "-y", "+y"];
+
+/**
+ * Small depth previews of the model seen from each of the six directions,
+ * plus a guess which one is the front: the view with the largest silhouette
+ * and the most surface detail (faces have noses and eyes, backs of heads don't).
+ */
+export function orientationPreviews(positions: Float32Array, size = 72): OrientationPreview[] {
+  const tris = positions.length / 9;
+  const stride = Math.max(1, Math.floor(tris / 120000));
+  return FRONT_AXES.map((axis) => {
+    const p = orientPositions(positions, axis, 0, false);
+    const b = bounds(p);
+    const bx = Math.max(b.maxx - b.minx, 1e-9);
+    const by = Math.max(b.maxy - b.miny, 1e-9);
+    const sc = (size - 1) / Math.max(bx, by);
+    const nx = Math.max(2, Math.round(bx * sc) + 1);
+    const ny = Math.max(2, Math.round(by * sc) + 1);
+    const zb = zbuffer(p, nx, ny, (x) => (x - b.minx) * sc, (y) => (y - b.miny) * sc, (z) => z, stride);
+    let zlo = Infinity, zhi = -Infinity, hits = 0;
+    for (const z of Array.from(zb)) if (z !== -Infinity) { hits++; if (z < zlo) zlo = z; if (z > zhi) zhi = z; }
+    const range = Math.max(zhi - zlo, 1e-9);
+    const data = new Float32Array(nx * ny).fill(-1);
+    for (let k = 0; k < zb.length; k++) if (zb[k] !== -Infinity) data[k] = (zb[k] - zlo) / range;
+    // Detail: mean depth change between neighbouring covered cells
+    let grad = 0, pairs = 0;
+    for (let y = 0; y < ny - 1; y++) {
+      for (let x = 0; x < nx - 1; x++) {
+        const k = y * nx + x;
+        if (data[k] < 0) continue;
+        if (data[k + 1] >= 0) { grad += Math.abs(data[k + 1] - data[k]); pairs++; }
+        if (data[k + nx] >= 0) { grad += Math.abs(data[k + nx] - data[k]); pairs++; }
+      }
+    }
+    const area = (hits / (nx * ny)) * bx * by;
+    const detail = pairs ? (grad / pairs) * size : 0;
+    return { axis, nx, ny, data, score: area * (1 + detail) };
+  });
 }
 
 /** Separable box blur, in place. */

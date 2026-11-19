@@ -1,3 +1,5 @@
+@use "../../../admin/tokens" as tk;
+
 .messageModal,
 .deleteModal {
   position: absolute;
@@ -189,4 +191,11 @@
       }
     }
   }
+}
+
+
+// Workshop skin (see styles/admin/_tokens.scss)
+.messageModal,
+.deleteModal {
+  @include tk.modal-skin;
 }

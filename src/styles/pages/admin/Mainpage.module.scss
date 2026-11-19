@@ -1,209 +1,199 @@
-.mainPage {
+@use "../../admin/tokens" as *;
+
+.shell {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100dvh;
+  background: $paper;
+  color: $ink;
+  font-family: $sans;
+  font-size: 14px;
+
+  button {
+    font: inherit;
+  }
+
+  @media (max-width: 800px) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  border-right: 1px solid $rule-strong;
+  padding: 22px 18px;
+
+  @media (max-width: 800px) {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 2px solid $ink;
+    padding: 14px 16px 0;
+  }
+}
+
+.brand {
+  display: flex;
   align-items: center;
-  height: 100vh;
-  max-height: 100vh;
-  overflow-y: hidden;
-  color: black;
-  background-color: white;
+  gap: 10px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid $ink;
 
-  .hero {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    padding: 2.5rem 1rem;
-
-    background-image: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 1) 47.2%,
-        rgba(0, 0, 0, 0.9) 100%
-      ),
-      url("/images/covers/navbar.webp");
-    background-size: cover;
-    background-position: center;
+  strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  small {
+    @include eyebrow;
+    font-size: 10px;
   }
 
-  .content {
-    margin-bottom: auto;
-    width: 100%;
-    padding: 2.5rem 1rem 1rem 1rem;
+  @media (max-width: 800px) {
+    border-bottom: 0;
+    padding-bottom: 10px;
+  }
+}
 
-    .topNav,
-    .sideNav {
-      display: none;
+.brandMark {
+  @include figure;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid $ink;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding-top: 14px;
+
+  button,
+  a {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 2px;
+    border: 0;
+    border-bottom: 1px solid $rule;
+    background: none;
+    color: $graphite;
+    text-align: left;
+    text-decoration: none;
+    font-size: 15px;
+    cursor: pointer;
+
+    i {
+      @include figure;
+      font-style: normal;
+      font-size: 11px;
+      color: $faint;
+      width: 18px;
+    }
+
+    &:hover {
+      color: $ink;
+    }
+    &:focus-visible {
+      outline: 2px solid $red;
+      outline-offset: 2px;
     }
   }
 
-  .bottomNav {
-    width: 75%;
-    display: flex;
-    align-items: center;
-    place-content: space-between;
-    padding: 1rem;
+  .navActive {
+    color: $ink;
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 $red;
+    padding-left: 12px;
 
-    .navItem,
-    .active {
-      padding: 0.65rem;
-      border-radius: 0.3125rem;
-      background-color: white;
-
-      transition: 0.2s ease-in-out;
-
-      svg {
-        color: black;
-        width: 1.75rem;
-        height: 1.75rem;
-        transition: 0.2s ease-in-out;
-      }
-
-      &:hover {
-        background-color: black;
-
-        svg {
-          color: white;
-        }
-      }
+    i {
+      color: $red;
     }
+  }
 
-    .active {
-      background-color: black;
+  .navTool span {
+    margin-left: auto;
+    color: $faint;
+  }
 
-      svg {
-        color: white;
-      }
+  @media (max-width: 800px) {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-top: 0;
+    gap: 18px;
+
+    button,
+    a {
+      border-bottom: 0;
+      padding: 10px 0 12px;
+      white-space: nowrap;
+    }
+    .navActive {
+      box-shadow: inset 0 -3px 0 $red;
+      padding-left: 0;
     }
   }
 }
 
-@media only screen and (min-width: 700px) {
-  .mainPage {
-    .content {
-      margin-bottom: auto;
-      width: 100%;
-      padding: 3rem 1.5rem;
+.railFoot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid $rule;
 
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      flex-direction: column;
+  a,
+  button {
+    @include eyebrow;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: $graphite;
+    text-decoration: none;
+    cursor: pointer;
 
-      .topNav,
-      .sideNav {
-        width: 75%;
-        display: flex;
-        align-items: center;
-        gap: 3rem;
-
-        .navItem,
-        .active {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-
-          padding: 0.65rem 1.5rem 0.65rem 0.65rem;
-          border-radius: 0.3125rem;
-          background-color: white;
-
-          transition: 0.2s ease-in-out;
-
-          color: rgba(0, 0, 0, 0.5);
-          font-size: 1rem;
-          font-weight: 500;
-
-          svg {
-            color: rgba(0, 0, 0, 0.5);
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: 0.2s ease-in-out;
-          }
-
-          &:hover {
-            background-color: black;
-            color: white;
-
-            svg {
-              color: white;
-            }
-          }
-        }
-
-        .active {
-          background-color: black;
-          color: white;
-
-          svg {
-            color: white;
-          }
-        }
-      }
-
-      .sideNav {
-        display: none;
-      }
+    &:hover {
+      color: $red;
     }
+  }
 
-    .bottomNav {
-      display: none;
-    }
+  @media (max-width: 800px) {
+    display: none;
   }
 }
 
-@media only screen and (min-width: 1400px) {
-  .mainPage {
-    .content {
-      margin-bottom: auto;
-      max-width: 100rem;
-      width: 100%;
-      padding: 3rem 1.5rem;
+.main {
+  min-width: 0;
+  padding: 22px 32px 40px;
 
-      flex-direction: row;
-      justify-content: center;
-      gap: 2rem;
-
-      .topNav {
-        display: none;
-      }
-
-      .sideNav {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 20%;
-        height: 72vh;
-        gap: 1rem;
-
-        border-radius: 0.3125rem;
-        background: #ededed;
-        padding: 1.5rem;
-
-        h1 {
-          color: #000;
-          font-size: 1.5rem;
-          font-weight: 500;
-
-          border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-          padding-bottom: 1.5rem;
-          width: 100%;
-
-          span {
-            font-weight: 800;
-          }
-        }
-
-        .navItem,
-        .active {
-          width: 100%;
-          padding: 0.75rem 1rem;
-        }
-
-        .navItem {
-          background-color: transparent;
-        }
-      }
-    }
+  @media (max-width: 800px) {
+    padding: 16px;
   }
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+
+  p {
+    @include eyebrow;
+    font-size: 10px;
+  }
+}
+
+.loading {
+  padding: 40px;
+  font-family: $sans;
+  color: $graphite;
 }

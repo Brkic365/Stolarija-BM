@@ -31,8 +31,8 @@ function Messages() {
     <section className={styles.messages}>
       <section className={styles.top}>
         <section className={styles.left}>
-          <h3>Posljednje Poruke</h3>
-          <p>{total} Ukupno</p>
+          <h3>Poruke</h3>
+          <p>{total} ukupno</p>
         </section>
         <section className={styles.right}>
           <div className={styles.info}>

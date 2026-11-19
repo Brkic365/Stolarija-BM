@@ -60,7 +60,7 @@ function MessageTable({ updateData }: { updateData: () => void }) {
           <tr key={message.id} onClick={() => setOpenedMessage(message)}>
             <td>{message.name}</td>
             <td>{message.telephone}</td>
-            <td>{new Date(message.created_at).toLocaleDateString("en-GB")}</td>
+            <td>{new Date(message.created_at).toLocaleDateString("hr-HR")}</td>
             <td className={styles.status}>
               <Status status={message.read ? "read" : "notRead"} />
             </td>
