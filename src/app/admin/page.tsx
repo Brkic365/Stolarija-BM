@@ -7,6 +7,7 @@ import {
   HiOutlineClipboardDocumentList,
   HiOutlineChatBubbleLeftRight,
   HiOutlineWallet,
+  HiOutlineViewColumns,
 } from "react-icons/hi2";
 import Orders from "@/components/admin/Orders";
 import Messages from "@/components/admin/Messages";
@@ -60,6 +61,13 @@ function AdminContent() {
             <HiOutlineWallet />
             Proizvodi
           </button>
+          <button
+            className={styles.navItem}
+            onClick={() => router.push("/admin/lamele")}
+          >
+            <HiOutlineViewColumns />
+            Lamelni zid
+          </button>
         </section>
 
         {/* Side nav */}
@@ -87,6 +95,13 @@ function AdminContent() {
           >
             <HiOutlineWallet />
             Proizvodi
+          </button>
+          <button
+            className={styles.navItem}
+            onClick={() => router.push("/admin/lamele")}
+          >
+            <HiOutlineViewColumns />
+            Lamelni zid
           </button>
         </section>
 
