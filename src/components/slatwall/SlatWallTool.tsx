@@ -654,6 +654,22 @@ export default function SlatWallTool() {
               {l}
             </button>
           ))}
+          <label className={styles.depthDial} title="Koliko najistaknutija točka izlazi ispred osnove">
+            <span>Izlazi iz zida</span>
+            <input
+              type="range"
+              min={20}
+              max={Math.max(500, wall.reliefDepth)}
+              step={5}
+              value={wall.reliefDepth}
+              onChange={(e) => setW("reliefDepth", Number(e.target.value))}
+            />
+            <b>
+              {wall.reliefDepth}
+              <em>mm</em>
+            </b>
+            <small>ukupno {wall.baseDepth + wall.reliefDepth} mm</small>
+          </label>
         </div>
 
         <div className={styles.view}>
